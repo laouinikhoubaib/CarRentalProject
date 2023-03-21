@@ -6,9 +6,10 @@ import com.example.carrental.Exceptions.EmailExist;
 import com.example.carrental.Exceptions.PasswordValidException;
 import com.example.carrental.Exceptions.UsernameExist;
 import com.example.carrental.Exceptions.UsernameNotExist;
+import com.example.carrental.Models.Agence;
+import com.example.carrental.Models.Notification;
 import com.example.carrental.Models.User;
-import com.example.carrental.Repository.MediaRepo;
-import com.example.carrental.Repository.UserRepository;
+import com.example.carrental.Repository.*;
 import com.example.carrental.ServiceInterfaces.UserService;
 import freemarker.core.ParseException;
 import freemarker.template.MalformedTemplateNameException;
@@ -50,24 +51,32 @@ public class UserServiceImpl implements UserService
     @Autowired
 	MediaRepo mediaRepository;
 
+	@Autowired
+	AgenceRepository agenceRepository;
 
 
-    public UserServiceImpl(UserRepository<User, Number> userRepository, PasswordEncoder passwordEncoder)
+
+
+	@Autowired
+	NotificationRepository notificationRepository;
+
+
+    public UserServiceImpl(UserRepository<User, Number> userRepository, PasswordEncoder passwordEncoder )
     {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+
     }
 
     @Override
     public User saveUser(User user) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, io.jsonwebtoken.io.IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, IOException, MessagingException {
     	isvalidUsernameAndEmail(EMPTY, user.getUsername(), user.getEmail());
     	isValid(user.getPassword());
-        //user.setRole(Role.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setBlock(false);
+        user.setLocked(false);
         //user.setRegistrationDate(new Date());
         User savedUser = userRepository.save(user);
-        emailService.sendWelcomeMail(savedUser.getName(), savedUser.getEmail());
+        emailService.sendWelcomeMail(savedUser.getUsername(), savedUser.getEmail());
         return savedUser;
     }
     
@@ -83,7 +92,8 @@ public class UserServiceImpl implements UserService
 
 		return userRepository.findByUsername(username);
     }
-    
+
+
     @Override
     public Optional<User> findByEmail(String email)
     {
@@ -106,10 +116,11 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public void unlockUser(long idUser) {
-		User user = userRepository.findById(idUser).get();
-		user.setBlock(false);
-		userRepository.save(user);
+	public void unlockUser(String username) {
+		User u = userRepository.findByUsername(username).get();
+		u.setLoginAttempts(0);
+		u.setLocked(false);
+		userRepository.save(u);
 	}
 
 
@@ -230,10 +241,11 @@ public class UserServiceImpl implements UserService
 	        }
 	    }
 	@Override
-	public void lockUser(long idUser) {
-		User user = userRepository.findById(idUser).get();
-		user.setBlock(true);
-		userRepository.save(user);
+	public void lockUser(String username) {
+		User u = userRepository.findByUsername(username).get();
+		u.setLoginAttempts(0);
+		u.setLocked(true);
+		userRepository.save(u);
 
 	}
 
@@ -261,7 +273,61 @@ public class UserServiceImpl implements UserService
 		return result;
 	}
 
+	@Override
+	public List<Notification> findNotificationsByUser(Long userId) {
+		return notificationRepository.userNotification(userId);
+	}
 
+	@Override
+	public Notification addNotification(Notification notification, String username) {
+		User user = userRepository.findByUsername(username).get();
+		notification.setRead(false);
+		notification.setUser(user);
+		return notificationRepository.save(notification);
+	}
+
+	@Override
+	public void deleteNotification(Long notificationId) {
+		Notification notif = notificationRepository.findById(notificationId).orElse(null);
+		notificationRepository.delete(notif);
+
+	}
+
+	@Override
+	public List<Notification> findAllNotifications() {
+		// TODO Auto-generated method stub
+		return notificationRepository.findAll();
+	}
+
+	@Override
+	public void markNotifAsRead(Long  idNotif) {
+		Notification notification = notificationRepository.findById(idNotif).orElse(null);
+		notification.setRead(true);
+		notificationRepository.save(notification);
+
+	}
+
+	@Override
+	public void markNotifAsUnRead(Long idNotif) {
+		Notification notification = notificationRepository.findById(idNotif).orElse(null);
+		notification.setRead(false);
+		notificationRepository.save(notification);
+
+	}
+
+	public void affectatUserToAgence(Long agenceId, Long userId){
+
+		User user=userRepository.findById(userId).get();
+		Agence agence=agenceRepository.findById(agenceId).get();
+		user.setAgence(agence);
+		userRepository.save(user);
+
+}
+
+
+	public List<User> getUsersByAgence(Agence agence) {
+		return userRepository.findByAgence(agence);
+	}
 
 
 }

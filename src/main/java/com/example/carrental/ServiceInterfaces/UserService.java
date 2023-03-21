@@ -5,6 +5,8 @@ import com.example.carrental.Enumerations.Role;
 import com.example.carrental.Exceptions.EmailExist;
 import com.example.carrental.Exceptions.UsernameExist;
 import com.example.carrental.Exceptions.UsernameNotExist;
+import com.example.carrental.Models.Agence;
+import com.example.carrental.Models.Notification;
 import com.example.carrental.Models.User;
 import freemarker.core.ParseException;
 import freemarker.template.MalformedTemplateNameException;
@@ -22,7 +24,7 @@ public interface UserService
     User saveUser(User user) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, java.io.IOException;
 
     Optional<User> findByUsername(String username);
-    
+
     User getUser(Long userId);
     
 	Optional<User> findByEmail(String email);
@@ -33,9 +35,10 @@ public interface UserService
 
     List<User> findAllUsers();
 
-	void unlockUser(long idUser);
-	
-	void lockUser(long idUser);
+
+    void unlockUser(String username);
+
+    void lockUser(String username);
 
 	User updateUser(User user);
 	
@@ -45,7 +48,21 @@ public interface UserService
 	public List<User> allAdmins();
 
 
+    List<Notification> findNotificationsByUser(Long userId);
+
+    Notification addNotification(Notification notification, String username);
+
+    void deleteNotification(Long notificationId);
+
+    List<Notification> findAllNotifications();
 
 
-    
+    void markNotifAsRead(Long idNotif);
+
+    void markNotifAsUnRead(Long idNotif);
+
+    public void affectatUserToAgence(Long agenceId, Long userId);
+
+    public List<User> getUsersByAgence(Agence agence);
+
 }

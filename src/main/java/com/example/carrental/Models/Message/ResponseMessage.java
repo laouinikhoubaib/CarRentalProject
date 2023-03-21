@@ -1,4 +1,4 @@
-package com.example.carrental.Message;
+package com.example.carrental.Models.Message;
 
 public class ResponseMessage {
 	  private String message;

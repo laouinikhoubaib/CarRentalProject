@@ -1,14 +1,19 @@
 package com.example.carrental.Controllers;
 
 
+
 import com.example.carrental.Exceptions.*;
+import com.example.carrental.Models.Agence;
 import com.example.carrental.Models.Media;
 import com.example.carrental.Models.User;
+import com.example.carrental.Repository.AgenceRepository;
 import com.example.carrental.Repository.MediaRepo;
 import com.example.carrental.Repository.UserRepository;
+import com.example.carrental.ServiceInterfaces.AgenceService;
 import com.example.carrental.ServiceInterfaces.AuthenticationService;
 import com.example.carrental.ServiceInterfaces.JwtRefreshTokenService;
 import com.example.carrental.ServiceInterfaces.UserService;
+import com.example.carrental.security.UserPrincipal;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import freemarker.core.ParseException;
@@ -20,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,8 +46,12 @@ public class AuthenticationController {
     private UserService userService;
 
     @Autowired
+    private AgenceService agenceService;
+    @Autowired
     MediaRepo mediaRepository;
 
+    @Autowired
+    AgenceRepository agenceRepository;
     @Autowired
     UserRepository<User, Number> userRepository;
 
@@ -61,6 +71,7 @@ public class AuthenticationController {
     @PostMapping(value="sign-up", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})//api/authentication/sign-up
     public ResponseEntity<User> signUp(@RequestPart("user") String user, @RequestPart("file") MultipartFile file) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, IOException, io.jsonwebtoken.io.IOException, TemplateException
     {
+
         //upload file
 
         File convertFile = new File(uploadDirectory+file.getOriginalFilename());
@@ -75,7 +86,9 @@ public class AuthenticationController {
         userData.setProfilPicture(profilPicture);
         userData.setProfilPic(file.getOriginalFilename());
         userService.saveUser(userData);
+
         return new ResponseEntity<>(userData, HttpStatus.CREATED);
+
     }
 
     @PostMapping("sign-in")//api/authentication/sign-in
@@ -83,12 +96,12 @@ public class AuthenticationController {
     {
         User u = userRepository.findByUsername(user.getUsername()).orElse(null);
         if (u != null) {
-            if (!u.isBlock()) {
+            if (!u.isLocked()) {
                 if (u.getLoginAttempts() != 4 && !passwordEncoder.matches(user.getPassword(), u.getPassword())){
                     u.setLoginAttempts(u.getLoginAttempts() + 1);
                     userRepository.save(u);
                     if (u.getLoginAttempts()==4) {
-                        u.setBlock(true);
+                        u.setLocked(true);
                         userRepository.save(u);
                         throw new com.example.carrental.Exceptions.AccountLockedException("Your account has been locked, please contact the administration !");
                     }

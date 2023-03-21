@@ -11,6 +11,8 @@
 			box-sizing: border-box;
 		}
 
+
+
 		body {
 			margin: 0;
 			padding: 0;
@@ -147,7 +149,7 @@
 <td style="padding-bottom:10px;padding-left:40px;padding-right:40px;padding-top:10px;">
 <div style="font-family: sans-serif">
 <div style="font-size: 12px; mso-line-height-alt: 18px; color: #191919; line-height: 1.5; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;">
-<p style="margin: 0; font-size: 16px; text-align: center;"><strong><span style="font-size:38px;">Hi ${user.name}, </span></strong></p>
+<p style="margin: 0; font-size: 16px; text-align: center;"><strong><span style="font-size:38px;">Hi ${user.username}, </span></strong></p>
 <p style="margin: 0; font-size: 16px; text-align: center;"><strong><span style="font-size:38px;">Welcome to LB CONSULTING!</span></strong></p>
 </div>
 </div>
