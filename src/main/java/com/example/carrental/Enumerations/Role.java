@@ -6,7 +6,7 @@ package com.example.carrental.Enumerations;
 public enum Role {
 
 
-	USER, ADMIN, SUPERADMIN
+	USER,USER_FRANCHISE,ADMIN, ADMIN_FRANCHISE, SUPERADMIN
 
 
 

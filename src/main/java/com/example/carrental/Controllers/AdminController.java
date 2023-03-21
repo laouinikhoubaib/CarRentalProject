@@ -1,26 +1,33 @@
 package com.example.carrental.Controllers;
 
+
 import com.example.carrental.Enumerations.Role;
+import com.example.carrental.Models.Agence;
 import com.example.carrental.Models.User;
+import com.example.carrental.ServiceInterfaces.AgenceService;
 import com.example.carrental.ServiceInterfaces.UserService;
 import com.example.carrental.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 
 @RestController
 @RequestMapping("api/admin")//pre-path
-@PreAuthorize("hasRole('ADMIN')")
+
 public class AdminController
 {
 
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AgenceService agenceService;
+
 
 
     @GetMapping("all")//api/admin/all
@@ -29,16 +36,16 @@ public class AdminController
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @PutMapping("/lock/{idUser}")
-    public ResponseEntity<?> lockUser(@PathVariable long idUser ) {
-    	userService.lockUser(idUser);
-    	return ResponseEntity.ok(true);
+    @PutMapping("/lock")
+    public ResponseEntity<?> lockUser(@RequestBody String username) {
+        userService.lockUser(username);
+        return ResponseEntity.ok(true);
     }
-    
-    @PutMapping("/unlock/{idUser}")
-    public ResponseEntity<?> unlockUser(@PathVariable long idUser) {
-    	userService.unlockUser(idUser);
-    	return ResponseEntity.ok(true);
+
+    @PutMapping("/unlock")
+    public ResponseEntity<?> unlockUser(@RequestBody String username) {
+        userService.unlockUser(username);
+        return ResponseEntity.ok(true);
     }
 
     @PutMapping("change/{role}")//api/user/change/{role}
@@ -58,6 +65,12 @@ public class AdminController
     	return userService.allAdmins();
     }
 
+    @GetMapping("/{agenceId}/users")
+    public ResponseEntity<List<User>> getUsersByAgence(@PathVariable Long agenceId) {
+        Agence agence = new Agence(agenceId);
+        List<User> users = userService.getUsersByAgence(agence);
+        return ResponseEntity.ok(users);
+    }
 
- 
+
 }

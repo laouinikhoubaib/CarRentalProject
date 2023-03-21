@@ -52,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll();
         http.authorizeRequests()
                 .antMatchers("/api/authentication/**").permitAll()
-                .antMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
+                .antMatchers("/api/admin/**").hasRole(Role.SUPERADMIN.name())
+                .antMatchers("/api/agence/**").permitAll()
                 .anyRequest().authenticated()
 		        .and()
 		       // .oauth2Login();
@@ -82,22 +83,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer()
-    {
-        return new WebMvcConfigurer()
-        {
-            @Override
-            public void addCorsMappings(CorsRegistry registry)
-            {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*");
-            }
-        };
-    }
+
     private static final String[] AUTH_WHITELIST = {
-            "/v3/api-docs/**","/**",
+            "/**",
+            "/v3/api-docs/**",
             "/api/**",
             "/swagger-ui/**",
             "/swagger-ui.html/**",
@@ -109,4 +98,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
             "/api/auth/**",
             "/api/admin/**"
     };
+
 }

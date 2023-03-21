@@ -2,11 +2,14 @@ package com.example.carrental.Models;
 
 
 import com.example.carrental.Enumerations.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,26 +30,30 @@ public class User implements Serializable {
     @Column(name = "username", unique = true, nullable = false, length = 100)
     String username;
 
-    @Column(name = "name", unique = true, nullable = false, length = 100)
-    String name;
-
-    @Column(name = "password", nullable = false)
-    String password;
-
-    @Column(name = "PhoneNumber", nullable = false)
-    String PhoneNumber;
 
     @Column(name = "email", nullable = false)
     String email;
 
-    @Column(name = "block", nullable = false)
-    boolean block;
+    @Column(name = "password", nullable = false)
+    String password;
+
+
+    @Column(name = "isLocked", nullable = false)
+    boolean isLocked;
 
     @Column(name = "loginAttempts", nullable = false)
     int loginAttempts;
 
     @Column(name = "profilPic", nullable = false)
     String profilPic;
+
+
+    @Temporal(TemporalType.DATE)
+    Date birthDate;
+
+    @Temporal(TemporalType.DATE)
+    Date registrationDate;
+
 
     @Transient
     String accessToken;
@@ -63,5 +70,11 @@ public class User implements Serializable {
     @OneToOne
     Media profilPicture;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
+    Set<Notification> notifications;
+
+    @ManyToOne
+    Agence agence;
 
 }
