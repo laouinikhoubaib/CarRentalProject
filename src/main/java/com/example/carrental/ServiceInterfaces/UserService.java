@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public interface UserService
 {
-    User saveUser(User user) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, java.io.IOException;
+    User saveUser(User user, String nomAgence) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, java.io.IOException;
 
     Optional<User> findByUsername(String username);
 
@@ -61,8 +61,7 @@ public interface UserService
 
     void markNotifAsUnRead(Long idNotif);
 
-    public void affectatUserToAgence(Long agenceId, Long userId);
 
-    public List<User> getUsersByAgence(Agence agence);
+  //  public List<User> getUsersByAgence(Agence agence);
 
 }

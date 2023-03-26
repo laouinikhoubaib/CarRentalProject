@@ -32,9 +32,9 @@ public class ServiceAllEmail {
 	
 	@Autowired
 	Configuration configuration;
-	
-	@Autowired
-    UserRepository<User, Number> userRepository;
+
+    @Autowired
+    UserRepository userRepository;
 	
 	//private JavaMailSender javaMailSender;
 	

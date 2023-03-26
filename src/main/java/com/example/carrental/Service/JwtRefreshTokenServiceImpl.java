@@ -30,7 +30,7 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService
     JwtRefreshTokenRepository jwtRefreshTokenRepository;
 
     @Autowired
-    UserRepository<User, Number> userRepository;
+    UserRepository userRepository;
 
     @Autowired
     JwtProvider jwtProvider;

@@ -16,8 +16,7 @@ public interface AgenceRepository extends JpaRepository<Agence, Long>{
 
 
 
-//    @Query(nativeQuery = true, value = "SELECT u.* FROM users u WHERE u.agence_agence_id = :agence_agence_id")
-//    public List<User> findUsersByAgence(@Param("agence_agence_id") Long agence_agence_id);
+  //  Agence findByNom(String nom);
 
 
 }

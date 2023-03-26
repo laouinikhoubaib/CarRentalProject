@@ -16,7 +16,7 @@ import java.util.Optional;
 ;
 
 @Repository
-public interface UserRepository<C extends User, L extends Number> extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 	
     Optional<User> findByUsername(String username);
 
@@ -32,7 +32,7 @@ public interface UserRepository<C extends User, L extends Number> extends JpaRep
     void makeAdmin(@Param("username") String username);
 
 
-    List<User> findByAgence(Agence agence);
+   // List<User> findByAgence(Agence agence);
    
     
 }

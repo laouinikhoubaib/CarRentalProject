@@ -1,14 +1,15 @@
 package com.example.carrental.Models;
 
 
-import com.example.carrental.Enumerations.NomAgence;
 import com.example.carrental.Enumerations.TypeAgence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
+
 
 @Getter
 @Setter
@@ -24,30 +25,18 @@ public class Agence implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long agenceId;
 
-    @Column(name = "numeroAgence", nullable = false)
-    Integer numeroAgence;
+    @Column(name = "numero", nullable = false)
+    String numero;
 
-
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "nomAgence", nullable = false)
-    NomAgence nomAgence;
-
+    @Column(name = "nom", nullable = false)
+    String nom;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "typeagence", nullable = false)
     TypeAgence typeagence;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "agence")
+    @OneToMany(cascade = CascadeType.ALL ,mappedBy = "agence")
     Set<User> users;
-
-    public Agence(Integer numeroAgence, NomAgence nomAgence, TypeAgence typeagence, Set<User> users) {
-        this.numeroAgence = numeroAgence;
-        this.nomAgence = nomAgence;
-        this.typeagence = typeagence;
-        this.users = users;
-    }
 
     public Agence(Long agenceId) {
         this.agenceId = agenceId;
