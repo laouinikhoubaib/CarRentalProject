@@ -26,8 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.mail.MessagingException;
+import javax.persistence.TypedQuery;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -39,8 +41,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 @Service
 public class UserServiceImpl implements UserService
 {
-	
-    private final UserRepository<User, Number> userRepository;
+
+	private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     
@@ -55,31 +57,36 @@ public class UserServiceImpl implements UserService
 	AgenceRepository agenceRepository;
 
 
-
+	@Inject
+	private EntityManager entityManager;
 
 	@Autowired
 	NotificationRepository notificationRepository;
 
 
-    public UserServiceImpl(UserRepository<User, Number> userRepository, PasswordEncoder passwordEncoder )
-    {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-
-    }
+	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder)
+	{
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+	}
 
     @Override
-    public User saveUser(User user) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, io.jsonwebtoken.io.IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, IOException, MessagingException {
-    	isvalidUsernameAndEmail(EMPTY, user.getUsername(), user.getEmail());
-    	isValid(user.getPassword());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setLocked(false);
-        //user.setRegistrationDate(new Date());
-        User savedUser = userRepository.save(user);
-        emailService.sendWelcomeMail(savedUser.getUsername(), savedUser.getEmail());
-        return savedUser;
-    }
-    
+	public User saveUser(User user, String agenceName) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, io.jsonwebtoken.io.IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, IOException, MessagingException {
+		isvalidUsernameAndEmail(EMPTY, user.getUsername(), user.getEmail());
+		isValid(user.getPassword());
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setLocked(false);
+
+		TypedQuery<Agence> query = entityManager.createQuery("SELECT a FROM Agence a WHERE a.nom = :nomAgence", Agence.class);
+		query.setParameter("nomAgence", agenceName);
+		List<Agence> agences = query.getResultList();
+		Agence agence = agences.get(0);
+		user.setAgence(agence);
+		User savedUser = userRepository.save(user);
+		emailService.sendWelcomeMail(savedUser.getUsername(), savedUser.getEmail());
+		return savedUser;
+	}
+
 	@Override
     public User updateUser(User user) {
 
@@ -315,19 +322,11 @@ public class UserServiceImpl implements UserService
 
 	}
 
-	public void affectatUserToAgence(Long agenceId, Long userId){
-
-		User user=userRepository.findById(userId).get();
-		Agence agence=agenceRepository.findById(agenceId).get();
-		user.setAgence(agence);
-		userRepository.save(user);
-
-}
 
 
-	public List<User> getUsersByAgence(Agence agence) {
-		return userRepository.findByAgence(agence);
-	}
+//	public List<User> getUsersByAgence(Agence agence) {
+//		return userRepository.findByAgence(agence);
+//	}
 
 
 }

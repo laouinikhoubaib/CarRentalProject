@@ -46,9 +46,9 @@ public class AuthenticationServiceImpl implements AuthenticationService
     
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
-    @Autowired
-    private UserRepository<User, Number> userRepository;
+
+	@Autowired
+	UserRepository userRepository;
     
     @Autowired 
     private PasswordResetTokenRepository passwordResetTokenRepository;

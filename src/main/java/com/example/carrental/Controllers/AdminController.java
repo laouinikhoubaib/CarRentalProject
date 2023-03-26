@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/admin")//pre-path
-
+@CrossOrigin("http://localhost:4200")
 public class AdminController
 {
 
@@ -65,12 +65,12 @@ public class AdminController
     	return userService.allAdmins();
     }
 
-    @GetMapping("/{agenceId}/users")
-    public ResponseEntity<List<User>> getUsersByAgence(@PathVariable Long agenceId) {
-        Agence agence = new Agence(agenceId);
-        List<User> users = userService.getUsersByAgence(agence);
-        return ResponseEntity.ok(users);
-    }
+//    @GetMapping("/{agenceId}/users")
+//    public ResponseEntity<List<User>> getUsersByAgence(@PathVariable Long agenceId) {
+//        Agence agence = new Agence(agenceId);
+//        List<User> users = userService.getUsersByAgence(agence);
+//        return ResponseEntity.ok(users);
+//    }
 
 
 }

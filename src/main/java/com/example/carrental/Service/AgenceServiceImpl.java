@@ -2,6 +2,7 @@ package com.example.carrental.Service;
 
 
 import com.example.carrental.Models.Agence;
+import com.example.carrental.Models.User;
 import com.example.carrental.Repository.AgenceRepository;
 import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.ServiceInterfaces.AgenceService;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Set;
 
 
 @Slf4j
@@ -22,7 +23,8 @@ public class AgenceServiceImpl implements AgenceService {
 
 
 
-
+    @Autowired
+    UserRepository userrepository;
     @Autowired
     AgenceRepository agenceRepository;
 
@@ -41,8 +43,10 @@ public class AgenceServiceImpl implements AgenceService {
 
 
     @Override
-    public Agence saveAgence(Agence agence) {
+    public Agence addAgence(Agence agence) {
+
         return agenceRepository.save(agence);
+
     }
 
     @Override

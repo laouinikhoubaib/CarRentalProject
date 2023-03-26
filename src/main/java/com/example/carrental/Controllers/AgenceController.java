@@ -1,16 +1,22 @@
 package com.example.carrental.Controllers;
 
 
+import com.example.carrental.Exceptions.AgenceExist;
+import com.example.carrental.Exceptions.AgenceNotExist;
 import com.example.carrental.Models.Agence;
 import com.example.carrental.Models.User;
 import com.example.carrental.Repository.AgenceRepository;
 import com.example.carrental.ServiceInterfaces.AgenceService;
 import com.example.carrental.ServiceInterfaces.UserService;
+import com.example.carrental.security.UserPrincipal;
+import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +40,10 @@ public class AgenceController {
     }
 
     @PostMapping("/addAgence")
-    public ResponseEntity<Agence> createAgence(@RequestBody Agence agences) {
-        try {
-            Agence agence  = agenceRepository.save(new Agence(agences.getNumeroAgence(),agences.getNomAgence(),agences.getTypeagence(),agences.getUsers()));
-            return new ResponseEntity<>(agence, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @ResponseBody
+    public Agence addAgence(@RequestBody Agence agence){
+        return agenceService.addAgence(agence);
+
     }
 
     @DeleteMapping({"/deleteAgence/{agenceId}"})
@@ -76,28 +79,6 @@ public class AgenceController {
         return agenceService.findAllAgences();
     }
 
-//    @GetMapping("/getBynom/nomAgence")
-//    public ResponseEntity<List<Agence>> getAgence(@RequestParam(required = false) String nomAgence) {
-//        try {
-//            List<Agence> agences = new ArrayList<Agence>();
-//            if (nomAgence == null)
-//                agenceRepository.findAll().forEach(agences::add);
-//            else
-//                agenceRepository.getAgence(nomAgence).forEach(agences::add);
-//            if (agences.isEmpty()) {
-//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//            }
-//            return new ResponseEntity<>(agences, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-//
-    @PostMapping("/affectatUserToagence/{userId}/{agenceId}")
-    @ResponseBody
-    public void affectatUserToAgence(@PathVariable("userId") Long userId,@PathVariable("agenceId")Long agenceId) throws IOException {
 
-        userService.affectatUserToAgence(agenceId,userId);
-   }
 
 }

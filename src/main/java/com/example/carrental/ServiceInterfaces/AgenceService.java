@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface AgenceService {
 
-    public Agence saveAgence(Agence agence) throws AgenceNotExist, AgenceExist, MessagingException, IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, java.io.IOException;
+    public Agence addAgence(Agence agence);
 
     List<Agence> getAgences();
 

@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+
 @RestController
 @RequestMapping("api/authentication")
 public class AuthenticationController {
@@ -53,7 +54,7 @@ public class AuthenticationController {
     @Autowired
     AgenceRepository agenceRepository;
     @Autowired
-    UserRepository<User, Number> userRepository;
+    UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -62,75 +63,66 @@ public class AuthenticationController {
     private JwtRefreshTokenService jwtRefreshTokenService;
 
 
-    public static String uploadDirectory = System.getProperty("user.dir")+"/uploads/";
+    public static String uploadDirectory = System.getProperty("user.dir") + "/uploads/";
     public static String uploadDirectory22 = "C:\\Users\\khoubaib\\Desktop\\PFE\\uploads";
-   public static String uploadDirectory2 = "C:\\Users\\khoubaib\\Desktop\\PFE\\upload";
+    public static String uploadDirectory2 = "C:\\Users\\khoubaib\\Desktop\\PFE\\upload";
 
     ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    @PostMapping(value="sign-up", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})//api/authentication/sign-up
-    public ResponseEntity<User> signUp(@RequestPart("user") String user, @RequestPart("file") MultipartFile file) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, IOException, io.jsonwebtoken.io.IOException, TemplateException
-    {
+    @PostMapping(value = "sign-up", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<User> signUp(@RequestPart("user") String user, @RequestPart("file") MultipartFile file, @RequestPart("agence") String nomAgence) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, IOException, io.jsonwebtoken.io.IOException, TemplateException {
 
-        //upload file
-
-        File convertFile = new File(uploadDirectory+file.getOriginalFilename());
+        File convertFile = new File(uploadDirectory + file.getOriginalFilename());
         convertFile.createNewFile();
         FileOutputStream fout = new FileOutputStream(convertFile);
         fout.write(file.getBytes());
         fout.close();
         Media profilPicture = new Media();
-        profilPicture.setImagenUrl(uploadDirectory2+file.getOriginalFilename());
+        profilPicture.setImagenUrl(uploadDirectory2 + file.getOriginalFilename());
         profilPicture = mediaRepository.save(profilPicture);
         User userData = objectMapper.readValue(user, User.class);
         userData.setProfilPicture(profilPicture);
         userData.setProfilPic(file.getOriginalFilename());
-        userService.saveUser(userData);
-
+        userService.saveUser(userData, nomAgence);
         return new ResponseEntity<>(userData, HttpStatus.CREATED);
-
     }
 
+
     @PostMapping("sign-in")//api/authentication/sign-in
-    public ResponseEntity<?> signIn(@RequestBody User user) throws com.example.carrental.Exceptions.AccountLockedException
-    {
+    public ResponseEntity<?> signIn(@RequestBody User user) throws com.example.carrental.Exceptions.AccountLockedException {
         User u = userRepository.findByUsername(user.getUsername()).orElse(null);
         if (u != null) {
             if (!u.isLocked()) {
-                if (u.getLoginAttempts() != 4 && !passwordEncoder.matches(user.getPassword(), u.getPassword())){
+                if (u.getLoginAttempts() != 4 && !passwordEncoder.matches(user.getPassword(), u.getPassword())) {
                     u.setLoginAttempts(u.getLoginAttempts() + 1);
                     userRepository.save(u);
-                    if (u.getLoginAttempts()==4) {
+                    if (u.getLoginAttempts() == 4) {
                         u.setLocked(true);
                         userRepository.save(u);
                         throw new com.example.carrental.Exceptions.AccountLockedException("Your account has been locked, please contact the administration !");
-                    }
-                    else {
+                    } else {
                         return new ResponseEntity<>(authenticationService.signInAndReturnJWT(user), HttpStatus.OK);
                     }
-                }
-                else if (u.getLoginAttempts() != 4 && passwordEncoder.matches(user.getPassword(), u.getPassword())){
+
+                } else if (u.getLoginAttempts() != 4 && passwordEncoder.matches(user.getPassword(), u.getPassword())) {
                     u.setLoginAttempts(0);
                     userRepository.save(u);
                     return new ResponseEntity<>(authenticationService.signInAndReturnJWT(user), HttpStatus.OK);
-                }
-                else {
+                } else {
                     throw new com.example.carrental.Exceptions.AccountLockedException("Your account has been locked, please contact the administration !");
                 }
-            }
-            else {
+            } else {
                 throw new com.example.carrental.Exceptions.AccountLockedException("Your account has been locked, please contact the administration !");
             }
-        }
-        else {
+
+        } else {
             return new ResponseEntity<>(authenticationService.signInAndReturnJWT(user), HttpStatus.OK);
         }
 
     }
 
     @PostMapping("refresh-token")//api/authentication/refresh-token?token=
-    public ResponseEntity<?> refreshToken(@RequestParam String token)
-    {
+    public ResponseEntity<?> refreshToken(@RequestParam String token) {
         return ResponseEntity.ok(jwtRefreshTokenService.generateAccessTokenFromRefreshToken(token));
     }
 
@@ -140,7 +132,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/reset-password/new")
-    public ResponseEntity<?> updatePassword(@RequestParam String token, @RequestBody String newPassword) throws ResetPasswordException, ResetPasswordTokenException{
+    public ResponseEntity<?> updatePassword(@RequestParam String token, @RequestBody String newPassword) throws ResetPasswordException, ResetPasswordTokenException {
         authenticationService.updatePassword(token, newPassword);
         return new ResponseEntity<>("Your password has been successfully updated !", HttpStatus.OK);
     }
