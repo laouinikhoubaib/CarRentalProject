@@ -81,7 +81,15 @@ public class UserController
     	return userService.getUser(userId);
     }
 
-
+    @GetMapping("/same-agence")
+    public ResponseEntity<List<User>> getUsersBySameAgence(@RequestParam("userId") Long userId) {
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<User> users = userService.findUsersByAgence(user);
+        return ResponseEntity.ok(users);
+    }
 
     
 }

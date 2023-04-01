@@ -62,6 +62,8 @@ public interface UserService
     void markNotifAsUnRead(Long idNotif);
 
 
-  //  public List<User> getUsersByAgence(Agence agence);
+    public User findUserById(Long userId);
+    public List<User> findUsersByAgence(User user);
 
+    public List<User> findAdminByNomAgence(String nomAgence);
 }

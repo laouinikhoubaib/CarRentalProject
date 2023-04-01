@@ -69,7 +69,9 @@ public class UserServiceImpl implements UserService
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 	}
-
+	public User findUserById(Long userId) {
+		return userRepository.findById(userId).orElse(null);
+	}
     @Override
 	public User saveUser(User user, String agenceName) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, io.jsonwebtoken.io.IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, IOException, MessagingException {
 		isvalidUsernameAndEmail(EMPTY, user.getUsername(), user.getEmail());
@@ -321,12 +323,13 @@ public class UserServiceImpl implements UserService
 		notificationRepository.save(notification);
 
 	}
+	@Override
+	public List<User> findUsersByAgence(User user) {
+		return userRepository.findByAgence(user.getAgence());
+	}
 
-
-
-//	public List<User> getUsersByAgence(Agence agence) {
-//		return userRepository.findByAgence(agence);
-//	}
-
-
+	@Override
+	public List<User> findAdminByNomAgence(String nomAgence) {
+		return userRepository.findAdminByNomAgence(nomAgence, Role.ADMIN);
+	}
 }

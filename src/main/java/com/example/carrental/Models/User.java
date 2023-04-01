@@ -47,7 +47,7 @@ public class User implements Serializable {
     String profilPic;
 
     @Temporal(TemporalType.DATE)
-    Date registrationDate;
+    Date birthDate;
 
     @Transient
     String accessToken;
@@ -68,4 +68,8 @@ public class User implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agence_id", referencedColumnName = "agenceId")
     private Agence agence;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL ,mappedBy = "user")
+    Set<Vehicule> vehicules;
 }

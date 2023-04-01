@@ -1,6 +1,7 @@
 package com.example.carrental.Repository;
 
 
+import com.example.carrental.Enumerations.TypeAgence;
 import com.example.carrental.Models.Agence;
 import com.example.carrental.Models.User;
 import org.springframework.data.jpa.repository.Query;
@@ -15,8 +16,11 @@ import java.util.List;
 public interface AgenceRepository extends JpaRepository<Agence, Long>{
 
 
+    @Query("SELECT a FROM Agence a WHERE a.nom = :nom")
+    Agence findByNom(@Param("nom") String nom);
 
-  //  Agence findByNom(String nom);
+
+    List<Agence> findByTypeagence(TypeAgence typeAgence);
 
 
 }
