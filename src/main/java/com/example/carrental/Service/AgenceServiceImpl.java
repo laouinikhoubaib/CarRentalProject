@@ -1,6 +1,7 @@
 package com.example.carrental.Service;
 
 
+import com.example.carrental.Enumerations.TypeAgence;
 import com.example.carrental.Models.Agence;
 import com.example.carrental.Models.User;
 import com.example.carrental.Repository.AgenceRepository;
@@ -74,5 +75,11 @@ public class AgenceServiceImpl implements AgenceService {
         return agenceRepository.save(agence);
     }
 
+    public Agence getAgenceByNom(String nom) {
+        return agenceRepository.findByNom(nom);
+    }
 
+    public List<Agence> findByTypeAgence(TypeAgence typeAgence) {
+        return agenceRepository.findByTypeagence(typeAgence);
+    }
 }

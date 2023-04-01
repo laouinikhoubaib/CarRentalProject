@@ -1,5 +1,6 @@
 package com.example.carrental.ServiceInterfaces;
 
+import com.example.carrental.Enumerations.TypeAgence;
 import com.example.carrental.Exceptions.*;
 import com.example.carrental.Models.Agence;
 import com.example.carrental.Models.User;
@@ -25,6 +26,9 @@ public interface AgenceService {
 
     List<Agence> findAllAgences();
 
+    public Agence getAgenceByNom(String nom);
 
+
+    public List<Agence> findByTypeAgence(TypeAgence typeAgence);
 
 }

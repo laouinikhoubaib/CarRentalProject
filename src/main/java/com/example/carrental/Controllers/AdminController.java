@@ -65,12 +65,10 @@ public class AdminController
     	return userService.allAdmins();
     }
 
-//    @GetMapping("/{agenceId}/users")
-//    public ResponseEntity<List<User>> getUsersByAgence(@PathVariable Long agenceId) {
-//        Agence agence = new Agence(agenceId);
-//        List<User> users = userService.getUsersByAgence(agence);
-//        return ResponseEntity.ok(users);
-//    }
-
+    @GetMapping("/{nomAgence}")
+    public ResponseEntity<List<User>> findAdminByNomAgence(@PathVariable String nomAgence) {
+        List<User> users = userService.findAdminByNomAgence(nomAgence);
+        return ResponseEntity.ok(users);
+    }
 
 }

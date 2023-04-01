@@ -31,8 +31,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("update User set role = 'ADMIN' where username = :username")
     void makeAdmin(@Param("username") String username);
 
+    @Query("SELECT u FROM User u JOIN u.agence a WHERE a.nom = :nomAgence AND u.role = :role")
+    List<User> findAdminByNomAgence(@Param("nomAgence") String nomAgence, @Param("role") Role role);
 
-   // List<User> findByAgence(Agence agence);
+    List<User> findByAgence(Agence agence);
    
     
 }

@@ -1,24 +1,15 @@
 package com.example.carrental.Controllers;
 
 
-import com.example.carrental.Exceptions.AgenceExist;
-import com.example.carrental.Exceptions.AgenceNotExist;
+import com.example.carrental.Enumerations.TypeAgence;
 import com.example.carrental.Models.Agence;
-import com.example.carrental.Models.User;
 import com.example.carrental.Repository.AgenceRepository;
 import com.example.carrental.ServiceInterfaces.AgenceService;
 import com.example.carrental.ServiceInterfaces.UserService;
-import com.example.carrental.security.UserPrincipal;
-import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -47,6 +38,7 @@ public class AgenceController {
     }
 
     @DeleteMapping({"/deleteAgence/{agenceId}"})
+    @ResponseBody
     public ResponseEntity<Agence> deleteAgence(@PathVariable("agenceId") Long agenceId) {
         agenceService.deleteAgence(agenceId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -80,5 +72,19 @@ public class AgenceController {
     }
 
 
+    @GetMapping("/{nom}")
+    public ResponseEntity<Agence> getAgenceByNom(@PathVariable String nom) {
+        Agence agence = agenceService.getAgenceByNom(nom);
+        if (agence == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(agence);
+    }
+
+    @GetMapping("/typeagence/{typeAgence}")
+    public ResponseEntity<List<Agence>> findByTypeAgence(@PathVariable("typeAgence") TypeAgence typeAgence) {
+        List<Agence> agences = agenceService.findByTypeAgence(typeAgence);
+        return ResponseEntity.ok(agences);
+    }
 
 }
