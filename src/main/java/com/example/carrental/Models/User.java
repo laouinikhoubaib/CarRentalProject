@@ -62,8 +62,8 @@ public class User implements Serializable {
     @OneToOne
     Media profilPicture;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    Set<Notification> notifications;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    Set<Notification> notifications;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agence_id", referencedColumnName = "agenceId")
