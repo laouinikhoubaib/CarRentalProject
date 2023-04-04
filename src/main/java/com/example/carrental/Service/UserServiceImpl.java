@@ -7,7 +7,7 @@ import com.example.carrental.Exceptions.PasswordValidException;
 import com.example.carrental.Exceptions.UsernameExist;
 import com.example.carrental.Exceptions.UsernameNotExist;
 import com.example.carrental.Models.Agence;
-import com.example.carrental.Models.Notification;
+//import com.example.carrental.Models.Notification;
 import com.example.carrental.Models.User;
 import com.example.carrental.Repository.*;
 import com.example.carrental.ServiceInterfaces.UserService;
@@ -60,8 +60,8 @@ public class UserServiceImpl implements UserService
 	@Inject
 	private EntityManager entityManager;
 
-	@Autowired
-	NotificationRepository notificationRepository;
+//	@Autowired
+//	NotificationRepository notificationRepository;
 
 
 	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder)
@@ -282,47 +282,47 @@ public class UserServiceImpl implements UserService
 		return result;
 	}
 
-	@Override
-	public List<Notification> findNotificationsByUser(Long userId) {
-		return notificationRepository.userNotification(userId);
-	}
-
-	@Override
-	public Notification addNotification(Notification notification, String username) {
-		User user = userRepository.findByUsername(username).get();
-		notification.setRead(false);
-		notification.setUser(user);
-		return notificationRepository.save(notification);
-	}
-
-	@Override
-	public void deleteNotification(Long notificationId) {
-		Notification notif = notificationRepository.findById(notificationId).orElse(null);
-		notificationRepository.delete(notif);
-
-	}
-
-	@Override
-	public List<Notification> findAllNotifications() {
-		// TODO Auto-generated method stub
-		return notificationRepository.findAll();
-	}
-
-	@Override
-	public void markNotifAsRead(Long  idNotif) {
-		Notification notification = notificationRepository.findById(idNotif).orElse(null);
-		notification.setRead(true);
-		notificationRepository.save(notification);
-
-	}
-
-	@Override
-	public void markNotifAsUnRead(Long idNotif) {
-		Notification notification = notificationRepository.findById(idNotif).orElse(null);
-		notification.setRead(false);
-		notificationRepository.save(notification);
-
-	}
+//	@Override
+//	public List<Notification> findNotificationsByUser(Long userId) {
+//		return notificationRepository.userNotification(userId);
+//	}
+//
+//	@Override
+//	public Notification addNotification(Notification notification, String username) {
+//		User user = userRepository.findByUsername(username).get();
+//		notification.setRead(false);
+//		notification.setUser(user);
+//		return notificationRepository.save(notification);
+//	}
+//
+//	@Override
+//	public void deleteNotification(Long notificationId) {
+//		Notification notif = notificationRepository.findById(notificationId).orElse(null);
+//		notificationRepository.delete(notif);
+//
+//	}
+//
+//	@Override
+//	public List<Notification> findAllNotifications() {
+//		// TODO Auto-generated method stub
+//		return notificationRepository.findAll();
+//	}
+//
+//	@Override
+//	public void markNotifAsRead(Long  idNotif) {
+//		Notification notification = notificationRepository.findById(idNotif).orElse(null);
+//		notification.setRead(true);
+//		notificationRepository.save(notification);
+//
+//	}
+//
+//	@Override
+//	public void markNotifAsUnRead(Long idNotif) {
+//		Notification notification = notificationRepository.findById(idNotif).orElse(null);
+//		notification.setRead(false);
+//		notificationRepository.save(notification);
+//
+//	}
 	@Override
 	public List<User> findUsersByAgence(User user) {
 		return userRepository.findByAgence(user.getAgence());
