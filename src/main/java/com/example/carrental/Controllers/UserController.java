@@ -2,6 +2,7 @@ package com.example.carrental.Controllers;
 
 
 //import com.example.carrental.Models.Notification;
+import com.example.carrental.Models.Notification;
 import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.ServiceInterfaces.UserService;
 import com.example.carrental.security.UserPrincipal;
@@ -44,31 +45,31 @@ public class UserController
     
 
     
-//    @PostMapping("/notification/save/{username}")
-//    public Notification addNotification(@RequestBody Notification notification,@PathVariable(name="username") String username) {
-//    	return userService.addNotification(notification, username);
-//    }
-//
-//    @DeleteMapping("/notification/delete/{notificationId}")
-//    public void deleteNotification(@PathVariable(name="notificationId") Long notificationId) {
-//    	userService.deleteNotification(notificationId);
-//    }
-//
-//    @GetMapping("/notifications/all")
-//    public List<Notification> findAllNotifications() {
-//    	return userService.findAllNotifications();
-//    }
-//
-//
-//    @PutMapping("/notification/read")
-//    public void markNotifAsRead(@RequestBody Long idNotif) {
-//    	userService.markNotifAsRead(idNotif);
-//    }
-//
-//    @PutMapping("/notification/unread")
-//    public void markNotifAsUnRead(@RequestBody Long idNotif) {
-//    	userService.markNotifAsUnRead(idNotif);
-//    }
+    @PostMapping("/notification/save/{username}")
+    public Notification addNotification(@RequestBody Notification notification, @PathVariable(name="username") String username) {
+    	return userService.addNotification(notification, username);
+    }
+
+    @DeleteMapping("/notification/delete/{notificationId}")
+    public void deleteNotification(@PathVariable(name="notificationId") Long notificationId) {
+    	userService.deleteNotification(notificationId);
+    }
+
+    @GetMapping("/notifications/all")
+    public List<Notification> findAllNotifications() {
+    	return userService.findAllNotifications();
+    }
+
+
+    @PutMapping("/notification/read")
+    public void markNotifAsRead(@RequestBody Long idNotif) {
+    	userService.markNotifAsRead(idNotif);
+    }
+
+    @PutMapping("/notification/unread")
+    public void markNotifAsUnRead(@RequestBody Long idNotif) {
+    	userService.markNotifAsUnRead(idNotif);
+    }
 
     @GetMapping("/picture")
     public String getUserProfilPic( @AuthenticationPrincipal UserPrincipal user) {

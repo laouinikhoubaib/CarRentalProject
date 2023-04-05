@@ -10,6 +10,9 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
 import io.jsonwebtoken.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,7 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,8 +39,9 @@ public class ServiceAllEmail {
 
     @Autowired
     UserRepository userRepository;
-	
-	//private JavaMailSender javaMailSender;
+
+    @Autowired
+    private JavaMailSender emailSender;
 	
     public void sendNewPasswordEmail(String firstName, String password, String email) throws MessagingException {
         Message message = createEmail(firstName, password, email);
@@ -138,7 +143,34 @@ public class ServiceAllEmail {
 
 
 
+    public void sendSimpleMessage(
+            String to, String subject, String text,String pathToAttachment) throws MessagingException {
 
+        MimeMessage message = emailSender.createMimeMessage();
+
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setFrom("laouinikhoubaib@gmail.com");
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(text);
+
+        FileSystemResource file
+                = new FileSystemResource(new File(pathToAttachment));
+        helper.addAttachment(file.getFilename(), file);
+
+        emailSender.send(message);
+        System.out.println("Email sent successufully");
+    }
+    public void sendSimpleMessage2(String to, String subject, String text)
+    {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("laouinikhoubaib@gmail.com");
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        emailSender.send(message);
+    }
 
 
 

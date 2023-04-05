@@ -3,8 +3,10 @@ package com.example.carrental.Service;
 
 import com.example.carrental.Enumerations.TypeAgence;
 import com.example.carrental.Models.Agence;
+import com.example.carrental.Models.Notification;
 import com.example.carrental.Models.User;
 import com.example.carrental.Repository.AgenceRepository;
+import com.example.carrental.Repository.NotificationRepository;
 import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.ServiceInterfaces.AgenceService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +32,8 @@ public class AgenceServiceImpl implements AgenceService {
     @Autowired
     AgenceRepository agenceRepository;
 
+    @Autowired
+    NotificationRepository notificationRepository;
     public AgenceServiceImpl(AgenceRepository agenceRepository) {
         this.agenceRepository = agenceRepository;
 
@@ -46,6 +51,12 @@ public class AgenceServiceImpl implements AgenceService {
     @Override
     public Agence addAgence(Agence agence) {
 
+        Agence u = agenceRepository.save(agence);
+        Notification notif = new Notification();
+        notif.setCreatedAt(new Date());
+        notif.setMessage("Nous sommes heureux d'avoir " + u.getNom()+ " notre nouvelle agnce !");
+        notif.setRead(false);
+        notificationRepository.save(notif);
         return agenceRepository.save(agence);
 
     }
