@@ -8,6 +8,7 @@ import com.example.carrental.Exceptions.UsernameExist;
 import com.example.carrental.Exceptions.UsernameNotExist;
 import com.example.carrental.Models.Agence;
 //import com.example.carrental.Models.Notification;
+import com.example.carrental.Models.Notification;
 import com.example.carrental.Models.User;
 import com.example.carrental.Repository.*;
 import com.example.carrental.ServiceInterfaces.UserService;
@@ -60,8 +61,8 @@ public class UserServiceImpl implements UserService
 	@Inject
 	private EntityManager entityManager;
 
-//	@Autowired
-//	NotificationRepository notificationRepository;
+	@Autowired
+	NotificationRepository notificationRepository;
 
 
 	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder)
@@ -85,6 +86,12 @@ public class UserServiceImpl implements UserService
 		Agence agence = agences.get(0);
 		user.setAgence(agence);
 		User savedUser = userRepository.save(user);
+		Notification notif = new Notification();
+		notif.setCreatedAt(new Date());
+		notif.setMessage("Nous sommes heureux d'avoir"  + savedUser.getUsername()+   " dans notre communauté !");
+		notif.setRead(false);
+		notif.setUser(savedUser);
+		notificationRepository.save(notif);
 		emailService.sendWelcomeMail(savedUser.getUsername(), savedUser.getEmail());
 		return savedUser;
 	}
@@ -129,6 +136,13 @@ public class UserServiceImpl implements UserService
 		User u = userRepository.findByUsername(username).get();
 		u.setLoginAttempts(0);
 		u.setLocked(false);
+
+		Notification notif = new Notification();
+		notif.setCreatedAt(new Date());
+		notif.setMessage("Nous sommes heureux d'avoir "  + u.getUsername()+   " encore parmi nous !");
+		notif.setRead(false);
+		notif.setUser(u);
+		notificationRepository.save(notif);
 		userRepository.save(u);
 	}
 
@@ -148,21 +162,21 @@ public class UserServiceImpl implements UserService
 	        if(StringUtils.isNotBlank(currentUsername)) {
 	            User currentUser = findByUsername(currentUsername).orElse(null);
 	            if(currentUser == null) {
-	                throw new UsernameNotExist("No user found by username: " + currentUsername);
+	                throw new UsernameNotExist("Aucun utilisateur trouvé par nom d’utilisateur: " + currentUsername);
 	            }
 	            if(userByNewUsername != null && !currentUser.getUserId().equals(userByNewUsername.getUserId())) {
-	                throw new UsernameExist("Username already exists");
+	                throw new UsernameExist("Username exist dèja");
 	            }
 	            if(userByNewEmail != null && !currentUser.getUserId().equals(userByNewEmail.getUserId())) {
-	                throw new EmailExist("Email are already exists");
+	                throw new EmailExist("Email exist dèja");
 	            }
 	            return currentUser;
 	        } else {
 	            if(userByNewUsername != null) {
-	                throw new UsernameExist("Username already exists");
+	                throw new UsernameExist("Username exist dèja");
 	            }
 	            if(userByNewEmail != null) {
-	                throw new EmailExist("Email are already exists");
+	                throw new EmailExist("Email exist dèja");
 	            }
 	            return null;
 	        }
@@ -255,13 +269,27 @@ public class UserServiceImpl implements UserService
 		u.setLoginAttempts(0);
 		u.setLocked(true);
 		userRepository.save(u);
+		Notification notif = new Notification();
+		notif.setCreatedAt(new Date());
+		notif.setMessage("Pour des raisons de sécurité "  + u.getUsername()+   " sera blocké!");
+		notif.setRead(false);
+		notif.setUser(u);
+		notificationRepository.save(notif);
 
 	}
 
 	@Override
 	@Transactional //Transactional is required when executing an update/delete query.
 	public void makeAdmin(String username) {
+
 		userRepository.makeAdmin(username);
+		User u = userRepository.findByUsername(username).get();
+		Notification notif = new Notification();
+		notif.setCreatedAt(new Date());
+		notif.setMessage("Félécitations "  + u.getUsername()+   " est notre nouveau admin!");
+		notif.setRead(false);
+		notif.setUser(u);
+		notificationRepository.save(notif);
 
 	}
 	@Override
@@ -282,47 +310,47 @@ public class UserServiceImpl implements UserService
 		return result;
 	}
 
-//	@Override
-//	public List<Notification> findNotificationsByUser(Long userId) {
-//		return notificationRepository.userNotification(userId);
-//	}
-//
-//	@Override
-//	public Notification addNotification(Notification notification, String username) {
-//		User user = userRepository.findByUsername(username).get();
-//		notification.setRead(false);
-//		notification.setUser(user);
-//		return notificationRepository.save(notification);
-//	}
-//
-//	@Override
-//	public void deleteNotification(Long notificationId) {
-//		Notification notif = notificationRepository.findById(notificationId).orElse(null);
-//		notificationRepository.delete(notif);
-//
-//	}
-//
-//	@Override
-//	public List<Notification> findAllNotifications() {
-//		// TODO Auto-generated method stub
-//		return notificationRepository.findAll();
-//	}
-//
-//	@Override
-//	public void markNotifAsRead(Long  idNotif) {
-//		Notification notification = notificationRepository.findById(idNotif).orElse(null);
-//		notification.setRead(true);
-//		notificationRepository.save(notification);
-//
-//	}
-//
-//	@Override
-//	public void markNotifAsUnRead(Long idNotif) {
-//		Notification notification = notificationRepository.findById(idNotif).orElse(null);
-//		notification.setRead(false);
-//		notificationRepository.save(notification);
-//
-//	}
+	@Override
+	public List<Notification> findNotificationsByUser(Long userId) {
+		return notificationRepository.userNotification(userId);
+	}
+
+	@Override
+	public Notification addNotification(Notification notification, String username) {
+		User user = userRepository.findByUsername(username).get();
+		notification.setRead(false);
+		notification.setUser(user);
+		return notificationRepository.save(notification);
+	}
+
+	@Override
+	public void deleteNotification(Long notificationId) {
+		Notification notif = notificationRepository.findById(notificationId).orElse(null);
+		notificationRepository.delete(notif);
+
+	}
+
+	@Override
+	public List<Notification> findAllNotifications() {
+		// TODO Auto-generated method stub
+		return notificationRepository.findAll();
+	}
+
+	@Override
+	public void markNotifAsRead(Long  idNotif) {
+		Notification notification = notificationRepository.findById(idNotif).orElse(null);
+		notification.setRead(true);
+		notificationRepository.save(notification);
+
+	}
+
+	@Override
+	public void markNotifAsUnRead(Long idNotif) {
+		Notification notification = notificationRepository.findById(idNotif).orElse(null);
+		notification.setRead(false);
+		notificationRepository.save(notification);
+
+	}
 	@Override
 	public List<User> findUsersByAgence(User user) {
 		return userRepository.findByAgence(user.getAgence());

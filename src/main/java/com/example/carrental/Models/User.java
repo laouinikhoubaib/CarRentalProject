@@ -62,8 +62,9 @@ public class User implements Serializable {
     @OneToOne
     Media profilPicture;
 
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    Set<Notification> notifications;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
+    Set<Notification> notifications;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agence_id", referencedColumnName = "agenceId")
@@ -72,4 +73,7 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL ,mappedBy = "user")
     Set<Vehicule> vehicules;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy="user")
+    private Set<Complaint>complaint;
 }
