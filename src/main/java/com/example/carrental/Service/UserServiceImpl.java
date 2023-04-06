@@ -360,4 +360,9 @@ public class UserServiceImpl implements UserService
 	public List<User> findAdminByNomAgence(String nomAgence) {
 		return userRepository.findAdminByNomAgence(nomAgence, Role.ADMIN);
 	}
+
+	@Override
+	public List<User> getUserByAgence(Long agenceId) {
+		return userRepository.findByAgenceAgenceId(agenceId);
+	}
 }
