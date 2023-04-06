@@ -33,16 +33,21 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Autowired
     NotificationRepository notificationRepository;
 
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
-    public Complaint addComplaint(Complaint T) {
+    public Complaint addComplaint(Complaint T, Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        T.setUser(user);
         Complaint complaint = Crepo.save(T);
         Notification notif = new Notification();
         notif.setCreatedAt(new Date());
         notif.setMessage("Réclamation " + complaint.getComplaint_id()+ "  est  ajoutée avec succès !");
         notif.setRead(false);
         notificationRepository.save(notif);
-        return complaint;
+        return Crepo.save(complaint);
     }
 
     @Override
@@ -74,30 +79,34 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public Complaint updateComplaint2(Integer id) throws MessagingException {
+    public Complaint updateComplaint2(Integer id, Long userId) throws MessagingException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         Complaint oldComplaint = Crepo.getOne(id);
+        User user = userRepository.getOne(userId);
+        String email = oldComplaint.getUser().getEmail();
+        String firstName = oldComplaint.getUser().getUsername();
+        Date requestDate = oldComplaint.getComplaintDate();
 
-        String Email=oldComplaint.getUser().getEmail();
-        String fname=oldComplaint.getUser().getUsername();
-        Date requestDate= (Date) oldComplaint.getComplaintDate();
-        if (oldComplaint.isEtat()==false)
-        {
+        if (oldComplaint.isEtat() == false) {
             oldComplaint.setComplaint_status(ComplaintStatus.treated);
             oldComplaint.setEtat(true);
-            emailService.sendSimpleMessage(Email, "Enregistrez votre Réclamation demandée sur "+requestDate+""+ "sous id" +oldComplaint.getComplaint_id(),
-                    "Bonjour " + " " +fname+ "" +"votre plainte est traitée avec succès à"+""+now,"/Users/khoubaib/Desktop/khoubaib.jpg");
+            oldComplaint.setUser(user);
+
+            emailService.sendSimpleMessage(email, "Enregistrez votre Réclamation demandée sur " + requestDate + " sous id " + oldComplaint.getComplaint_id(),
+                    "Bonjour " + firstName + ", votre plainte est traitée avec succès à " + now, "/Users/khoubaib/Desktop/khoubaib.jpg");
         }
 
+        Notification notif = new Notification();
+        Complaint c = Crepo.findById(id).orElse(null);
+        notif.setCreatedAt(new Date());
+        notif.setMessage("Réclamation " + c.getComplaint_id()+ "  est  traitée !");
+        notif.setRead(false);
+        notificationRepository.save(notif);
         return Crepo.save(oldComplaint);
-        
-    }
-    public void affectatComplaintToUser(int Complaint_id, long id) {
-        User user=ur.findById(id).get();
-        Complaint complaint=Crepo.findById(Complaint_id).get();
-        complaint.setUser(user);
-        Crepo.save(complaint);
+
 
     }
+
+
 }

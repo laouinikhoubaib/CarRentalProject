@@ -95,6 +95,10 @@ public class UserController
         List<User> users = userService.findUsersByAgence(user);
         return ResponseEntity.ok(users);
     }
-
+    @GetMapping("/agence/{id}")
+    public ResponseEntity<List<User>> getUserByAgence(@PathVariable("id") Long agenceId) {
+        List<User> users = userService.getUserByAgence(agenceId);
+        return ResponseEntity.ok(users);
+    }
     
 }

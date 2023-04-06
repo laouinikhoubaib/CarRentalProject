@@ -35,6 +35,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAdminByNomAgence(@Param("nomAgence") String nomAgence, @Param("role") Role role);
 
     List<User> findByAgence(Agence agence);
-   
+
+
+    List<User> findByAgenceAgenceId(Long agenceId);
     
 }
