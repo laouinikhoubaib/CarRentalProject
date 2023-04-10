@@ -306,7 +306,11 @@ public class UserServiceImpl implements UserService
 			if (u.getRole().name().equals("ADMIN")) {
 				result.add(u);
 			}
-		}
+				else if(u.getRole().name().equals(("ADMIN_FRANCHISE"))){
+					result.add(u);
+				}
+			}
+
 		return result;
 	}
 
@@ -364,5 +368,14 @@ public class UserServiceImpl implements UserService
 	@Override
 	public List<User> getUserByAgence(Long agenceId) {
 		return userRepository.findByAgenceAgenceId(agenceId);
+	}
+
+	@Override
+	public String getAgencyNameByUserId(Long userId) {
+		User user = userRepository.findById(userId).orElse(null);
+		if(user != null && user.getAgence() != null) {
+			return user.getAgence().getNom();
+		}
+		return null;
 	}
 }

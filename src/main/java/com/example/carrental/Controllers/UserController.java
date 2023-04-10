@@ -15,11 +15,13 @@ import com.example.carrental.Models.User;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
-@RequestMapping("api/user")//pre-path
+@RequestMapping("api/user")
 public class UserController
 {
 		
@@ -99,6 +101,17 @@ public class UserController
     public ResponseEntity<List<User>> getUserByAgence(@PathVariable("id") Long agenceId) {
         List<User> users = userService.getUserByAgence(agenceId);
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/{userId}/agencyName")
+    public ResponseEntity<Map<String, String>> getAgencyNameByUserId(@PathVariable Long userId) {
+        String agencyName = userService.getAgencyNameByUserId(userId);
+        if(agencyName == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Map<String, String> response = new HashMap<>();
+        response.put("nom", agencyName);
+        return ResponseEntity.ok(response);
     }
     
 }
