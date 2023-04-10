@@ -2,11 +2,13 @@ package com.example.carrental.Controllers;
 
 
 
+import com.example.carrental.Enumerations.ComplaintType;
 import com.example.carrental.Models.Complaint;
 import com.example.carrental.Models.User;
 import com.example.carrental.ServiceInterfaces.ComplaintService;
 import com.example.carrental.ServiceInterfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/complaint")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ComplaintController {
 
 
@@ -35,15 +36,10 @@ public class ComplaintController {
         return complaintService.addComplaint(complaint, userId);
     }
 
-    @DeleteMapping("/deleteComplaint/{Complaint_id}")
-    public void deleteComplaint(@PathVariable("Complaint_id") Integer id) {
+    @DeleteMapping("/deleteComplaint/{ComplaintId}")
+    public void deleteComplaint(@PathVariable("ComplaintId") Integer id) {
         complaintService.deleteComplaint(id);
 
-    }
-
-    @PutMapping("/updateCompalaint/{Compalaint-id}")
-    public void updateComplaint(@RequestBody Complaint newcomplaint, @PathVariable("Compalaint-id") int idComplaint) {
-        complaintService.updateComplaint(newcomplaint, idComplaint);
     }
 
     @GetMapping("/retrieveAllComplaints")
@@ -53,12 +49,20 @@ public class ComplaintController {
     }
 
 
-    @PutMapping("traiter/{id}")
-    public ResponseEntity<Complaint> updateComplaint2(@PathVariable Integer id, @RequestBody Complaint complaint, @RequestParam Long userId) throws MessagingException {
-        Complaint updatedComplaint = complaintService.updateComplaint2(id, userId);
-        return ResponseEntity.ok(updatedComplaint);
+    @PutMapping("/updateUntreatedComplaint/{CompalaintId}")
+    @Transactional
+    public Complaint updateComplaint2(@PathVariable(value ="CompalaintId")Integer id) throws MessagingException {
+        return complaintService.updateComplaint2(id);
     }
 
-
-
+    @GetMapping("/{id}")
+    public ResponseEntity<Complaint> getComplaintById(@PathVariable int id) {
+        Complaint complaint = complaintService.getComplaintById(id);
+        return new ResponseEntity<>(complaint, HttpStatus.OK);
+    }
+    @GetMapping("/type/{type}")
+    public ResponseEntity<List<Complaint>> getComplaintsByType(@PathVariable("type") ComplaintType type) {
+        List<Complaint> complaints = complaintService.getComplaintsByType(type);
+        return new ResponseEntity<>(complaints, HttpStatus.OK);
+    }
 }

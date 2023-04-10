@@ -69,4 +69,6 @@ public interface UserService
     public List<User> findAdminByNomAgence(String nomAgence);
 
     public List<User> getUserByAgence(Long agenceId);
+
+    public String getAgencyNameByUserId(Long userId);
 }

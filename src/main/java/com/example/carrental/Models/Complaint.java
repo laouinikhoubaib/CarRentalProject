@@ -18,14 +18,14 @@ public class Complaint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Complaint_id;
+    private int ComplaintId;
     private String description;
 
     @Temporal(TemporalType.DATE)
-    private Date ComplaintDate;
+    Date complaintDate;
 
     @Enumerated(EnumType.STRING)
-    private ComplaintType name;
+    private ComplaintType complaintType;
 
     @Enumerated(EnumType.STRING)
     ComplaintStatus complaint_status;

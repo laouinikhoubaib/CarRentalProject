@@ -54,7 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll();
         http.authorizeRequests()
                 .antMatchers("/api/authentication/**").permitAll()
+                .antMatchers("/assets/**").permitAll()
                 .antMatchers("/api/admin/**").hasRole(Role.SUPERADMIN.name())
+                .antMatchers("/api/complaint/**").hasRole(Role.SUPERADMIN.name())
                 .antMatchers("/api/agence/**").permitAll()
                 .antMatchers("/api/user/**").permitAll()
                 .anyRequest().authenticated()

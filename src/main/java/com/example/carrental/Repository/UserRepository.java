@@ -38,5 +38,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     List<User> findByAgenceAgenceId(Long agenceId);
-    
+
+
+
+
 }

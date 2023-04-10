@@ -1,5 +1,6 @@
 package com.example.carrental.ServiceInterfaces;
 
+import com.example.carrental.Enumerations.ComplaintType;
 import com.example.carrental.Models.Complaint;
 
 import javax.mail.MessagingException;
@@ -13,7 +14,10 @@ public interface ComplaintService {
 
     public List<Complaint> retrieveAllComplaints();
 
-    public void updateComplaint( Complaint newcomplaint, int idComplaint);
 
-    public Complaint  updateComplaint2(Integer id, Long userId) throws MessagingException;
+    public Complaint  updateComplaint2(Integer id) throws MessagingException;
+
+    public Complaint getComplaintById(int id);
+
+    public List<Complaint> getComplaintsByType(ComplaintType type);
 }
