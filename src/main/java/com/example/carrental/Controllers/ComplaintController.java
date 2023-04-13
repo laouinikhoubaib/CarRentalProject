@@ -2,6 +2,7 @@ package com.example.carrental.Controllers;
 
 
 
+import com.example.carrental.Enumerations.ComplaintStatus;
 import com.example.carrental.Enumerations.ComplaintType;
 import com.example.carrental.Models.Complaint;
 import com.example.carrental.Models.User;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -60,9 +63,26 @@ public class ComplaintController {
         Complaint complaint = complaintService.getComplaintById(id);
         return new ResponseEntity<>(complaint, HttpStatus.OK);
     }
-    @GetMapping("/type/{type}")
-    public ResponseEntity<List<Complaint>> getComplaintsByType(@PathVariable("type") ComplaintType type) {
-        List<Complaint> complaints = complaintService.getComplaintsByType(type);
-        return new ResponseEntity<>(complaints, HttpStatus.OK);
+    @GetMapping("/stats")
+    public Map<String, Integer> getComplaintStats() {
+        Map<String, Integer> stats = new HashMap<>();
+        stats.put("treated", complaintService.countByComplaintStatus("treated"));
+        stats.put("untreated", complaintService.countByComplaintStatus("untreated"));
+        stats.put("InProgress", complaintService.countByComplaintStatus("InProgress"));
+        return stats;
+    }
+
+    @GetMapping("/count-by-type")
+    public Map<String, Integer> getCountByComplaintType() {
+        Map<String, Integer> stats = new HashMap<>();
+        stats.put("technical", complaintService.countByComplaintType("technical"));
+        stats.put("service", complaintService.countByComplaintType("service"));
+        return stats;
+    }
+
+    @GetMapping("/complaints-count")
+    public ResponseEntity<List<Integer>> getComplaintsCountByDate() {
+        List<Integer> complaintsCount = complaintService.getComplaintsCountByDate();
+        return ResponseEntity.ok(complaintsCount);
     }
 }

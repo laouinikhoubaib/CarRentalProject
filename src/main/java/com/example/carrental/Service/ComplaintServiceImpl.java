@@ -13,10 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 
@@ -80,7 +82,7 @@ public class ComplaintServiceImpl implements ComplaintService {
             oldComplaint.setEtat(true);
 
 
-            emailService.sendSimpleMessage(email, "Enregistrez votre Réclamation demandée sur " + requestDate + " sous id " + oldComplaint.getComplaintId(),
+            emailService.sendSimpleMessage(email, "Votre Réclamation demandée Le " + requestDate ,
                     "Bonjour " + username + ", votre plainte est traitée avec succès à " + now, "/Users/khoubaib/Desktop/khoubaib.jpg");
         }
 
@@ -104,7 +106,32 @@ public class ComplaintServiceImpl implements ComplaintService {
         }
     }
     @Override
-    public List<Complaint> getComplaintsByType(ComplaintType type) {
-        return Crepo.findByComplaintType(type);
+    public int countByComplaintStatus(String status) {
+        return Crepo.countByComplaintStatus(status);
+    }
+    @Override
+    public int countByComplaintType(String type) {
+        return Crepo.countByComplaintType(type);
+    }
+    @Override
+    public List<Integer> getComplaintsCountByDate() {
+        LocalDate endDate = LocalDate.now().plusDays(1);
+        LocalDate startDate = endDate.minusMonths(1);
+
+        List<Object[]> complaintsByDate = Crepo.findComplaintsCountByDate(Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+        List<Integer> complaintsCount = new ArrayList<>();
+        for (int i = 0; i < 30; i++) {
+            complaintsCount.add(0);
+        }
+        for (Object[] complaint : complaintsByDate) {
+            Date complaintDate = (Date) complaint[0];
+            Long count = (Long) complaint[1];
+            LocalDate localDate = complaintDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            int dayOfMonth = localDate.getDayOfMonth();
+            complaintsCount.set(dayOfMonth - 1, count.intValue());
+        }
+
+        return complaintsCount;
     }
 }
