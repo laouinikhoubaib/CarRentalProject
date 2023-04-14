@@ -5,11 +5,10 @@ import com.example.carrental.Enumerations.Alimentation;
 import com.example.carrental.Enumerations.EtatActuel;
 import com.example.carrental.Enumerations.TypeCategorie;
 import com.example.carrental.Enumerations.TypeVehicule;
-import com.example.carrental.Models.CategorieVehicule;
-import com.example.carrental.Models.ModelVehicule;
-import com.example.carrental.Models.Vehicule;
+import com.example.carrental.Models.*;
 import com.example.carrental.Repository.CategorieVehiculeRepository;
 import com.example.carrental.Repository.ModelVehiculeRepository;
+import com.example.carrental.Repository.NotificationRepository;
 import com.example.carrental.Repository.VehiculeRepository;
 import com.example.carrental.ServiceInterfaces.VehiculeService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +39,10 @@ public class VehiculeServiceImpl implements VehiculeService {
 
     @Autowired
     CategorieVehiculeRepository categorieVehiculeRepository;
-
+    @Autowired
+    NotificationRepository notificationRepository;
+    @Inject
+    private EntityManager entityManager;
     public VehiculeServiceImpl(VehiculeRepository vehiculeRepository, ModelVehiculeRepository modelVehiculeRepository, CategorieVehiculeRepository categorieVehiculeRepository) {
         this.vehiculeRepository = vehiculeRepository;
         this.modelVehiculeRepository = modelVehiculeRepository;
@@ -44,8 +50,19 @@ public class VehiculeServiceImpl implements VehiculeService {
     }
 
     @Override
-    public Vehicule addVehicule(Vehicule vehicule) {
+    public Vehicule addVehicule(Vehicule vehicule, String agenceName) {
 
+        TypedQuery<Agence> query = entityManager.createQuery("SELECT a FROM Agence a WHERE a.nom = :nomAgence", Agence.class);
+        query.setParameter("nomAgence", agenceName);
+        List<Agence> agences = query.getResultList();
+        Agence agence = agences.get(0);
+        vehicule.setAgence(agence);
+        Notification notif = new Notification();
+        notif.setCreatedAt(new Date());
+        notif.setMessage("Une nouvelle vehicule a été ajoutée avec succès!");
+        notif.setRead(false);
+        notif.setVehicule(vehicule);
+        notificationRepository.save(notif);
         return vehiculeRepository.save(vehicule);
 
     }

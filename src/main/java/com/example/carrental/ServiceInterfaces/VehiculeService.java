@@ -13,7 +13,7 @@ import java.util.List;
 public interface VehiculeService {
 
 
-    public Vehicule addVehicule(Vehicule vehicule);
+    public Vehicule addVehicule(Vehicule vehicule, String agenceName);
 
     List<Vehicule> findAllAgences();
 

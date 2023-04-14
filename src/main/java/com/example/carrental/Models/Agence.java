@@ -38,6 +38,12 @@ public class Agence implements Serializable {
     @OneToMany(cascade = CascadeType.ALL ,mappedBy = "agence")
     Set<User> users;
 
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL ,mappedBy = "agence")
+    Set<Vehicule> vehicules;
+
+
     public Agence(Long agenceId) {
         this.agenceId = agenceId;
     }

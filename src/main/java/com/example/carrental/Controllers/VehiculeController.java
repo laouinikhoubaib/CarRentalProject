@@ -5,17 +5,25 @@ import com.example.carrental.Enumerations.Alimentation;
 import com.example.carrental.Enumerations.EtatActuel;
 import com.example.carrental.Enumerations.TypeCategorie;
 import com.example.carrental.Enumerations.TypeVehicule;
-import com.example.carrental.Models.CategorieVehicule;
-import com.example.carrental.Models.ModelVehicule;
-import com.example.carrental.Models.Vehicule;
+import com.example.carrental.Models.*;
+import com.example.carrental.Repository.MediaRepo;
 import com.example.carrental.Repository.VehiculeRepository;
 import com.example.carrental.ServiceInterfaces.VehiculeService;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -28,17 +36,38 @@ public class VehiculeController {
     VehiculeRepository vehiculeRepository;
 
     @Autowired
+    MediaRepo mediaRepository;
+    @Autowired
     VehiculeService vehiculeService;
 
+    public static String uploadDirectory = System.getProperty("user.dir") + "/uploads/";
+    public static String uploadDirectory2 = "C:\\Users\\khoubaib\\Desktop\\PFE\\upload";
+
+    ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     public VehiculeController(VehiculeService vehiculeService) {
         this.vehiculeService = vehiculeService;
     }
 
 
-    @PostMapping("/addVehicule")
+
+    @PostMapping(value ="addVehicule", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseBody
-    public Vehicule addVehicule(@RequestBody Vehicule vehicule){
-        return vehiculeService.addVehicule(vehicule);
+    public ResponseEntity<Vehicule> addVehicule(@RequestPart("vehicule") String vehicule, @RequestPart("file") MultipartFile file, @RequestPart("agence") String nomAgence)throws MessagingException, IOException, io.jsonwebtoken.io.IOException, TemplateException {
+
+        File convertFile = new File(uploadDirectory + file.getOriginalFilename());
+        convertFile.createNewFile();
+        FileOutputStream fout = new FileOutputStream(convertFile);
+        fout.write(file.getBytes());
+        fout.close();
+        Media profilPicture = new Media();
+        profilPicture.setImagenUrl(uploadDirectory2 + file.getOriginalFilename());
+        profilPicture = mediaRepository.save(profilPicture);
+        Vehicule userData = objectMapper.readValue(vehicule, Vehicule.class);
+        userData.setVehiculepicture(profilPicture);
+        vehiculeService.addVehicule(userData, nomAgence);
+        return new ResponseEntity<>(userData, HttpStatus.CREATED);
+
+
 
     }
 

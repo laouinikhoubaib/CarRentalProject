@@ -47,10 +47,10 @@ public class UserController
     
 
     
-    @PostMapping("/notification/save/{username}")
-    public Notification addNotification(@RequestBody Notification notification, @PathVariable(name="username") String username) {
-    	return userService.addNotification(notification, username);
-    }
+//    @PostMapping("/notification/save/{username}")
+//    public Notification addNotification(@RequestBody Notification notification, @PathVariable(name="username") String username) {
+//    	return userService.addNotification(notification, username);
+//    }
 
     @DeleteMapping("/notification/delete/{notificationId}")
     public void deleteNotification(@PathVariable(name="notificationId") Long notificationId) {
@@ -109,7 +109,7 @@ public class UserController
         if(agencyName == null) {
             return ResponseEntity.notFound().build();
         }
-        Map<String, String> response = new HashMap<>();
+        Map<String, String> response = new HashMap<>(   );
         response.put("nom", agencyName);
         return ResponseEntity.ok(response);
     }

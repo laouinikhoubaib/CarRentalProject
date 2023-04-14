@@ -56,9 +56,22 @@ public class Vehicule {
     @OneToMany(cascade = CascadeType.ALL ,mappedBy = "vehicule")
     Set<ModelVehicule> modelVehicules;
 
+
+    @OneToOne
+    Media vehiculepicture;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User user;
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agence_id", referencedColumnName = "agenceId")
+    private Agence agence;
+
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vehicule")
+    @JsonIgnore
+    Set<Notification> notifications;
 }

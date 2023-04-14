@@ -83,7 +83,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 
             emailService.sendSimpleMessage(email, "Votre Réclamation demandée Le " + requestDate ,
-                    "Bonjour " + username + ", votre plainte est traitée avec succès à " + now, "/Users/khoubaib/Desktop/khoubaib.jpg");
+                    "Bonjour " + username + ", votre plainte est traitée avec succès à " + now, "/Users/khoubaib/Desktop/reclamation.PNG");
         }
 
         Notification notif = new Notification();
