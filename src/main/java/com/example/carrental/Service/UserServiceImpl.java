@@ -319,13 +319,13 @@ public class UserServiceImpl implements UserService
 		return notificationRepository.userNotification(userId);
 	}
 
-	@Override
-	public Notification addNotification(Notification notification, String username) {
-		User user = userRepository.findByUsername(username).get();
-		notification.setRead(false);
-		notification.setUser(user);
-		return notificationRepository.save(notification);
-	}
+//	@Override
+//	public Notification addNotification(Notification notification, String username) {
+//		User user = userRepository.findByUsername(username).get();
+//		notification.setRead(false);
+//		notification.setUser(user);
+//		return notificationRepository.save(notification);
+//	}
 
 	@Override
 	public void deleteNotification(Long notificationId) {

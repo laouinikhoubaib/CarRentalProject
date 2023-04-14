@@ -51,7 +51,7 @@ public interface UserService
 
     List<Notification> findNotificationsByUser(Long userId);
 
-    Notification addNotification(Notification notification, String username);
+//    Notification addNotification(Notification notification, String username);
 
     void deleteNotification(Long notificationId);
 

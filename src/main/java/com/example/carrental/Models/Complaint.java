@@ -35,6 +35,8 @@ public class Complaint {
     @ManyToOne
     User user;
 
+    @OneToOne
+    Notification notification;
 
 
 }
