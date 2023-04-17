@@ -11,6 +11,7 @@ import freemarker.template.TemplateNotFoundException;
 import io.jsonwebtoken.io.IOException;
 import javax.mail.MessagingException;
 import java.util.List;
+import java.util.Map;
 
 public interface AgenceService {
 
@@ -30,5 +31,7 @@ public interface AgenceService {
 
 
     public List<Agence> findByTypeAgence(TypeAgence typeAgence);
+
+    public Map<String, Long> getCountByTypeAgence();
 
 }

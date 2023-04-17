@@ -19,6 +19,8 @@ public interface AgenceRepository extends JpaRepository<Agence, Long>{
     @Query("SELECT a FROM Agence a WHERE a.nom = :nom")
     Agence findByNom(@Param("nom") String nom);
 
+    @Query("SELECT COUNT(a) FROM Agence a WHERE a.typeagence = :typeagence")
+    Long countByTypeagence(@Param("typeagence") TypeAgence typeagence);
 
     List<Agence> findByTypeagence(TypeAgence typeAgence);
 
