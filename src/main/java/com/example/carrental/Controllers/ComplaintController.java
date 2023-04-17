@@ -35,8 +35,8 @@ public class ComplaintController {
 
 
     @PostMapping("/AddComplaint/{userId}")
-    public Complaint addComplaint(@RequestBody Complaint complaint, @PathVariable Long userId) {
-        return complaintService.addComplaint(complaint, userId);
+    public ResponseEntity<Complaint> addComplaint(@RequestBody Complaint complaint, @PathVariable Long userId) {
+        return new ResponseEntity<>(complaintService.addComplaint(complaint, userId), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/deleteComplaint/{ComplaintId}")
@@ -80,9 +80,10 @@ public class ComplaintController {
         return stats;
     }
 
-    @GetMapping("/complaints-count")
-    public ResponseEntity<List<Integer>> getComplaintsCountByDate() {
-        List<Integer> complaintsCount = complaintService.getComplaintsCountByDate();
-        return ResponseEntity.ok(complaintsCount);
+    @GetMapping("/statistics")
+    public ResponseEntity<Map<String, Integer>> getComplaintsByDayInCurrentMonth() {
+        Map<String, Integer> complaintsByDay = complaintService.getComplaintsByDayInCurrentMonth();
+        return ResponseEntity.ok(complaintsByDay);
     }
+
 }

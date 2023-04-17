@@ -38,6 +38,6 @@ public class Notification implements Serializable {
 	@ManyToOne
 	Vehicule vehicule;
 
-	@OneToOne
+	@OneToOne(mappedBy = "notification")
 	Complaint complaint;
 }

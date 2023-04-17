@@ -21,7 +21,6 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Integer> {
     @Query(value = "SELECT COUNT(*) FROM complaint WHERE complaint_type = :type", nativeQuery = true)
     int countByComplaintType(@Param("type") String type);
 
-    @Query("SELECT c.complaintDate, COUNT(c) FROM Complaint c WHERE c.complaintDate BETWEEN ?1 AND ?2 GROUP BY c.complaintDate")
-    List<Object[]> findComplaintsCountByDate(Date startDate, Date endDate);
-
+    @Query("SELECT DAY(c.complaintDate), CAST(COUNT(c) AS java.math.BigInteger) FROM Complaint c WHERE c.complaintDate BETWEEN :startDate AND :endDate GROUP BY DAY(c.complaintDate)")
+    List<Object[]> getComplaintsByDayInMonth(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }
