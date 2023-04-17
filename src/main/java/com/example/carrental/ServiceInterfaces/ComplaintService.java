@@ -25,5 +25,5 @@ public interface ComplaintService {
 
     public int countByComplaintType(String type);
 
-    public List<Integer> getComplaintsCountByDate();
+    public Map<String, Integer> getComplaintsByDayInCurrentMonth();
 }

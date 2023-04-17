@@ -36,7 +36,9 @@ public class Complaint {
     User user;
 
     @OneToOne
+    @JoinColumn(name = "notification_id")
     Notification notification;
+
 
 
 }

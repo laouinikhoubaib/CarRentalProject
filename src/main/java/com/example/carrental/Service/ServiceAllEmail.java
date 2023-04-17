@@ -46,7 +46,7 @@ public class ServiceAllEmail {
     public void sendNewPasswordEmail(String firstName, String password, String email) throws MessagingException {
         Message message = createEmail(firstName, password, email);
         SMTPTransport smtpTransport = (SMTPTransport) getEmailSession().getTransport("smtps");
-        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "mqvqasngmgaekpaq");
+        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "fpabghphpgbtsyoa");
         smtpTransport.sendMessage(message, message.getAllRecipients());
         smtpTransport.close();
     }
@@ -56,8 +56,8 @@ public class ServiceAllEmail {
         message.setFrom(new InternetAddress("laouinikhoubaib@gmail.com"));
         message.setRecipients(TO, InternetAddress.parse(email, false));
         //message.setRecipients(CC, InternetAddress.parse("bdtcourse@gmail.com", false));
-        message.setSubject("Carz - New Password");
-        message.setText("Hello " + firstName + ", \n \n Your new account password is: " + password + "\n \n The Support Team"+"\n From Les Elites Dev Team");
+        message.setSubject("MASTERCLASS CARS - Nouveau Mot de passe");
+        message.setText("Bonjour " + firstName + ", \n \n Your new account password is: " + password + "\n \n The Support Team"+"\n From Les Elites Dev Team");
         message.setSentDate(new Date());
         message.saveChanges();
         return message;
@@ -83,7 +83,7 @@ public class ServiceAllEmail {
         helper.setFrom(new InternetAddress("laouinikhoubaib@gmail.com"));
         helper.setTo(email);
         helper.setCc("khoubaib.laouini@esprit.tn");
-        helper.setSubject("carz - Password Reset");
+        helper.setSubject("MASTERCLASS CARS ");
         String emailContent = getResetEmailContent(token);
         helper.setText(emailContent, true);
         helper.setSentDate(new Date());
@@ -93,7 +93,7 @@ public class ServiceAllEmail {
     public void sendNewResetPasswordMail(String token, String email) throws MessagingException, IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, java.io.IOException {
         Message message = createresetPasswordMail(token, email);
         SMTPTransport smtpTransport = (SMTPTransport) getEmailSession().getTransport("smtps");
-        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "mqvqasngmgaekpaq");
+        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "fpabghphpgbtsyoa");
         smtpTransport.sendMessage(message, message.getAllRecipients());	
         smtpTransport.close();
     }
@@ -117,7 +117,7 @@ public class ServiceAllEmail {
         helper.setFrom(new InternetAddress("laouinikhoubaib@gmail.com"));
         helper.setTo(email);
         helper.setCc("khoubaib.laouini@esprit.tn");
-        helper.setSubject("Welcome to Carz App");
+        helper.setSubject("Bievenue chez MASTERCLASS CARS");
         String emailContent = getWelcomeEmailContent(user);
         helper.setText(emailContent, true);
         helper.setSentDate(new Date());
@@ -127,7 +127,7 @@ public class ServiceAllEmail {
     public void sendWelcomeMail(String token, String email) throws MessagingException, IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, java.io.IOException {
         Message message = createWelcomeMail(token, email);
         SMTPTransport smtpTransport = (SMTPTransport) getEmailSession().getTransport("smtps");
-        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "mqvqasngmgaekpaq");
+        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "fpabghphpgbtsyoa");
         smtpTransport.sendMessage(message, message.getAllRecipients());	
         smtpTransport.close();
     }
@@ -160,7 +160,7 @@ public class ServiceAllEmail {
         helper.addAttachment(file.getFilename(), file);
 
         emailSender.send(message);
-        System.out.println("Email sent successufully");
+        System.out.println("Courriel envoyé avec succès");
     }
     public void sendSimpleMessage2(String to, String subject, String text)
     {

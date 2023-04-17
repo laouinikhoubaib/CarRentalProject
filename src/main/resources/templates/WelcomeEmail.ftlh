@@ -149,8 +149,8 @@
 <td style="padding-bottom:10px;padding-left:40px;padding-right:40px;padding-top:10px;">
 <div style="font-family: sans-serif">
 <div style="font-size: 12px; mso-line-height-alt: 18px; color: #191919; line-height: 1.5; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;">
-<p style="margin: 0; font-size: 16px; text-align: center;"><strong><span style="font-size:38px;">Hi ${user.username}, </span></strong></p>
-<p style="margin: 0; font-size: 16px; text-align: center;"><strong><span style="font-size:38px;">Welcome to LB CONSULTING!</span></strong></p>
+<p style="margin: 0; font-size: 16px; text-align: center;"><strong><span style="font-size:38px;">Bonjour ${user.username}, </span></strong></p>
+<p style="margin: 0; font-size: 16px; text-align: center;"><strong><span style="font-size:38px;">Bienvenue chez MASTERCLASS Cars !</span></strong></p>
 </div>
 </div>
 </td>
@@ -161,7 +161,7 @@
 <td style="padding-bottom:65px;padding-left:10px;padding-right:10px;padding-top:10px;">
 <div style="font-family: sans-serif">
 <div style="font-size: 12px; mso-line-height-alt: 14.399999999999999px; color: #191919; line-height: 1.2; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;">
-<p style="margin: 0; font-size: 14px; text-align: center;"><span style="font-size:22px;">Thank you for joining us!</span></p>
+<p style="margin: 0; font-size: 14px; text-align: center;"><span style="font-size:22px;">Merci de nous avoir rejoint !</span></p>
 </div>
 </div>
 </td>
@@ -205,7 +205,7 @@
 <td style="padding-bottom:10px;padding-left:40px;padding-right:40px;padding-top:25px;">
 <div style="font-family: sans-serif">
 <div style="font-size: 12px; mso-line-height-alt: 24px; color: #555555; line-height: 2; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;">
-<p style="margin: 0; font-size: 14px; text-align: center;">If you have any questions, feel free message us at laouinikhoubaib@gmail.com. All right reserved. Update <a href="#" rel="noopener" style="text-decoration: none; color: #555555;" target="_blank">email preferences</a> or <a href="#" rel="noopener" style="text-decoration: none; color: #555555;" target="_blank">unsubscribe</a>.</p>
+<p style="margin: 0; font-size: 14px; text-align: center;">Si vous avez des questions, n’hésitez pas à nous envoyer un message à laouinikhoubaib@gmail.com. Très bien réservé. Mise à jour <a href="#" rel="noopener" style="text-decoration: none; color: #555555;" target="_blank">email préférences</a> or <a href="#" rel="noopener" style="text-decoration: none; color: #555555;" target="_blank">vous désabonner</a>.</p>
 </div>
 </div>
 </td>
@@ -243,7 +243,8 @@
 <td>
 <div style="font-family: sans-serif">
 <div style="font-size: 12px; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #ffffff; line-height: 1.2;">
-<p style="margin: 0; font-size: 12px; text-align: center;"><span style="color:#555555;">Terms of use <strong>|</strong> Privacy Policy</span></p>
+<p style="margin: 0; font-size: 12px; text-align: center;"><span style="color:#555555;">Conditions générales d'utilisation <strong>|</strong>Politique de confidentialité
+</span></p>
 </div>
 </div>
 </td>

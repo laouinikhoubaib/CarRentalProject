@@ -64,7 +64,7 @@ public class AuthenticationController {
 
 
     public static String uploadDirectory = System.getProperty("user.dir") + "/uploads/";
-    public static String uploadDirectory2 = "C:\\Users\\khoubaib\\Desktop\\PFE\\upload";
+    public static String uploadDirectory2 = "C:\\Users\\khoubaib\\Desktop\\PFE\\upload\\";
 
     ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
