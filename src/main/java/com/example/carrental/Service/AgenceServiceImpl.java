@@ -13,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Slf4j
@@ -92,5 +89,12 @@ public class AgenceServiceImpl implements AgenceService {
 
     public List<Agence> findByTypeAgence(TypeAgence typeAgence) {
         return agenceRepository.findByTypeagence(typeAgence);
+    }
+
+    public Map<String, Long> getCountByTypeAgence() {
+        Map<String, Long> countByTypeAgence = new HashMap<>();
+        countByTypeAgence.put("normale", agenceRepository.countByTypeagence(TypeAgence.normale));
+        countByTypeAgence.put("franchise", agenceRepository.countByTypeagence(TypeAgence.franchise));
+        return countByTypeAgence;
     }
 }

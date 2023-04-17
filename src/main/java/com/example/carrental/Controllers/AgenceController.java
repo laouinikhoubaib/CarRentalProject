@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/agence")
@@ -86,5 +87,8 @@ public class AgenceController {
         List<Agence> agences = agenceService.findByTypeAgence(typeAgence);
         return ResponseEntity.ok(agences);
     }
-
+    @GetMapping("/agences/countByType")
+    public Map<String, Long> getCountByTypeAgence() {
+        return agenceService.getCountByTypeAgence();
+    }
 }
