@@ -1,15 +1,9 @@
 package com.example.carrental.ServiceInterfaces;
 
 import com.example.carrental.Enumerations.TypeAgence;
-import com.example.carrental.Exceptions.*;
 import com.example.carrental.Models.Agence;
-import com.example.carrental.Models.User;
-import freemarker.core.ParseException;
-import freemarker.template.MalformedTemplateNameException;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateNotFoundException;
-import io.jsonwebtoken.io.IOException;
-import javax.mail.MessagingException;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,5 +27,9 @@ public interface AgenceService {
     public List<Agence> findByTypeAgence(TypeAgence typeAgence);
 
     public Map<String, Long> getCountByTypeAgence();
+
+    public String agenceDetails(Long agenceId) throws IOException;
+
+    void lockAgence(String nom);
 
 }
