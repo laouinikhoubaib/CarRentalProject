@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 
@@ -31,8 +32,29 @@ public class Agence implements Serializable {
     @Column(name = "nom", nullable = false)
     String nom;
 
+    @Column(name = "email", nullable = false)
+    String email;
+
+    @Column(name = "adresse", nullable = false)
+    String adresse;
+
+    @Temporal(TemporalType.DATE)
+    Date dateouverture;
+
+    @Temporal(TemporalType.DATE)
+    Date datefermeture;
+
+    @Column(name = "jourtravail", nullable = false)
+    String jourtravail;
+
+    @Column(name = "description", nullable = false)
+    String description;
+
     @Enumerated(EnumType.STRING)
     TypeAgence typeagence;
+
+    @Column(name = "isLocked", nullable = false)
+    boolean isLocked;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL ,mappedBy = "agence")
@@ -47,4 +69,6 @@ public class Agence implements Serializable {
     public Agence(Long agenceId) {
         this.agenceId = agenceId;
     }
+
+
 }

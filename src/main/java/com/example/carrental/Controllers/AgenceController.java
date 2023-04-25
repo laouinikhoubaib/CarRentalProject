@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -87,8 +89,21 @@ public class AgenceController {
         List<Agence> agences = agenceService.findByTypeAgence(typeAgence);
         return ResponseEntity.ok(agences);
     }
-    @GetMapping("/agences/countByType")
+    @GetMapping("/countByType")
     public Map<String, Long> getCountByTypeAgence() {
         return agenceService.getCountByTypeAgence();
     }
+
+    @GetMapping("/{id}/details")
+    public ResponseEntity<String> agenceDetails(@PathVariable Long id) throws IOException {
+        String result = agenceService.agenceDetails(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/lock")
+    public ResponseEntity<?> lockAgence(@RequestBody String nom) {
+        agenceService.lockAgence(nom);
+        return ResponseEntity.ok(true);
+    }
+
 }
