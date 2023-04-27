@@ -30,6 +30,6 @@ public interface AgenceService {
 
     public String agenceDetails(Long agenceId) throws IOException;
 
-    void lockAgence(String nom);
-
+    public Agence blockAgence(String nom);
+    public Agence deblockAgence(String nom);
 }
