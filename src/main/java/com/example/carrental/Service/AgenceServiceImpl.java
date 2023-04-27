@@ -2,6 +2,8 @@ package com.example.carrental.Service;
 
 
 import com.example.carrental.Enumerations.TypeAgence;
+import com.example.carrental.Exceptions.AgenceNotExist;
+import com.example.carrental.Exceptions.AgenceNotFoundException;
 import com.example.carrental.Models.Agence;
 import com.example.carrental.Models.Notification;
 import com.example.carrental.Models.User;
@@ -64,6 +66,7 @@ public class AgenceServiceImpl implements AgenceService {
         notif.setCreatedAt(new Date());
         notif.setMessage("Nous sommes heureux d'avoir " + u.getNom()+ " notre nouvelle agnce !");
         notif.setRead(false);
+        u.setLocked(false);
         notificationRepository.save(notif);
         return agenceRepository.save(agence);
 
@@ -134,13 +137,24 @@ public class AgenceServiceImpl implements AgenceService {
 
         return sb.toString();
     }
+    @Override
+    public Agence blockAgence(String nom) {
+        Agence agence = agenceRepository.findByNom(nom);
+        if (agence == null) {
+            throw new AgenceNotFoundException("Agence not found with nom " + nom);
+        }
+        agence.setLocked(true);
+        return agenceRepository.save(agence);
+    }
 
     @Override
-    public void lockAgence(String nom) {
-
-        Agence u = agenceRepository.findByNom(nom);
-        u.setLocked(true);
-        agenceRepository.save(u);
+    public Agence deblockAgence(String nom) {
+        Agence agence = agenceRepository.findByNom(nom);
+        if (agence == null) {
+            throw new AgenceNotFoundException("Agence not found with nom " + nom);
+        }
+        agence.setLocked(false);
+        return agenceRepository.save(agence);
     }
 }
 

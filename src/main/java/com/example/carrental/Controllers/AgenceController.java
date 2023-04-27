@@ -100,10 +100,14 @@ public class AgenceController {
         return ResponseEntity.ok(result);
     }
 
-    @PutMapping("/lock")
-    public ResponseEntity<?> lockAgence(@RequestBody String nom) {
-        agenceService.lockAgence(nom);
-        return ResponseEntity.ok(true);
+    @PutMapping("/block")
+    public Agence blockAgence(@RequestBody String nom) {
+        return agenceService.blockAgence(nom);
+    }
+
+    @PutMapping("/deblock")
+    public Agence deblockAgence(@RequestBody String nom) {
+        return agenceService.deblockAgence(nom);
     }
 
 }
