@@ -86,7 +86,20 @@ public class ForumService {
 
 
 	}
+	public ResponseEntity<?> addComment_to_Post(PostComment postComment, Long idPost, Long idUser) {
+		Post p = postRepo.findById(idPost).orElse(null);
+		User u = userRepo.findById(idUser).orElse(null);
+		DetctaDataLoad(postComment.getCommentBody(),idUser);
+		if (Filtrage_bad_word(postComment.getCommentBody()) == 0) {
+			postComment.setUser(u);
+			postComment.setPost(p);
 
+			postCommentRepo.save(postComment);
+			return ResponseEntity.ok().body(postComment);
+		}else
+
+			return ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY).body("Mauvais mot détecté");
+	}
 		public PostLike addLike_to_Post(PostLike postLike, Long idPost, Long idUser) {
 			int x=0;
 			boolean y =false;
@@ -108,6 +121,7 @@ public class ForumService {
 			 postLikeRepo.save(postLike);}
 				return postLike;
 		}
+
 
 	public CommentLike addLike_to_Comment(CommentLike commentLike, Long idComment, Long idUser) {
 		User u = userRepo.findById(idUser).orElse(null);

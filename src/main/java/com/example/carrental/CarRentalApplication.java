@@ -15,7 +15,6 @@ import org.springframework.context.annotation.ComponentScan;
 @SecurityScheme(name = "/api", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @OpenAPIDefinition(info = @Info(title = "User API", version = "2.0", description = "User Details"))
 @ComponentScan(basePackages = {"com.example.carrental"})
-
 public class CarRentalApplication {
 
     public static void main(String[] args) {
