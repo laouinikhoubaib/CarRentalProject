@@ -1,12 +1,10 @@
 package com.example.carrental.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Getter
@@ -23,10 +21,13 @@ public class Media implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long mediaId;
 
+	@Column(name = "name")
 	String name;
-	
+
+	@Column(name = "imagenUrl")
 	String imagenUrl;
-    
+
+	@Column(name = "codeImage")
     String codeImage;
 
 	public Media(String name, String imagenUrl, String imagencode) {
@@ -35,5 +36,8 @@ public class Media implements Serializable{
 		this.imagenUrl = imagenUrl;
 		this.codeImage = imagencode;
 	}
-    
+
+	@JsonIgnore
+	@ManyToOne
+	Post post;
 }

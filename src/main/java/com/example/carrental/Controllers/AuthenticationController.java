@@ -86,6 +86,23 @@ public class AuthenticationController {
         return new ResponseEntity<>(userData, HttpStatus.CREATED);
     }
 
+//    @PostMapping(value = "sign-upp", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+//    public ResponseEntity<User> signUpp(@RequestPart("user") String user, @RequestPart("file") MultipartFile file) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, IOException, io.jsonwebtoken.io.IOException, TemplateException {
+//
+//        File convertFile = new File(uploadDirectory + file.getOriginalFilename());
+//        convertFile.createNewFile();
+//        FileOutputStream fout = new FileOutputStream(convertFile);
+//        fout.write(file.getBytes());
+//        fout.close();
+//        Media profilPicture = new Media();
+//        profilPicture.setImagenUrl(uploadDirectory2 + file.getOriginalFilename());
+//        profilPicture = mediaRepository.save(profilPicture);
+//        User userData = objectMapper.readValue(user, User.class);
+//        userData.setProfilPicture(profilPicture);
+//        userData.setProfilPic(file.getOriginalFilename());
+//        userService.saveAdmin(userData);
+//        return new ResponseEntity<>(userData, HttpStatus.CREATED);
+//    }
 
     @PostMapping("sign-in")//api/authentication/sign-in
     public ResponseEntity<?> signIn(@RequestBody User user) throws com.example.carrental.Exceptions.AccountLockedException {

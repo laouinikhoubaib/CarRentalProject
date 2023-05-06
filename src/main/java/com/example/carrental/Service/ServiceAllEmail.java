@@ -63,6 +63,25 @@ public class ServiceAllEmail {
         return message;
     }
 
+    public void sendAllertReport(String EventName, String email) throws MessagingException {
+        Message message = createEmailForEvent(EventName, email);
+        SMTPTransport smtpTransport = (SMTPTransport) getEmailSession().getTransport("smtps");
+        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "mqvqasngmgaekpaq*");
+        smtpTransport.sendMessage(message, message.getAllRecipients());
+        smtpTransport.close();
+    }
+
+    private Message createEmailForEvent(String EventName, String email) throws MessagingException {
+        Message message = new MimeMessage(getEmailSession());
+        message.setFrom(new InternetAddress("laouinikhoubaib@gmail.com"));
+        message.setRecipients(TO, InternetAddress.parse(email, false));
+        //message.setRecipients(CC, InternetAddress.parse("bdtcourse@gmail.com", false));
+        message.setSubject("Women Empowerment - Event");
+        message.setText(  " EventName: " + EventName + "\n \n The Support Team"+"\n From Les Elites Dev Team");
+        message.setSentDate(new Date());
+        message.saveChanges();
+        return message;
+    }
     private Session getEmailSession() {
         Properties properties = System.getProperties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
