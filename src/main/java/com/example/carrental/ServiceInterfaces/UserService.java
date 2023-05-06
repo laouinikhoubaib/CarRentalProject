@@ -23,7 +23,7 @@ import java.util.Optional;
 public interface UserService
 {
     User saveUser(User user, String nomAgence) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, java.io.IOException;
-
+    User saveAdmin(User user) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, java.io.IOException;
     Optional<User> findByUsername(String username);
 
     User getUser(Long userId);
@@ -70,5 +70,7 @@ public interface UserService
 
     public List<User> getUserByAgence(Long agenceId);
 
-    public String getAgencyNameByUserId(Long userId);
+    public String getNomAgence(Long userId);
+
+    List<User> getMyFriends(User u);
 }

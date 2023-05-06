@@ -8,6 +8,7 @@ import com.example.carrental.Exceptions.UsernameExist;
 import com.example.carrental.Exceptions.UsernameNotExist;
 import com.example.carrental.Models.Agence;
 //import com.example.carrental.Models.Notification;
+import com.example.carrental.Models.Amie;
 import com.example.carrental.Models.Notification;
 import com.example.carrental.Models.User;
 import com.example.carrental.Repository.*;
@@ -64,6 +65,8 @@ public class UserServiceImpl implements UserService
 	@Autowired
 	NotificationRepository notificationRepository;
 
+	@Autowired
+	AmieRepository amieRepository;
 
 	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder)
 	{
@@ -95,7 +98,16 @@ public class UserServiceImpl implements UserService
 		emailService.sendWelcomeMail(savedUser.getUsername(), savedUser.getEmail());
 		return savedUser;
 	}
-
+	@Override
+	public User saveAdmin(User user) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, io.jsonwebtoken.io.IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, IOException, MessagingException {
+		isvalidUsernameAndEmail(EMPTY, user.getUsername(), user.getEmail());
+		isValid(user.getPassword());
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setLocked(false);
+		User savedUser = userRepository.save(user);
+		emailService.sendWelcomeMail(savedUser.getUsername(), savedUser.getEmail());
+		return savedUser;
+	}
 	@Override
     public User updateUser(User user) {
 
@@ -369,13 +381,29 @@ public class UserServiceImpl implements UserService
 	public List<User> getUserByAgence(Long agenceId) {
 		return userRepository.findByAgenceAgenceId(agenceId);
 	}
-
 	@Override
-	public String getAgencyNameByUserId(Long userId) {
+	public String getNomAgence(Long userId) {
 		User user = userRepository.findById(userId).orElse(null);
-		if(user != null && user.getAgence() != null) {
-			return user.getAgence().getNom();
+		if (user == null || user.getAgence() == null) {
+			return "Pas d'agence définie";
 		}
-		return null;
+		Agence agence = agenceRepository.findById(user.getAgence().getAgenceId()).orElse(null);
+		if (agence == null) {
+			return "Pas d'agence définie";
+		}
+		return agence.getNom();
 	}
+	@Override
+	public List<User> getMyFriends(User u){
+		List<Amie> allFriends = amieRepository.findAll();
+		Set<User> myFriends = new HashSet<>();
+		for (Amie f : allFriends) {
+			if (f.getSender().getUserId() == u.getUserId() ) {
+				myFriends.add(f.getReceiver());
+			}
+		}
+		List<User> friends = new ArrayList<>(myFriends);
+		return friends;
+	}
+
 }

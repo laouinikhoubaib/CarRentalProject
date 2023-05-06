@@ -4,6 +4,7 @@ package com.example.carrental.Controllers;
 //import com.example.carrental.Models.Notification;
 import com.example.carrental.Models.Notification;
 import com.example.carrental.Repository.UserRepository;
+import com.example.carrental.ServiceInterfaces.AgenceService;
 import com.example.carrental.ServiceInterfaces.UserService;
 import com.example.carrental.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,6 @@ public class UserController
     
     @Autowired
     UserRepository userRepository;
-    
 
     
     
@@ -103,15 +103,10 @@ public class UserController
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{userId}/agencyName")
-    public ResponseEntity<Map<String, String>> getAgencyNameByUserId(@PathVariable Long userId) {
-        String agencyName = userService.getAgencyNameByUserId(userId);
-        if(agencyName == null) {
-            return ResponseEntity.notFound().build();
-        }
-        Map<String, String> response = new HashMap<>(   );
-        response.put("nom", agencyName);
-        return ResponseEntity.ok(response);
+    @GetMapping("/users/{userId}/agence/nom")
+    public ResponseEntity<String> getNomAgenceByUserId(@PathVariable Long userId) {
+        String nomAgence = userService.getNomAgence(userId);
+        return ResponseEntity.ok(nomAgence);
     }
-    
+
 }
