@@ -7,15 +7,12 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
-@EnableCaching(proxyTargetClass = true)
-@SecurityScheme(name = "/api", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
-@OpenAPIDefinition(info = @Info(title = "User API", version = "2.0", description = "User Details"))
+@SpringBootApplication(exclude = ElasticsearchDataAutoConfiguration.class)
 @ComponentScan(basePackages = {"com.example.carrental"})
-
 public class CarRentalApplication {
 
     public static void main(String[] args) {
