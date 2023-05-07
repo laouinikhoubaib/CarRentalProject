@@ -53,7 +53,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll();
         http.authorizeRequests()
-                .antMatchers("/api/authentication/**").permitAll()
+                .antMatchers("/api/authentication/**", "/swagger-ui/","/swagger-ui/**",
+                        "/v2/api-docs", "/configuration/ui",
+                        "/swagger-resources/**", "/configuration/security",
+                        "/swagger-ui.html", "/webjars/**", "/forum/**", "/chat-websocket/**").permitAll()
                 .antMatchers("/assets/**").permitAll()
                 .antMatchers("/api/admin/**").hasRole(Role.SUPERADMIN.name())
                 .antMatchers("/api/complaint/**").hasRole(Role.SUPERADMIN.name())
@@ -91,7 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 
     private static final String[] AUTH_WHITELIST = {
             "/**",
-            "/v3/api-docs/**",
+            "/v2/api-docs/**",
             "/api/**",
             "/swagger-ui/**",
             "/swagger-ui.html/**",
