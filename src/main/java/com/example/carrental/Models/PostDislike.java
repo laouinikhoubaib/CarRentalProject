@@ -19,7 +19,7 @@ public class PostDislike implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long postDislikeId;
 
-	@Temporal(TemporalType.DATE)
+
 	Date dislikedAt;
 
 	@ManyToOne

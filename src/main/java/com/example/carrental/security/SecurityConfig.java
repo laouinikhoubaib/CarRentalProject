@@ -54,8 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll();
         http.authorizeRequests()
                 .antMatchers("/api/authentication/**", "/swagger-ui/","/swagger-ui/**",
-                        "/v2/api-docs", "/configuration/ui",
-                        "/swagger-resources/**", "/configuration/security",
+                        "/v3/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/security",
                         "/swagger-ui.html", "/webjars/**", "/forum/**", "/chat-websocket/**").permitAll()
                 .antMatchers("/assets/**").permitAll()
                 .antMatchers("/api/admin/**").hasRole(Role.SUPERADMIN.name())
@@ -94,7 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 
     private static final String[] AUTH_WHITELIST = {
             "/**",
-            "/v2/api-docs/**",
+            "/v3/api-docs/**",
             "/api/**",
             "/swagger-ui/**",
             "/swagger-ui.html/**",
@@ -107,19 +106,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
             "/api/admin/**"
     };
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
+    public WebMvcConfigurer corsConfigurer()
+    {
+        return new WebMvcConfigurer()
+        {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(CorsRegistry registry)
+            {
                 registry.addMapping("/**")
                         .allowedOrigins("*")
                         .allowedMethods("*");
             }
         };
-    }
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/assets/**");
     }
 
 }

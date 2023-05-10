@@ -24,20 +24,20 @@ public class Post implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long postId;
 
-	@Column(name = "postTitle")
+
 	String postTitle;
 
 
-	@Column(name = "body")
+
 	String body;
 
-	@Temporal(TemporalType.DATE)
+
 	Date createdAt;
 
-	@Column(name = "nb_Signal")
+
 	int nb_Signal;
 
-	@Column(name = "nb_etoil")
+
 	int nb_etoil;
 	
 

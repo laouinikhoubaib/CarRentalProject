@@ -1,4 +1,4 @@
-package com.example.carrental.Service;
+package com.example.carrental.websocketproject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

@@ -22,7 +22,7 @@ public class CommentLike implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long commentLikeId;
 
-	@Temporal(TemporalType.DATE)
+
 	Date likedAt;
 	
 	@JsonIgnore

@@ -1,4 +1,4 @@
-package com.example.carrental.Utils;
+package com.example.carrental.websocketproject;
 
 import com.sun.security.auth.UserPrincipal;
 import org.slf4j.Logger;
