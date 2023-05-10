@@ -24,7 +24,7 @@ public class PostComment implements Serializable{
 	
 	String commentBody;
 
-	@Temporal(TemporalType.DATE)
+
 	Date commentedAt;
 	
 	

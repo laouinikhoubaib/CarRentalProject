@@ -3,9 +3,11 @@ package com.example.carrental.Models;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
-
 
 @Getter
 @Setter
@@ -15,13 +17,12 @@ import java.io.Serializable;
 @Entity
 @ToString
 public class BadWord implements Serializable{
-
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long IdWord;
+	
 
-	@Column(name = "word")
 	String word;
 
 }

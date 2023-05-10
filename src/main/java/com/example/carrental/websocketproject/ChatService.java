@@ -1,9 +1,6 @@
-package com.example.carrental.Service;
+package com.example.carrental.websocketproject;
 
-import com.example.carrental.Models.Chatroom;
 import com.example.carrental.Models.User;
-import com.example.carrental.Repository.ChatroomRepo;
-import com.example.carrental.Repository.MessageRepository;
 import com.example.carrental.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +14,6 @@ public class ChatService {
 	UserRepository ur;
 	@Autowired
 	MessageRepository mr;
-
-
 	public Chatroom findchat(Long idsender , Long idreciver) {
 		int x = 0;
 		Chatroom cht =  new Chatroom();
@@ -42,7 +37,18 @@ public class ChatService {
 		}
 	}
 	
-
+	
+/*	public void sendmessage(Message m , Long idchatroom) {
+		Chatroom ch = chatroomRepo.findById(idchatroom).orElse(null);
+		m.setChat(ch);
+		mr.save(m);
+		Set<Message> l = ch.getMessages();
+		l.add(m);
+		ch.setMessages(l);
+		chatroomRepo.save(ch);
+		
+	}*/
+	
 	public Chatroom getConv(Long idchatroom) {
 		Chatroom ch = chatroomRepo.findById(idchatroom).orElse(null);
 		return ch;

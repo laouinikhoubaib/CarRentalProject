@@ -9,7 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import springfox.documentation.annotations.ApiIgnore;
+
+
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.sql.Date;
@@ -28,7 +29,7 @@ public class ForumController {
 	
 	@PostMapping("/add-Post/{IdUser}")
 	@ResponseBody
-	public ResponseEntity<?> addPost_affectedto_User(@RequestBody Post post, @ApiIgnore @AuthenticationPrincipal UserPrincipal u) {
+	public ResponseEntity<?> addPost_affectedto_User(@RequestBody Post post, @AuthenticationPrincipal UserPrincipal u) {
 		Long iduser = u.getId();
 		post.setCreatedAt(Date.valueOf(LocalDate.now()))	;
 		return forumService.addPost(post,iduser);
@@ -43,13 +44,13 @@ public class ForumController {
 	
 	@PostMapping("/add-Com-to-Com/{IdCom}/{IdUser}")
 	@ResponseBody
-	public ResponseEntity<?> add_Com_to_Com(@RequestBody PostComment post, @ApiIgnore @AuthenticationPrincipal UserPrincipal u, @PathVariable("IdCom") Long IdCom) {
+	public ResponseEntity<?> add_Com_to_Com(@RequestBody PostComment post, @AuthenticationPrincipal UserPrincipal u, @PathVariable("IdCom") Long IdCom) {
 		return forumService.add_Com_to_Com(post,u.getId(),IdCom);
 	}
 	
 	@PostMapping("/add-Comment/{IdPost}/{IdUser}")
 	@ResponseBody
-	public ResponseEntity<?> addComment_to_Post(@RequestBody PostComment postComment, @PathVariable("IdPost") Long IdPost, @ApiIgnore @AuthenticationPrincipal UserPrincipal u) {
+	public ResponseEntity<?> addComment_to_Post(@RequestBody PostComment postComment, @PathVariable("IdPost") Long IdPost, @AuthenticationPrincipal UserPrincipal u) {
 		postComment.setCommentedAt(Date.valueOf(LocalDate.now()))	;
 
 		return forumService.addComment_to_Post(postComment,IdPost,u.getId());
@@ -57,7 +58,7 @@ public class ForumController {
 	
 	@PostMapping("/add-Like-post/{IdPost}/{IdUser}")
 	@ResponseBody
-	public PostLike addLike_to_Post(@RequestBody(required = false) PostLike postLike, @PathVariable("IdPost") Long IdPost, @ApiIgnore @AuthenticationPrincipal UserPrincipal u) {
+	public PostLike addLike_to_Post(@RequestBody(required = false) PostLike postLike, @PathVariable("IdPost") Long IdPost, @AuthenticationPrincipal UserPrincipal u) {
 		PostLike pos1 = new PostLike();
 		pos1.setIsLiked(true);
 		
@@ -65,7 +66,7 @@ public class ForumController {
 	}
 	@PostMapping("/add-DisLike-post/{IdPost}/{IdUser}")
 	@ResponseBody
-	public PostLike addDisLike_to_Post(@RequestBody(required = false) PostLike postLike, @PathVariable("IdPost") Long IdPost, @ApiIgnore @AuthenticationPrincipal UserPrincipal u) {
+	public PostLike addDisLike_to_Post(@RequestBody(required = false) PostLike postLike, @PathVariable("IdPost") Long IdPost, @AuthenticationPrincipal UserPrincipal u) {
 		PostLike pos1 = new PostLike();
 		pos1.setIsLiked(false);
 		
@@ -73,28 +74,29 @@ public class ForumController {
 	}
 	@GetMapping("/get-user-islike-post/{IdPost}")
 	@ResponseBody
-	public int addDisLike_to_Post( @PathVariable("IdPost") Long IdPost, @ApiIgnore @AuthenticationPrincipal UserPrincipal u) {
+	public int addDisLike_to_Post( @PathVariable("IdPost") Long IdPost, @AuthenticationPrincipal UserPrincipal u) {
 		
 		return forumService.PostLikeFromUser(IdPost,u.getId());
 	}
 
 	@PostMapping("/add-Like-Comment/{IdComment}/{IdUser}")
 	@ResponseBody
-	public CommentLike addLike_to_Comment(@RequestBody CommentLike commentLike, @PathVariable("IdComment") Long IdComment, @ApiIgnore @AuthenticationPrincipal UserPrincipal u) {
+	public CommentLike addLike_to_Comment(@RequestBody CommentLike commentLike, @PathVariable("IdComment") Long IdComment,  @AuthenticationPrincipal UserPrincipal u) {
 		return forumService.addLike_to_Comment(commentLike,IdComment,u.getId());
 	}
 	
 	
 	@PutMapping("/Update-Post/{IdPost}/")
 	@ResponseBody
-	public ResponseEntity<?> Update_Post(@RequestBody Post post, @PathVariable("IdPost") Long IdPost, @ApiIgnore @AuthenticationPrincipal UserPrincipal u) {
+	public ResponseEntity<?> Update_Post(@RequestBody Post post, @PathVariable("IdPost") Long IdPost, @AuthenticationPrincipal UserPrincipal u) {
 		return forumService.Update_post(post,IdPost,u.getId());
 	}
 	
 
+	
 	@PutMapping("/Update-Comment/{IdPostCom}/")
 	@ResponseBody
-	public ResponseEntity<?> Update_Comment(@RequestBody PostComment postComment, @PathVariable("IdPostCom") Long IdPostCom, @ApiIgnore @AuthenticationPrincipal UserPrincipal u) {
+	public ResponseEntity<?> Update_Comment(@RequestBody PostComment postComment, @PathVariable("IdPostCom") Long IdPostCom,  @AuthenticationPrincipal UserPrincipal u) {
 		return forumService.Update_Comment(postComment,IdPostCom,u.getId());
 	}
 	
@@ -103,11 +105,14 @@ public class ForumController {
 	public ResponseEntity<?> Swap_like_dislike( @PathVariable("IdLike") Long IdLike) {
 		return forumService.Swap_like_dislike(IdLike);
 	}
-
+	
+	 
+	
 	@GetMapping("/Get-all-Post")
 	public List<Post> Get_all_post(){
 		return forumService.Get_all_post();
 	}
+	
 
 	
 	@GetMapping("/Get-Posts-By-user/{IdUser}")
@@ -116,7 +121,7 @@ public class ForumController {
 	}
 	
 	@DeleteMapping("/Delete-Like/{IdLike}")
-	public ResponseEntity<?> Delete_Like( @PathVariable("IdLike") Long IdLike, @ApiIgnore @AuthenticationPrincipal UserPrincipal u) {
+	public ResponseEntity<?> Delete_Like( @PathVariable("IdLike") Long IdLike, @AuthenticationPrincipal UserPrincipal u) {
 		return forumService.Delete_Like(IdLike,u.getId());
 	}
 	
@@ -138,8 +143,9 @@ public class ForumController {
 		return forumService.Delete_post(IdPost,(long)1/*u.getId()*/);
 	}
 
+	
 	@DeleteMapping("/Delete-PostComment/{IdPostCom}")
-	public ResponseEntity<?> Delete_PostCom( @PathVariable("IdPostCom") Long IdPostCom,@ApiIgnore @AuthenticationPrincipal UserPrincipal u) {
+	public ResponseEntity<?> Delete_PostCom( @PathVariable("IdPostCom") Long IdPostCom, @AuthenticationPrincipal UserPrincipal u) {
 		return forumService.Delete_PostCom(IdPostCom,u.getId());
 	}
 	//@Scheduled(cron = "*/30 * * * * *")
@@ -168,7 +174,7 @@ public class ForumController {
 	}
 	
 	@GetMapping("/Report-Post/{idPost}")
-	public  ResponseEntity<?> Report_User(@PathVariable("idPost") Long idPost ,@ApiIgnore @AuthenticationPrincipal UserPrincipal u) throws MessagingException{
+	public  ResponseEntity<?> Report_User(@PathVariable("idPost") Long idPost ,@AuthenticationPrincipal UserPrincipal u) throws MessagingException{
 		return forumService.Report_User (idPost,u.getId());
 	}
 	
@@ -181,15 +187,18 @@ public class ForumController {
 	public  Set<Object> Get_more_likers_user(){
 		 return forumService.Get_more_likers_user();
 	}
+	
 
+	
 	@PutMapping("/Put-test-Data")
-	public  void aa(@ApiIgnore @AuthenticationPrincipal UserPrincipal u){
+	public  void aa( @AuthenticationPrincipal UserPrincipal u){
 		forumService.DetctaDataLoad("sabri krima",u.getId());
 	}
+	
 
 	
 	@GetMapping("/Get-Search-post{ch}")
-	public  List<Post> adversting_bydata(@PathVariable("ch") String ch,@ApiIgnore @AuthenticationPrincipal UserPrincipal u ){
+	public  List<Post> adversting_bydata(@PathVariable("ch") String ch, @AuthenticationPrincipal UserPrincipal u ){
 		return forumService.Searchpost(ch,u.getId());
 	}
 	
@@ -212,7 +221,6 @@ public class ForumController {
 				return forumService.addimagepost(image,idpost);
 
 	}
-	
 
 	@GetMapping("/Get-Post-Details/{idpost}")
 	public Post Get_Post_Details(@PathVariable("idpost") Long idpost) {

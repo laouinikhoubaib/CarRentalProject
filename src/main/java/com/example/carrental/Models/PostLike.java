@@ -21,7 +21,7 @@ public class PostLike implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long postLikeId;
 
-	@Temporal(TemporalType.DATE)
+
 	Date likedAt;
 	
 	Boolean isLiked ;

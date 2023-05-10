@@ -1,11 +1,12 @@
-package com.example.carrental.Models;
+package com.example.carrental.websocketproject;
 
+import com.example.carrental.Models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,17 +15,22 @@ import java.io.Serializable;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @ToString
-public class Message implements Serializable{
-
+public class Chatroom implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long messageId;
-
-
-	@Column(name = "body")
-	String body;
+	Long chatroomId;
 	
 	@JsonIgnore
 	@ManyToOne
-	Chatroom chat;
+	User sender;
+	@JsonIgnore
+	@ManyToOne 
+	User reciver;
+	
+	
+	String color = "#EC407A";
+
+	
+	@OneToMany(cascade = CascadeType.ALL , mappedBy = "chat")
+	List<ChatMessage> messages;
 }

@@ -1,33 +1,29 @@
-package com.example.carrental.Controllers;
-import com.example.carrental.Models.ChatMessage;
-import com.example.carrental.Models.Chatroom;
-import com.example.carrental.Repository.ChatmessageRepo;
-import com.example.carrental.Repository.ChatroomRepo;
+package com.example.carrental.websocketproject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+// The chat message-handling Controller
 @RestController
 @RequestMapping("/chatt")
 public class ChatController {
 	@Autowired
-    ChatmessageRepo mr;
+	ChatmessageRepo mr;
 	@Autowired
-    ChatroomRepo cr;
+	ChatroomRepo cr;
 	
-
+    // mapped to handle chat messages to the /sendmsg destination
     @MessageMapping("/sendmsg")
-
+    // the return value is broadcast to all subscribers of /chat/messages
     @SendTo("/chat/messages")
     public ChatMessage chat(ChatMessage message) throws Exception {
-        Thread.sleep(1000);
-        Chatroom ch = cr.findById(message.getIdchat()).orElse(null);
+        Thread.sleep(1000); // simulated delay
+        Chatroom ch = cr.findById(message.idchat).orElse(null);
         message.setChat(ch);
         mr.save(message);
-        return new ChatMessage(message.getMessageId(),message.getText(), message.getUsername(), message.getAvatar(),message.getSender(),message.getIdchat(),message.getChat());
+        return new ChatMessage(message.messageId,message.getText(), message.getUsername(), message.getAvatar(),message.getSender(),message.idchat,message.chat);
     }
     
 }

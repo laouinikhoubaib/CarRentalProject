@@ -1,10 +1,10 @@
 package com.example.carrental.Controllers;
 
-import com.example.carrental.Models.Chatroom;
 import com.example.carrental.Models.User;
-import com.example.carrental.Repository.ChatroomRepo;
 import com.example.carrental.Repository.UserRepository;
-import com.example.carrental.Service.ChatService;
+import com.example.carrental.websocketproject.ChatService;
+import com.example.carrental.websocketproject.Chatroom;
+import com.example.carrental.websocketproject.ChatroomRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +28,7 @@ public class ChatControllerr {
 	return cs.findchat(Idsender, idreciver);
 	}
 
+	
 	@PostMapping("/getc/{idreciver}")
 	@ResponseBody
 	public Chatroom getcon(@PathVariable("idreciver") Long idreciver) {

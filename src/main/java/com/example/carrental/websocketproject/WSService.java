@@ -1,8 +1,5 @@
-package com.example.carrental.Utils;
+package com.example.carrental.websocketproject;
 
-import com.example.carrental.Models.ChatMessage;
-import com.example.carrental.Service.NotificationService;
-import com.example.carrental.Service.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;

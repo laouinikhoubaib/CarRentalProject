@@ -1,6 +1,5 @@
-package com.example.carrental.Repository;
+package com.example.carrental.websocketproject;
 
-import com.example.carrental.Models.ChatMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ChatmessageRepo extends JpaRepository<ChatMessage, Long>{

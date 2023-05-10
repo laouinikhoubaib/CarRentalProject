@@ -31,6 +31,7 @@ public class OcrModel {
 	public MultipartFile getImage() {
 		return Image;
 	}
+
 	public void setImage(MultipartFile image) {
 		Image = image;
 	}
