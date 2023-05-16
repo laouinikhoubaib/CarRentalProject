@@ -14,10 +14,11 @@ import java.util.List;
 public interface VehiculeRepository extends JpaRepository<Vehicule, Integer> {
 
 
+
     @Query("SELECT p FROM Vehicule p ORDER BY p.jourslocation ASC")
     List<Vehicule> findAllOrderByPrixAsc();
 
     @Query("SELECT p FROM Vehicule p WHERE p.jourslocation< :prix2 and p.jourslocation> :prix1")
-    List<Vehicule> findRentalOfferByRangePrice(@Param("prix1") double prix1, @Param("prix2")  double prix2);
+    List<Vehicule> getVehiculesByRangePrix(@Param("prix1") double prix1, @Param("prix2")  double prix2);
 }
 
