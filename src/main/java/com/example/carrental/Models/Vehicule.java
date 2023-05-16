@@ -1,9 +1,6 @@
 package com.example.carrental.Models;
 
 
-import com.example.carrental.Enumerations.Alimentation;
-import com.example.carrental.Enumerations.EtatActuel;
-import com.example.carrental.Enumerations.TypeCategorie;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -49,6 +46,10 @@ public class Vehicule {
     @Column(name = "charge_utile", nullable = false, length = 100)
     private String charge_utile;
 
+
+    @Column(name = "\"description\"", nullable = false, length = 100)
+    private String description;
+
     @Column
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dateajout;
@@ -60,20 +61,13 @@ public class Vehicule {
     private Double jourslocation;
 
 
-    @Enumerated(EnumType.STRING)
-    private Alimentation alimentation;
+    @OneToMany(mappedBy = "vehiculeCategorie")
+    private Set<CategorieVehicule> vehiculeCategorievehiculeCategories;
 
-    @Enumerated(EnumType.STRING)
-    private EtatActuel etatactuel;
-
-
-
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL ,mappedBy = "vehicule")
-    Set<ModelVehicule> modelVehicules;
 
     @OneToMany(mappedBy = "vehiculeReservation")
     private Set<Reservation> vehiculeReservationReservations;
+
 
     @ManyToOne
     private User user;

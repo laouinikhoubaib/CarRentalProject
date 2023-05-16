@@ -1,12 +1,8 @@
 package com.example.carrental.Models;
 
 
-import com.example.carrental.Enumerations.TypeCategorie;
-import com.example.carrental.Enumerations.TypeVehicule;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import javax.persistence.*;
 
 @Getter
@@ -22,13 +18,18 @@ public class CategorieVehicule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long categorieId;
+    Long categorieutilitaireId;
 
-    @Enumerated(EnumType.STRING)
-    TypeCategorie typecategorie;
 
-    @JsonIgnore
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "utilitaire")
+    private LocationUtilitaire locationUtilitaire;
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "voiture")
+    private LocationVoiture locationVoiture;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "model_id", referencedColumnName = "modelId")
-    private ModelVehicule modelvehicule;
+    @JoinColumn(name = "vehicule_catveh_categorie_id")
+    private Vehicule vehiculeCategorie;
 }

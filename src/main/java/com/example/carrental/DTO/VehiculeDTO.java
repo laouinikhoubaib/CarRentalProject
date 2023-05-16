@@ -2,7 +2,6 @@ package com.example.carrental.DTO;
 
 
 import com.example.carrental.Enumerations.Alimentation;
-import com.example.carrental.Enumerations.EtatActuel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,5 +37,4 @@ public class VehiculeDTO {
 
     private Alimentation alimentation;
 
-    private EtatActuel etatactuel;
 }
