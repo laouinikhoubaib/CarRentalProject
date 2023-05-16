@@ -70,9 +70,6 @@ public class User implements Serializable {
     @JoinColumn(name = "agence_id", referencedColumnName = "agenceId")
     private Agence agence;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL ,mappedBy = "user")
-    Set<Vehicule> vehicules;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL,mappedBy="user")
@@ -97,4 +94,7 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     Set<CommentLike> commentLikes;
+
+    @OneToMany(mappedBy = "userReservation")
+    private Set<Reservation> userReservationReservations;
 }
