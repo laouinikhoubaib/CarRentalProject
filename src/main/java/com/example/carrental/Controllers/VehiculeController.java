@@ -43,6 +43,30 @@ public class VehiculeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
         }
     }
+
+    @PutMapping("/updateVehicule")
+    public ResponseEntity<String> updateVehicule(@RequestBody Vehicule vehicule){
+        boolean isUpdated = vehiculeService.updateVehicule(vehicule);
+        if (isUpdated) {
+            String message = "Véhicule de location mise à jour avec succès";
+            return ResponseEntity.ok().body(message);
+        } else {
+            String message = "Erreur lors de la mise à jour de véhicule";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+        }
+    }
+
+    @DeleteMapping("/deleteVehicule/{vehicule}")
+    public ResponseEntity<String> deleteRentalOffer(@PathVariable("vehicule") int vehicule) {
+        boolean isDeleted = vehiculeService.deleteVehicule(vehicule);
+        if (isDeleted) {
+            String message = "Véhicule de location supprimée avec succès";
+            return ResponseEntity.ok().body(message);
+        } else {
+            String message = "Erreur lors de la suppression de Véhicule";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+        }
+    }
     @GetMapping("/GetAllVehicules")
     public List<VehiculeDTO> getAllVehicules(){
         List<VehiculeDTO> listvehicules = vehiculeService.getAll();
