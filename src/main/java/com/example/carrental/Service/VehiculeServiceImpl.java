@@ -162,5 +162,19 @@ public class VehiculeServiceImpl implements VehiculeService {
         }
         return vehiculeList.stream()
                 .map((vehicule) -> mapToDTO(vehicule, new VehiculeDTO()))
-                .collect(Collectors.toList());    }
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public double getChiffreAffaireByVehicule(int vehiculeId) {
+        Vehicule vehicule= vehiculeRepository.findById(vehiculeId).get();
+        Set<Reservation> reservationList=vehicule.getVehiculeReservationReservations();
+        double revenueVehicule=0.0;
+        for (Reservation reservation:reservationList){
+            revenueVehicule+=  vehicule.getJourslocation()*reservation.getNbjour();
+        }
+        return revenueVehicule;
+    }
+
 }

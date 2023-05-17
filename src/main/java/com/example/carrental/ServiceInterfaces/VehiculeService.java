@@ -17,4 +17,6 @@ public interface VehiculeService {
     public List<VehiculeDTO> findTopNByOrderByVehiculedateDesc(Integer n);
 
     public List<VehiculeDTO> getVehiculesByRangePrix(double prix1, double prix2);
+
+    double getChiffreAffaireByVehicule(int vehiculeId);
 }
