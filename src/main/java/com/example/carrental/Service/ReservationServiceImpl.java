@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -105,4 +106,27 @@ public class ReservationServiceImpl implements ReservationService {
 
         return reservationRepository.save(reservation).getReservid();
     }
+
+    @Override
+    public double getChiffreAffaireByUser(long userId) {
+        List<Vehicule> vehiculeListByUser=new ArrayList<>();
+        List<Vehicule> vehiculeList =vehiculeRepository.findAll();
+        for (Vehicule vehicule:vehiculeList) {
+            if (vehicule.getUser().getUserId()==userId){
+                vehiculeListByUser.add(vehicule);
+            }
+        }
+        List<Reservation> reservationListUser=new ArrayList<>();
+        List<Reservation> reservationList=reservationRepository.findAll();
+        for (Reservation reservation:reservationList){
+            for (Vehicule vehicule:vehiculeListByUser){
+                if (reservation.getVehiculeReservation().getVehiculeId()==vehicule.getVehiculeId()){
+                    reservationListUser.add(reservation);
+                }}
+        }
+        Double totalRevenue = 0.0;
+        for (Reservation reservation : reservationListUser) {
+            totalRevenue += reservation.getPrix();
+        }
+        return totalRevenue;    }
 }

@@ -13,4 +13,5 @@ public interface ReservationService {
     boolean updateReservation(Reservation reservation);
     boolean deleteReservation(int id);
     public int addReservation(Reservation reservation, long userId,int vehiculeId) throws MessagingException;
+    public double getChiffreAffaireByUser(long userId);
 }
