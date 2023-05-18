@@ -4,6 +4,7 @@ import com.example.carrental.DTO.ReservationDTO;
 import com.example.carrental.Models.Reservation;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.List;
 
 public interface ReservationService {
@@ -14,4 +15,6 @@ public interface ReservationService {
     boolean deleteReservation(int id);
     public int addReservation(Reservation reservation, long userId,int vehiculeId) throws MessagingException;
     public double getChiffreAffaireByUser(long userId);
+    public void exportcontrat(int idReserv, String filePath) throws IOException;
+    public void rappelFinContrat() throws MessagingException;
 }
