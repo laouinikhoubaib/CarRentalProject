@@ -59,4 +59,28 @@ public class ReservationServiceImpl implements ReservationService {
                 .map(rentalContract -> mapToDTO(rentalContract, new ReservationDTO()))
                 .orElseThrow(NotFoundException::new);
     }
+    public boolean contractIsValid(Reservation reservation){
+        List<Reservation> reservationList=reservationRepository.getReservationByDates(reservation.getDatedebut(),reservation.getDatefin());
+        return reservationList.isEmpty();
+    }
+
+    @Override
+    public boolean updateReservation(Reservation reservation) {
+        if(reservationRepository.existsById(reservation.getReservid())){
+            reservationRepository.save(reservation).equals(reservation);
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteReservation(int id) {
+        if(reservationRepository.existsById(id)){
+            reservationRepository.deleteById(id);
+            return true;
+        }else{
+            return  false;
+        }
+    }
 }
