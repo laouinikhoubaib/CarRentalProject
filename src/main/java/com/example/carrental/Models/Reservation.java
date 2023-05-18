@@ -44,4 +44,8 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicule_vehiculereserv_reservation_id")
     private Vehicule vehiculeReservation;
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "paiement")
+    private Paiement paiement; //
 }

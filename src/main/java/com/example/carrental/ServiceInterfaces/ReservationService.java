@@ -2,6 +2,8 @@ package com.example.carrental.ServiceInterfaces;
 
 import com.example.carrental.DTO.ReservationDTO;
 import com.example.carrental.Models.Reservation;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -17,4 +19,5 @@ public interface ReservationService {
     public double getChiffreAffaireByUser(long userId);
     public void exportcontrat(int idReserv, String filePath) throws IOException;
     public void rappelFinContrat() throws MessagingException;
+    public Charge createCharge(String token, int amount, String currency, int idcontract) throws StripeException;
 }

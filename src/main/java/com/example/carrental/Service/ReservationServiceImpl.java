@@ -3,6 +3,7 @@ package com.example.carrental.Service;
 
 import com.example.carrental.DTO.ReservationDTO;
 import com.example.carrental.Exceptions.NotFoundException;
+import com.example.carrental.Models.Paiement;
 import com.example.carrental.Models.Reservation;
 import com.example.carrental.Models.User;
 import com.example.carrental.Models.Vehicule;
@@ -13,6 +14,8 @@ import com.example.carrental.ServiceInterfaces.ReservationService;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -28,10 +31,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -244,4 +244,28 @@ public class ReservationServiceImpl implements ReservationService {
 
             }}
     }
+
+    @Override
+    public Charge createCharge(String token, int amount, String currency, int idreserv) throws StripeException {
+        Map<String, Object> chargeParams = new HashMap<>();
+        chargeParams.put("amount", amount);
+        chargeParams.put("currency", currency);
+        chargeParams.put("source", token);
+        Charge charge = Charge.create(chargeParams);
+        Reservation reservation = reservationRepository.findById(idreserv).get();
+        int id = reservation.getReservid();
+        String username = reservation.getVehiculeReservation().getUser().getUsername();
+        Paiement p = new Paiement();
+        String secretKey = "sk_test_51N9A3rDi7Brh0eKhHdXEuTxdDeZXnOCr0sgitOHfaCSmo1MEkejhZOXTWlf4cvZO0oMdx4s7Qaa6dsFrcaUXayd4000DiU9dDP";
+        p.setAmount(charge.getAmount());
+        p.setCardNumber(secretKey);
+        p.setCurrency(charge.getCurrency());
+        p.setCardholderName(username);
+        p.setCvc("test");
+        reservation.setPaiement(p);
+        p.setReservation(reservation);
+        reservationRepository.save(reservation);
+        return charge;
+    }
+
 }
