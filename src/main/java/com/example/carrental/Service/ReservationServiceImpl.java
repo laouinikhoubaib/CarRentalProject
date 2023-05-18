@@ -4,6 +4,8 @@ package com.example.carrental.Service;
 import com.example.carrental.DTO.ReservationDTO;
 import com.example.carrental.Exceptions.NotFoundException;
 import com.example.carrental.Models.Reservation;
+import com.example.carrental.Models.User;
+import com.example.carrental.Models.Vehicule;
 import com.example.carrental.Repository.ReservationRepository;
 import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.Repository.VehiculeRepository;
@@ -13,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.mail.Session;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -82,5 +87,22 @@ public class ReservationServiceImpl implements ReservationService {
         }else{
             return  false;
         }
+    }
+
+    @Override
+    public int addReservation(Reservation reservation, long userId,int vehiculeId) throws MessagingException {
+        LocalDate datefin=reservation.getDatedebut().plusDays(reservation.getNbjour());
+        reservation.setDatefin(datefin); //generation automatique de ladate fin
+
+        if (!contractIsValid(reservation))
+            return  -1;
+        User user=userRepository.findById(userId).get();
+        Vehicule vehicule=vehiculeRepository.findById(vehiculeId).get();
+        Set<Reservation> reservationList=vehicule.getVehiculeReservationReservations();
+        reservation.setUserReservation(user);
+        reservation.setVehiculeReservation(vehicule);
+        reservation.setPrix(reservation.getVehiculeReservation().getJourslocation()*reservation.getNbjour());
+
+        return reservationRepository.save(reservation).getReservid();
     }
 }
