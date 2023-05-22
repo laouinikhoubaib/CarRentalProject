@@ -20,5 +20,11 @@ public interface VehiculeRepository extends JpaRepository<Vehicule, Integer> {
 
     @Query("SELECT p FROM Vehicule p WHERE p.jourslocation< :prix2 and p.jourslocation> :prix1")
     List<Vehicule> getVehiculesByRangePrix(@Param("prix1") double prix1, @Param("prix2")  double prix2);
+
+    @Query("SELECT p FROM Vehicule p ORDER BY p.jourslocation DESC")
+    List<Vehicule> findAllVehiculesByPriceDESC();
+
+    @Query("SELECT p FROM Vehicule p WHERE  p.user.userId=:idUser")
+    List<Vehicule> findVehiculesByUser(int idUser);
 }
 

@@ -11,11 +11,13 @@ import com.example.carrental.Repository.ReservationRepository;
 import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.Repository.VehiculeRepository;
 import com.example.carrental.ServiceInterfaces.ReservationService;
+import com.example.carrental.ServiceInterfaces.UserService;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -27,6 +29,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -50,6 +53,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     VehiculeRepository vehiculeRepository;
 
+    @Autowired
+    UserServiceImpl userService;
 
     private ReservationDTO mapToDTO(final Reservation reservation,
                                        final ReservationDTO reservationDTO) {
@@ -76,9 +81,17 @@ public class ReservationServiceImpl implements ReservationService {
                 .map(rentalContract -> mapToDTO(rentalContract, new ReservationDTO()))
                 .orElseThrow(NotFoundException::new);
     }
+    @Override
     public boolean contractIsValid(Reservation reservation){
         List<Reservation> reservationList=reservationRepository.getReservationByDates(reservation.getDatedebut(),reservation.getDatefin());
         return reservationList.isEmpty();
+    }
+    @Override
+    public boolean contractIsValidd(LocalDate datedebut,LocalDate datefin){
+        List<Reservation> rentalContractList=reservationRepository.
+                getReservationByDates(datedebut,datefin);
+        System.out.println(rentalContractList.isEmpty());
+        return rentalContractList.isEmpty();
     }
 
     @Override
@@ -102,28 +115,28 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public int addReservation(Reservation reservation, long userId,int vehiculeId) throws MessagingException {
+    public int addReservation(Reservation reservation, @NonNull HttpServletRequest request, int vehiculeId) throws MessagingException {
         LocalDate datefin=reservation.getDatedebut().plusDays(reservation.getNbjour());
         reservation.setDatefin(datefin); //generation automatique de ladate fin
 
         if (!contractIsValid(reservation))
             return  -1;
-        User user=userRepository.findById(userId).get();
+        User user = userService.getUserByToken(request);
         Vehicule vehicule=vehiculeRepository.findById(vehiculeId).get();
         Set<Reservation> reservationList=vehicule.getVehiculeReservationReservations();
         reservation.setUserReservation(user);
         reservation.setVehiculeReservation(vehicule);
         reservation.setPrix(reservation.getVehiculeReservation().getJourslocation()*reservation.getNbjour());
-
         return reservationRepository.save(reservation).getReservid();
     }
 
     @Override
-    public double getChiffreAffaireByUser(long userId) {
+    public double getChiffreAffaireByUser(@NonNull HttpServletRequest request) {
         List<Vehicule> vehiculeListByUser=new ArrayList<>();
         List<Vehicule> vehiculeList =vehiculeRepository.findAll();
+        User user = userService.getUserByToken(request);
         for (Vehicule vehicule:vehiculeList) {
-            if (vehicule.getUser().getUserId()==userId){
+            if (vehicule.getUser().getUserId()==user.getUserId()){
                 vehiculeListByUser.add(vehicule);
             }
         }
@@ -142,6 +155,29 @@ public class ReservationServiceImpl implements ReservationService {
         return totalRevenue;
     }
 
+
+    public List<ReservationDTO> getContratUnJour(@NonNull HttpServletRequest request){
+
+        List<Reservation> reservationList= reservationRepository.findAll();
+        LocalDate date = LocalDate.now();
+        List<Reservation> reservationsEndDate=new ArrayList<>();
+
+        for (Reservation r:reservationList){
+            LocalDate avantTroisJoursDateFin =r.getDatefin().minusDays(1);
+            User user = userService.getUserByToken(request);
+            if (r.getUserReservation().getUserId()==user.getUserId()){
+                if (
+                        (avantTroisJoursDateFin != null && date.isEqual(avantTroisJoursDateFin)) ||
+                                (avantTroisJoursDateFin != null&&date.isAfter(avantTroisJoursDateFin)&& date.isBefore(r.getDatefin()))
+                ){
+                    reservationsEndDate.add(r);
+                }
+            }
+        }
+        return(reservationsEndDate.stream()
+                .map((rentalContract) -> mapToDTO(rentalContract, new ReservationDTO()  ))
+                .collect(Collectors.toList()));
+    }
     public void sendEmail(String to, String subject, String text, String htmlBody) throws MessagingException {
         Message message = new MimeMessage(session);
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
@@ -167,82 +203,35 @@ public class ReservationServiceImpl implements ReservationService {
         Transport.send(message);
     }
 
-    @Override
-    public void exportcontrat(int idReserv, String filePath) throws IOException {
-        try {
-            Reservation reservation = reservationRepository.findById(idReserv).get();
-
-            String htmlContent = "<!DOCTYPE html> \n" +
-                    "<html>\n" +
-                    "    <head><style>body{background-color: rgb(185, 161, 73);}h1{text-align: center ;font-weight: bold;color: rgb(255, 255, 255 );font-family: cursive;}p{text-align: center;font-size: medium;} </style></head>\n" +
-                    "    <body>\n" +
-                    "      <h1>Tech Master</h1> \n \n" +
-                    "      \n" +
-                    "      <p>Date début Contrat: "+ reservation.getDatedebut() +"</p>\n" +
-                    "      <p>Date fin  Contrat: "+ reservation.getDatefin() +"</p>\n" +
-
-                    "      <p>Prix: "+reservation.getPrix() +"</p>\n" +
-                    "      <p>NomClient: "+ reservation.getUserReservation().getUsername()+" </p>\n" +
-                    "      <p>Matricule de  vehicule: "+  reservation.getVehiculeReservation().getMatricule() +"</p>\n" +
-                    "      <p>Date: "+new Date() +"</p>\n" +
-                    "   \n" +
-                    "    </body>\n" +
-                    "</html>";
-
-            Document document = new Document();
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("output.pdf"));
-
-            PdfWriter.getInstance(document, new FileOutputStream(filePath));
-            document.open();
-
-            XMLWorkerHelper worker = XMLWorkerHelper.getInstance();
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(htmlContent.getBytes());
-            worker.parseXHtml(writer, document, inputStream);
-
-            document.close();
-        } catch (DocumentException e) {
-            // Handle DocumentException
-        }
-    }
 
     @Override
-    @Scheduled(cron = "0 0 10 * * *")
 
-    public void rappelFinContrat() throws MessagingException {
+    public List<Integer> rappelFinContratAngular() {
 
         List<Reservation> reservationList= reservationRepository.findAll();
-        List<Reservation> reservationDateFin=new ArrayList<>();
+        List<Reservation> reservationEndDate=new ArrayList<>();
         LocalDate date = LocalDate.now();
+        List<User> userFinContrat=new ArrayList<>();
+        List<Integer> idUserFinContrat=new ArrayList<>();
 
         for (Reservation r:reservationList){
-            LocalDate avantTroisJoursDateFin =r.getDatefin().minusDays(1);
-            if (
-                    (avantTroisJoursDateFin != null && date.isEqual(avantTroisJoursDateFin)) ||
-                            (avantTroisJoursDateFin != null&&date.isAfter(avantTroisJoursDateFin)&& date.isBefore(r.getDatefin()))
-            ){
-                reservationDateFin.add(r);
-                System.out.println("Ce contrat est d'id :" + r.getReservid());
-                User user=userRepository.findById(r.getUserReservation().getUserId()).get();
-                String email= user.getEmail();
-                System.out.println(email);
-                String msg="Je vous rappel que la fin de votre contrat est le :"+r.getDatefin();
-                String htmlBody = "<!DOCTYPE html> \n" +
-                        "<html>\n" +
-                        "    <head><style> header{background-color: (185, 161, 73); font-weight: bold;font-family: cursive ; text-align: center;}div{background-color: beige;}</style></head>\n" +
-                        "    <body>\n" +
-                        "       <header>TechMaster</header>\n" +
-                        "          <div>\n" +
-                        "          <h3>Bonjour </h3>" + user.getUsername()+
-                        "           <a>On vous rappel que la fin de votre contrat </a> \n" + r.getReservid()+
-                        "           <a> aura lieu le :</a>  \n" +r.getDatefin()+
-                        "<footer>Bonne journée.</footer>    \n" +
-                        "          </div>\n" +
-                        "       \n" +
-                        "    </body>\n" +
-                        "</html>";
-                sendEmail(email,"Rappel Fin Contrat", "", htmlBody);
+            LocalDate avantUnJoursDateFin =r.getDatefin().minusDays(1);
+            System.out.println("avantunJourDateFin"+avantUnJoursDateFin);
+            System.out.println("local date"+date);
 
+            if (
+                    (avantUnJoursDateFin != null && date.isEqual(avantUnJoursDateFin)) ||
+                            (avantUnJoursDateFin != null&&date.isAfter(avantUnJoursDateFin)&& date.isBefore(r.getDatefin()))
+            ){
+                reservationEndDate.add(r);
             }}
+        System.out.println(reservationEndDate);
+        for(Reservation r:reservationEndDate){
+            if(!userFinContrat.contains(r))
+                idUserFinContrat.add(Math.toIntExact(r.getUserReservation().getUserId()));
+        }
+        return  idUserFinContrat;
+
     }
 
     @Override

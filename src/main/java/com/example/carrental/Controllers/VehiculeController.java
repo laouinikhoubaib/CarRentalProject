@@ -8,14 +8,17 @@ import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.Repository.VehiculeRepository;
 import com.example.carrental.Service.VehiculeServiceImpl;
 import com.example.carrental.ServiceInterfaces.VehiculeService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -36,9 +39,9 @@ public class VehiculeController {
     VehiculeRepository vehiculeRepository;
 
 
-    @PostMapping("/addVehicule/{idUser}")
-    public ResponseEntity<String> addVehicule(@RequestBody Vehicule vehicule, @PathVariable("idUser") int idUser){
-        int newvehiculeId = vehiculeService.addVehicule(vehicule, idUser);
+    @PostMapping("/addVehicule")
+    public ResponseEntity<String> addVehicule(@RequestBody Vehicule vehicule,  @NotNull HttpServletRequest request){
+        int newvehiculeId = vehiculeService.addVehicule(vehicule, request);
         if (newvehiculeId != 0) {
             String message = "Véhicule  ajoutée avec succès avec l'id " + newvehiculeId;
             return ResponseEntity.ok().body(message);
@@ -61,7 +64,7 @@ public class VehiculeController {
     }
 
     @DeleteMapping("/deleteVehicule/{vehicule}")
-    public ResponseEntity<String> deleteRentalOffer(@PathVariable("vehicule") int vehicule) {
+    public ResponseEntity<String> deleteVehicule(@PathVariable("vehicule") int vehicule) {
         boolean isDeleted = vehiculeService.deleteVehicule(vehicule);
         if (isDeleted) {
             String message = "Véhicule de location supprimée avec succès";
@@ -97,8 +100,34 @@ public class VehiculeController {
             return ResponseEntity.ok().body(disponibilite);
         }
     }
-    @GetMapping("/getNTopRentalOffers/{vehicule}")
-    public ResponseEntity<?> getRentalOffersByRangePrice(@PathVariable("vehicule") Integer vehicule){
+
+    @GetMapping("/triDesc")
+    public ResponseEntity<List<VehiculeDTO>> getVehiculesOrderByPriceDesc() {
+        List<VehiculeDTO> vehicules = vehiculeService.findAllOrderByPrixDesc();
+        if (vehicules.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            String message = "Liste des offres de location triées par prix en ordre ascendant récupérée avec succès";
+            return ResponseEntity.ok().header("message", message).body(vehicules);
+        }
+    }
+
+    @GetMapping("/getNumberVehiculesByUser/{userId}")
+    public ResponseEntity<?> getNumberVehiculesByUser(@PathVariable("userId") int idUser) {
+        int numberVehiculesByUser = vehiculeService.getNumberVehiculeByUser(idUser);
+
+        String message = "Le nombre d'offre pour cette utilisateur est :" + numberVehiculesByUser;
+        return ResponseEntity.status(HttpStatus.OK.value()).body(message);
+
+    }
+    @GetMapping("/GetAvailableVehicules/{datedebut}/{datefin}")
+    public List<VehiculeDTO> GetAvailableVehicules(@PathVariable("datedebut") String datedebut,@PathVariable("datefin")String datefin){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        List<VehiculeDTO> listContrats = vehiculeService.getAvailableVehicules(LocalDate.parse(datedebut,formatter),LocalDate.parse(datefin,formatter));
+        return listContrats;
+    }
+    @GetMapping("/getNTopVehicules/{vehicule}")
+    public ResponseEntity<?> getVehiculesByRangePrice(@PathVariable("vehicule") Integer vehicule){
         List<VehiculeDTO> vehiculeDTOList = vehiculeService.findTopNByOrderByVehiculedateDesc(vehicule);
         if (!vehiculeDTOList.isEmpty()) {
             return ResponseEntity.ok(vehiculeDTOList);
@@ -109,7 +138,7 @@ public class VehiculeController {
     }
 
     @GetMapping("/getRentalOffersByRangePrice/{prix1}/{prix2}")
-    public ResponseEntity<List<VehiculeDTO>> getRentalOffersByRangePrice(@PathVariable("prix1")double prix1,@PathVariable("prix2")double prix2){
+    public ResponseEntity<List<VehiculeDTO>> getVehiculesByRangePrice(@PathVariable("prix1")double prix1,@PathVariable("prix2")double prix2){
         List<VehiculeDTO> vehicules = vehiculeService.getVehiculesByRangePrix(prix1,prix2);
         if (vehicules.isEmpty()) {
             String message = "Il n'existe pas des véhicules de location entre les prix " + prix1 + " et " + prix2;
@@ -132,54 +161,15 @@ public class VehiculeController {
         }
     }
 
-    @GetMapping("/revenueoffer/{vehiculeId}")
-    public ResponseEntity<Object> calculateRevenueForUser(@PathVariable int vehiculeId) {
+    @GetMapping("/revenue/{vehiculeId}")
+    public double calculateRevenueForUser(@PathVariable int vehiculeId) {
         Double revenue = vehiculeService.getChiffreAffaireByVehicule(vehiculeId);
         if (revenue == null) {
-            String message = "L'offre de location avec l'ID " + vehiculeId + " n'existe pas";
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+            return 0;
         } else {
-            String message = "Le chiffre d'affaires pour l'offre de location avec l'ID " + vehiculeId + " est de " + revenue;
-            return ResponseEntity.ok().body(message);
+            return revenue;
         }
     }
 
-    @PostMapping("/addImage/{userId}")
-    public ResponseEntity<?> addRentalOffer(@RequestParam("title") String title,
-                                            @RequestParam(value = "image", required = false) MultipartFile image,
-                                            @RequestParam("jourslocation") Double jourslocation,
-                                            @RequestParam("adress") String adress,
-                                            @RequestParam("description") String description,
-                                            @PathVariable("userId") int userId) throws IOException {
 
-        // Vérifier si l'utilisateur existe
-        User user = userRepository.findById((long) userId).orElse(null);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur non trouvé");
-        }
-
-        // Créer un nouveau plan
-        Vehicule vehicule = new Vehicule();
-        vehicule.setUser(user);
-//        vehicule.setTitle(title);
-//        vehicule.setOffredate(LocalDate.now());
-//        vehicule.setDescription(description);
-//        vehicule.setMonthlyrent(monthlyrent);
-//        vehicule.setAdress(adress);
-
-        // Enregistrer l'image si elle existe
-        if (image != null && !image.isEmpty()) {
-            String imagePath = vehiculeServiceimpl.saveImage(image,vehicule);
-            vehicule.setPicture(imagePath);
-        }
-
-        // Enregistrer le plan
-        int rentalOfferid = vehiculeService.addVehicule(vehicule, userId);
-
-        if (rentalOfferid > 0) {
-            return ResponseEntity.ok().body(vehiculeRepository.findById(rentalOfferid).orElse(null));
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout de l'offre de location");
-        }
-    }
 }

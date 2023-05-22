@@ -3,10 +3,14 @@ package com.example.carrental.Controllers;
 
 import com.example.carrental.DTO.ReservationDTO;
 import com.example.carrental.Models.Reservation;
+import com.example.carrental.Models.User;
 import com.example.carrental.Repository.ReservationRepository;
+import com.example.carrental.Service.UserServiceImpl;
 import com.example.carrental.ServiceInterfaces.ReservationService;
+import com.example.carrental.ServiceInterfaces.UserService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -17,10 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -34,6 +41,8 @@ public class ReservationController {
     @Autowired
     ReservationRepository reservationRepository;
 
+    @Autowired
+    UserServiceImpl userService;
     @GetMapping("/GetAllReservations")
     public ResponseEntity<List<ReservationDTO>> getAllReservations(){
         List<ReservationDTO> reservationDTOS = reservationService.findAll();
@@ -45,7 +54,7 @@ public class ReservationController {
     }
 
     @GetMapping("/getReservation/{reservation}")
-    public ResponseEntity<?> getRentalOffer(@PathVariable("reservation") int reservation) {
+    public ResponseEntity<?> getReservation(@PathVariable("reservation") int reservation) {
         ReservationDTO reservationDTO = reservationService.getById(reservation);
         if (reservationDTO == null) {
             return ResponseEntity.notFound().build();
@@ -54,14 +63,22 @@ public class ReservationController {
         }
     }
 
-    @PostMapping("/addReservation/{userId}/{vehiculeId}")
-    public ResponseEntity<String> addReservation(@RequestBody Reservation reservation, @PathVariable("userId") int userId, @PathVariable("vehiculeId") int vehiculeId) throws MessagingException {
+    @PostMapping("/addReservation/{vehiculeId}")
+    public ResponseEntity<String> addReservation(@RequestBody Reservation reservation, @NonNull HttpServletRequest request, @PathVariable("vehiculeId") int vehiculeId) throws MessagingException {
         try {
-            int contratId = reservationService.addReservation(reservation, userId, vehiculeId);
-            return ResponseEntity.ok("Le contrat a été ajouté avec succès. Identifiant de contrat : " + contratId);
+            int contratId = reservationService.addReservation(reservation, request, vehiculeId);
+            if(contratId == -1) throw new Exception() ;
+            return ResponseEntity.ok(" contrat : " + contratId);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur s'est produite lors de l'ajout du contrat : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Une erreur s'est produite lors de l'ajout du contrat : " + e.getMessage());
         }
+    }
+
+    @GetMapping("/ContractIsValidd/{datedebut}/{datefin}")
+    public Boolean contractIsValid(@PathVariable("datedebut") String datedebut,@PathVariable("datefin") String datefin) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        return reservationService.contractIsValidd(LocalDate.parse(datedebut,formatter),LocalDate.parse(datefin,formatter));
     }
 
     @PutMapping("/updateReservation")
@@ -86,44 +103,19 @@ public class ReservationController {
         }
     }
 
-    @GetMapping("/revenue/{userId}")
-    public ResponseEntity<String> calculateRevenueForUser(@PathVariable int userId) {
-        Double revenue = reservationService.getChiffreAffaireByUser(userId);
+    @GetMapping("/revenue")
+    public ResponseEntity<String> calculateRevenueForUser(@NonNull HttpServletRequest request) {
+        Double revenue = reservationService.getChiffreAffaireByUser(request);
+        User user = userService.getUserByToken(request);
         if (revenue != null) {
-            return ResponseEntity.ok("Chiffre d'affaires pour l'utilisateur " + userId + " : " + revenue);
+            return ResponseEntity.ok("Chiffre d'affaires pour l'utilisateur " + user.getUserId() + " : " + revenue);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Aucun chiffre d'affaires n'a été trouvé pour l'utilisateur " + userId + ".");
+                    .body("Aucun chiffre d'affaires n'a été trouvé pour l'utilisateur " + user.getUserId()+ ".");
         }
     }
 
-    @GetMapping("/export/{id}")
-    public ResponseEntity<Resource> exportContrat(@PathVariable int id) throws IOException {
 
-        String filename = "contrat_" + id + ".pdf";
-        String filePath = "C:/Users/khoubaib/Desktop/" + filename;
-
-        // Export the contract to PDF
-        reservationService.exportcontrat(id, filePath);
-
-        // Prepare the file as a Resource
-        File file = new File(filePath);
-        Path path = file.toPath();
-        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-
-        // Set the response headers
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
-
-        // Return the file as a ResponseEntity
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(file.length())
-                .contentType(MediaType.parseMediaType("application/pdf"))
-                .body(resource);
-
-    }
 
     @PostMapping("/charge")
     public ResponseEntity<Charge> createCharge(@RequestParam("token") String token,

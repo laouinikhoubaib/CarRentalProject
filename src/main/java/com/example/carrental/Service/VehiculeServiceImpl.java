@@ -6,6 +6,7 @@ import com.example.carrental.Exceptions.NotFoundException;
 import com.example.carrental.Models.Reservation;
 import com.example.carrental.Models.User;
 import com.example.carrental.Models.Vehicule;
+import com.example.carrental.Repository.ReservationRepository;
 import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.Repository.VehiculeRepository;
 import com.example.carrental.ServiceInterfaces.VehiculeService;
@@ -15,7 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -28,7 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @Service
@@ -39,16 +40,20 @@ public class VehiculeServiceImpl implements VehiculeService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ReservationRepository reservationRepository;
+    @Autowired
+    UserServiceImpl userService;
     private VehiculeDTO mapToDTO(final Vehicule vehicule,
                                     final VehiculeDTO vehiculeDTO) {
         vehiculeDTO.setVehiculeId(vehicule.getVehiculeId());
-        vehiculeDTO.setCharge_utile(vehicule.getCharge_utile());
+        vehiculeDTO.setCharge_utile(vehicule.getChargeutile());
         vehiculeDTO.setCouleur(vehicule.getCouleur());
         vehiculeDTO.setMatricule(vehicule.getMatricule());
         vehiculeDTO.setDateajout(vehicule.getDateajout());
         vehiculeDTO.setPicture(vehicule.getPicture());
         vehiculeDTO.setJourslocation(vehicule.getJourslocation());
-        vehiculeDTO.setNbr_places(vehicule.getNbr_places());
+        vehiculeDTO.setNbr_places(vehicule.getNbrplaces());
         vehiculeDTO.setLargeur(vehicule.getLargeur());
         vehiculeDTO.setLongueur(vehicule.getLongueur());
         vehiculeDTO.setPuissance(vehicule.getPuissance());
@@ -78,8 +83,8 @@ public class VehiculeServiceImpl implements VehiculeService {
     }
 
     @Override
-    public int addVehicule(Vehicule vehicule, int idUser){
-        User user=userRepository.findById((long) idUser).get();
+    public int addVehicule(Vehicule vehicule,@NotNull HttpServletRequest request){
+        User user = userService.getUserByToken(request);
         vehicule.setUser(user);
         return vehiculeRepository.save(vehicule).getVehiculeId();
     }
@@ -132,11 +137,39 @@ public class VehiculeServiceImpl implements VehiculeService {
     }
     @Override
     public List<VehiculeDTO> findAllOrderByPrixAsc() {
-        final List<Vehicule> rentalOffers = vehiculeRepository.findAllOrderByPrixAsc();
-        return rentalOffers.stream()
+        final List<Vehicule> vehicules = vehiculeRepository.findAllOrderByPrixAsc();
+        return vehicules.stream()
                 .map((vehicule) -> mapToDTO(vehicule, new VehiculeDTO()))
                 .collect(Collectors.toList());
 
+    }
+    @Override
+    public List<VehiculeDTO> findAllOrderByPrixDesc(){
+        final List<Vehicule> vehicules = vehiculeRepository.findAllVehiculesByPriceDESC();
+        return vehicules.stream()
+                .map((vehicule) -> mapToDTO(vehicule, new VehiculeDTO()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public int getNumberVehiculeByUser(int idUser){
+        List<Vehicule>rentalOfferList=vehiculeRepository.findVehiculesByUser(idUser);
+        int        numberOfferByUser=0;
+        for (Vehicule rentalOffer:rentalOfferList){
+            numberOfferByUser+=1;
+        }
+        return numberOfferByUser;
+    }
+
+    @Override
+    public List<VehiculeDTO> getAvailableVehicules(LocalDate datedebut,LocalDate datefin){
+        List<Vehicule>vehiculeListAvailable=new ArrayList<>();
+        List<Reservation>reservationList=reservationRepository.getReservationByDates(datedebut,datefin);
+        List<Vehicule> list = vehiculeRepository.findAll().stream().filter(o ->
+                !reservationList.stream().anyMatch(c -> o.getVehiculeReservationReservations().contains(c))).collect(Collectors.toList());
+        return list.stream()
+                .map((rentalOffer) -> mapToDTO(rentalOffer, new VehiculeDTO()))
+                .collect(Collectors.toList());
     }
 
     @Override
