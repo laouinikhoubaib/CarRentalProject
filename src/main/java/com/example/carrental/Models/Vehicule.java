@@ -1,6 +1,8 @@
 package com.example.carrental.Models;
 
 
+import com.example.carrental.Enumerations.Alimentation;
+import com.example.carrental.Enumerations.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -29,7 +31,7 @@ public class Vehicule {
     private String matricule;
 
     @Column(name = "nbr_places", nullable = false, length = 100)
-    private String nbr_places;
+    private String nbrplaces;
 
     @Column(name = "couleur", nullable = false, length = 100)
     private String couleur;
@@ -44,7 +46,7 @@ public class Vehicule {
     private String puissance;
 
     @Column(name = "charge_utile", nullable = false, length = 100)
-    private String charge_utile;
+    private String chargeutile;
 
 
     @Column(name = "\"description\"", nullable = false, length = 100)
@@ -60,6 +62,9 @@ public class Vehicule {
     @Column
     private Double jourslocation;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "alimentation", nullable = false)
+    Alimentation alimentation;
 
     @OneToMany(mappedBy = "vehiculeCategorie")
     private Set<CategorieVehicule> vehiculeCategorievehiculeCategories;

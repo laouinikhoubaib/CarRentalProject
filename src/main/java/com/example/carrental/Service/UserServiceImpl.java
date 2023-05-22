@@ -12,11 +12,13 @@ import com.example.carrental.Models.Amie;
 import com.example.carrental.Models.Notification;
 import com.example.carrental.Models.User;
 import com.example.carrental.Repository.*;
+import com.example.carrental.ServiceInterfaces.TokenAuthService;
 import com.example.carrental.ServiceInterfaces.UserService;
 import freemarker.core.ParseException;
 import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +34,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.mail.MessagingException;
 import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -68,6 +71,9 @@ public class UserServiceImpl implements UserService
 	@Autowired
 	AmieRepository amieRepository;
 
+	@Autowired
+
+	TokenAuthService tokenAuthService;
 	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder)
 	{
 		this.userRepository = userRepository;
@@ -405,5 +411,13 @@ public class UserServiceImpl implements UserService
 		List<User> friends = new ArrayList<>(myFriends);
 		return friends;
 	}
+	public User getUserByToken(@NonNull HttpServletRequest request) {
+		final String authHeader = request.getHeader("Authorization");
+		final String jwt;
+		final String userEmail;
+		jwt = authHeader.substring(7);
+		userEmail = tokenAuthService.extractUserEmail(jwt);
 
+		return userRepository.findByEmail(userEmail).get();
+	}
 }
