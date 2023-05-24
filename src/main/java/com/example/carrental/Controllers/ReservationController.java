@@ -64,9 +64,9 @@ public class ReservationController {
     }
 
     @PostMapping("/addReservation/{vehiculeId}")
-    public ResponseEntity<String> addReservation(@RequestBody Reservation reservation, @NonNull HttpServletRequest request, @PathVariable("vehiculeId") int vehiculeId) throws MessagingException {
+    public ResponseEntity<String> addReservation(@RequestBody Reservation reservation, @PathVariable("vehiculeId") int vehiculeId) throws MessagingException {
         try {
-            int contratId = reservationService.addReservation(reservation, request, vehiculeId);
+            int contratId = reservationService.addReservation(reservation, vehiculeId);
             if(contratId == -1) throw new Exception() ;
             return ResponseEntity.ok(" contrat : " + contratId);
         } catch (Exception e) {
@@ -79,6 +79,16 @@ public class ReservationController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         return reservationService.contractIsValidd(LocalDate.parse(datedebut,formatter),LocalDate.parse(datefin,formatter));
+    }
+
+    @GetMapping("/GetUsersFinContrat")
+    public ResponseEntity<List<Integer>> getUsersFinContrat(){
+        List<Integer> idUserFinContrat = reservationService.rappelFinContratAngular();
+        if(idUserFinContrat.isEmpty()){
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(idUserFinContrat);
+        }
     }
 
     @PutMapping("/updateReservation")

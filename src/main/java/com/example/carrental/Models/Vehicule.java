@@ -27,37 +27,41 @@ public class Vehicule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer vehiculeId;
 
-    @Column(name = "matricule",  nullable = false, length = 100)
+    @Column(name = "matricule")
     private String matricule;
 
-    @Column(name = "nbr_places", nullable = false, length = 100)
+    @Column(name = "nbr_places")
     private String nbrplaces;
 
-    @Column(name = "couleur", nullable = false, length = 100)
+    @Column(name = "couleur")
     private String couleur;
 
-    @Column(name = "longueur", nullable = false, length = 100)
+    @Column(name = "longueur")
     private String longueur;
 
-    @Column(name = "largeur",  nullable = false, length = 100)
+    @Column(name = "largeur")
     private String largeur;
 
-    @Column(name = "puissance", nullable = false, length = 100)
+    @Column(name = "puissance")
     private String puissance;
 
-    @Column(name = "charge_utile", nullable = false, length = 100)
+    @Column(name = "charge_utile")
     private String chargeutile;
 
 
-    @Column(name = "\"description\"", nullable = false, length = 100)
+    @Column(name = "\"description\"")
     private String description;
 
     @Column
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dateajout;
 
-    @Column
-    private String picture;
+
+    @Column(name = "Picture")
+    String picture;
+
+    @OneToOne
+    Media pictures;
 
     @Column
     private Double jourslocation;

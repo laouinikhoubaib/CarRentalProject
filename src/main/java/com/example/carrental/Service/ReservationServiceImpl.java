@@ -115,16 +115,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public int addReservation(Reservation reservation, @NonNull HttpServletRequest request, int vehiculeId) throws MessagingException {
+    public int addReservation(Reservation reservation, int vehiculeId) throws MessagingException {
         LocalDate datefin=reservation.getDatedebut().plusDays(reservation.getNbjour());
         reservation.setDatefin(datefin); //generation automatique de ladate fin
 
         if (!contractIsValid(reservation))
             return  -1;
-        User user = userService.getUserByToken(request);
         Vehicule vehicule=vehiculeRepository.findById(vehiculeId).get();
         Set<Reservation> reservationList=vehicule.getVehiculeReservationReservations();
-        reservation.setUserReservation(user);
         reservation.setVehiculeReservation(vehicule);
         reservation.setPrix(reservation.getVehiculeReservation().getJourslocation()*reservation.getNbjour());
         return reservationRepository.save(reservation).getReservid();

@@ -18,7 +18,7 @@ public interface ReservationService {
     public ReservationDTO getById(final Integer reservid);
     boolean updateReservation(Reservation reservation);
     boolean deleteReservation(int id);
-    public int addReservation(Reservation reservation, @NonNull HttpServletRequest request, int vehiculeId)throws MessagingException ;
+    public int addReservation(Reservation reservation, int vehiculeId)throws MessagingException ;
     public double getChiffreAffaireByUser(@NonNull HttpServletRequest request) ;
     public boolean contractIsValid(Reservation reservation);
     public boolean contractIsValidd(LocalDate datedebut, LocalDate datefin);

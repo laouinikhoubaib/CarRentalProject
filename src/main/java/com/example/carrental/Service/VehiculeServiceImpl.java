@@ -3,9 +3,8 @@ package com.example.carrental.Service;
 
 import com.example.carrental.DTO.VehiculeDTO;
 import com.example.carrental.Exceptions.NotFoundException;
-import com.example.carrental.Models.Reservation;
-import com.example.carrental.Models.User;
-import com.example.carrental.Models.Vehicule;
+import com.example.carrental.Models.*;
+import com.example.carrental.Repository.NotificationRepository;
 import com.example.carrental.Repository.ReservationRepository;
 import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.Repository.VehiculeRepository;
@@ -16,6 +15,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,10 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,11 +39,15 @@ public class VehiculeServiceImpl implements VehiculeService {
     VehiculeRepository vehiculeRepository;
     @Autowired
     UserRepository userRepository;
-
+    @Inject
+    private EntityManager entityManager;
     @Autowired
     ReservationRepository reservationRepository;
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    NotificationRepository notificationRepository;
     private VehiculeDTO mapToDTO(final Vehicule vehicule,
                                     final VehiculeDTO vehiculeDTO) {
         vehiculeDTO.setVehiculeId(vehicule.getVehiculeId());
@@ -83,10 +87,21 @@ public class VehiculeServiceImpl implements VehiculeService {
     }
 
     @Override
-    public int addVehicule(Vehicule vehicule,@NotNull HttpServletRequest request){
-        User user = userService.getUserByToken(request);
-        vehicule.setUser(user);
-        return vehiculeRepository.save(vehicule).getVehiculeId();
+    public Vehicule addVehicule(Vehicule vehicule, String agenceName) {
+
+        TypedQuery<Agence> query = entityManager.createQuery("SELECT a FROM Agence a WHERE a.nom = :nomAgence", Agence.class);
+        query.setParameter("nomAgence", agenceName);
+        List<Agence> agences = query.getResultList();
+        Agence agence = agences.get(0);
+        vehicule.setAgence(agence);
+        Vehicule savedVehicule = vehiculeRepository.save(vehicule);
+        Notification notif = new Notification();
+        notif.setCreatedAt(new Date());
+        notif.setMessage("Une nouvelle véhicule "  + savedVehicule.getVehiculeId()+   " est mise en service !");
+        notif.setRead(false);
+        notif.setVehicule(savedVehicule);
+        notificationRepository.save(notif);
+        return savedVehicule;
     }
 
     @Override
