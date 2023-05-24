@@ -2,20 +2,32 @@ package com.example.carrental.Controllers;
 
 
 import com.example.carrental.DTO.VehiculeDTO;
+import com.example.carrental.Exceptions.EmailExist;
+import com.example.carrental.Exceptions.UsernameExist;
+import com.example.carrental.Exceptions.UsernameNotExist;
+import com.example.carrental.Models.Media;
 import com.example.carrental.Models.User;
 import com.example.carrental.Models.Vehicule;
+import com.example.carrental.Repository.MediaRepo;
 import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.Repository.VehiculeRepository;
 import com.example.carrental.Service.VehiculeServiceImpl;
 import com.example.carrental.ServiceInterfaces.VehiculeService;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import freemarker.template.TemplateException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,17 +50,29 @@ public class VehiculeController {
     @Autowired
     VehiculeRepository vehiculeRepository;
 
+    @Autowired
+    MediaRepo mediaRepository;
 
-    @PostMapping("/addVehicule")
-    public ResponseEntity<String> addVehicule(@RequestBody Vehicule vehicule,  @NotNull HttpServletRequest request){
-        int newvehiculeId = vehiculeService.addVehicule(vehicule, request);
-        if (newvehiculeId != 0) {
-            String message = "Véhicule  ajoutée avec succès avec l'id " + newvehiculeId;
-            return ResponseEntity.ok().body(message);
-        } else {
-            String message = "Erreur lors de l'ajout de véhicule";
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
-        }
+    public static String uploadDirectory = System.getProperty("user.dir") + "/uploads/";
+    public static String uploadDirectory2 = "C:\\Users\\khoubaib\\Desktop\\PFE\\upload\\";
+
+    ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    @PostMapping(value = "addVehicule", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Vehicule> addVehicule(@RequestPart("vehicule") String vehicule, @RequestPart("file") MultipartFile file, @RequestPart("agence") String nomAgence) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, IOException, io.jsonwebtoken.io.IOException, TemplateException {
+
+        File convertFile = new File(uploadDirectory + file.getOriginalFilename());
+        convertFile.createNewFile();
+        FileOutputStream fout = new FileOutputStream(convertFile);
+        fout.write(file.getBytes());
+        fout.close();
+        Media profilPicture = new Media();
+        profilPicture.setImagenUrl(uploadDirectory2 + file.getOriginalFilename());
+        profilPicture = mediaRepository.save(profilPicture);
+        Vehicule userData = objectMapper.readValue(vehicule, Vehicule.class);
+        userData.setPictures(profilPicture);
+        userData.setPicture(file.getOriginalFilename());
+        vehiculeService.addVehicule(userData, nomAgence);
+        return new ResponseEntity<>(userData, HttpStatus.CREATED);
     }
 
     @PutMapping("/updateVehicule")

@@ -11,7 +11,7 @@ import java.util.List;
 public interface VehiculeService {
 
     VehiculeDTO getById(final Integer vehiculeId);
-    int addVehicule(Vehicule vehicule, @NotNull HttpServletRequest request);
+    Vehicule addVehicule(Vehicule vehicule, String nomAgence);
     boolean updateVehicule(Vehicule vehicule);
     boolean deleteVehicule(int id);
     public List<VehiculeDTO> getAll();
