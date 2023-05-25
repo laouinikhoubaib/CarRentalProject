@@ -25,10 +25,8 @@ public class Reservation {
     private Integer reservid;
 
     @Column
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate datedebut;
     @Column
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate datefin;
 
     @Column
@@ -37,9 +35,9 @@ public class Reservation {
     @Column
     private double prix;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_reservation_id")
-    private User userReservation;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_reservation_id")
+//    private User userReservation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicule_vehiculereserv_reservation_id")

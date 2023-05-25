@@ -60,6 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/api/admin/**").hasRole(Role.SUPERADMIN.name())
                 .antMatchers("/api/complaint/**").hasRole(Role.SUPERADMIN.name())
                 .antMatchers("/api/agence/**").permitAll()
+                .antMatchers("/api/vehicule/**").permitAll()
+                .antMatchers("/api/reservation/**").permitAll()
                 .antMatchers("/api/user/**").permitAll()
                 .anyRequest().authenticated()
 		        .and()
@@ -115,9 +117,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
             {
                 registry.addMapping("/**")
                         .allowedOrigins("*")
+                        .allowedOrigins("/api/**")
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+
                         .allowedMethods("*");
             }
         };
     }
+
 
 }

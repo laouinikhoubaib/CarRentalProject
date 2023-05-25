@@ -62,7 +62,6 @@ public class ReservationServiceImpl implements ReservationService {
         reservationDTO.setDatedebut(reservation.getDatedebut());
         reservationDTO.setNbjour(reservation.getNbjour());
         reservationDTO.setReservationVehicule(reservation.getVehiculeReservation() == null ? null : reservation.getVehiculeReservation().getVehiculeId());
-        reservationDTO.setUserReservation(Math.toIntExact(reservation.getUserReservation() == null ? null : reservation.getUserReservation().getUserId()));
         reservationDTO.setVehiculeReservation(reservation.getVehiculeReservation() == null ? null : reservation.getVehiculeReservation().getVehiculeId());
         return reservationDTO;
     }
