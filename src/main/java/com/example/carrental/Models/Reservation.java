@@ -35,9 +35,9 @@ public class Reservation {
     @Column
     private double prix;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_reservation_id")
-//    private User userReservation;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_reservation_id")
+    private User userReservation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicule_vehiculereserv_reservation_id")

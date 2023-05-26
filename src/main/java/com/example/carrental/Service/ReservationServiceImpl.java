@@ -11,28 +11,19 @@ import com.example.carrental.Repository.ReservationRepository;
 import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.Repository.VehiculeRepository;
 import com.example.carrental.ServiceInterfaces.ReservationService;
-import com.example.carrental.ServiceInterfaces.UserService;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.tool.xml.XMLWorkerHelper;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import com.itextpdf.text.Document;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -114,18 +105,27 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public int addReservation(Reservation reservation, int vehiculeId) throws MessagingException {
-        LocalDate datefin=reservation.getDatedebut().plusDays(reservation.getNbjour());
-        reservation.setDatefin(datefin); //generation automatique de ladate fin
-
+    public int addReservation(Reservation reservation, int vehiculeId, Long userId) throws MessagingException {
+        LocalDate datefin = reservation.getDatedebut().plusDays(reservation.getNbjour());
+        reservation.setDatefin(datefin);
         if (!contractIsValid(reservation))
-            return  -1;
-        Vehicule vehicule=vehiculeRepository.findById(vehiculeId).get();
-        Set<Reservation> reservationList=vehicule.getVehiculeReservationReservations();
+            return -1;
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return -1;
+        }
+        Vehicule vehicule = vehiculeRepository.findById(vehiculeId).orElse(null);
+        if (vehicule == null) {
+            return -1;
+        }
+        Set<Reservation> reservationList = vehicule.getVehiculeReservationReservations();
         reservation.setVehiculeReservation(vehicule);
-        reservation.setPrix(reservation.getVehiculeReservation().getJourslocation()*reservation.getNbjour());
+        reservation.setPrix(reservation.getVehiculeReservation().getJourslocation() * reservation.getNbjour());
+        reservation.setUserReservation(user);
+
         return reservationRepository.save(reservation).getReservid();
     }
+
 
     @Override
     public double getChiffreAffaireByUser(@NonNull HttpServletRequest request) {

@@ -63,14 +63,18 @@ public class ReservationController {
         }
     }
 
-    @PostMapping("/addReservation/{vehiculeId}")
-    public ResponseEntity<String> addReservation(@RequestBody Reservation reservation, @PathVariable("vehiculeId") int vehiculeId) throws MessagingException {
+    @PostMapping("/addReservation/{vehiculeId}/{userId}")
+    public ResponseEntity<String> addReservation(@RequestBody Reservation reservation,
+                                                 @PathVariable("vehiculeId") int vehiculeId, @PathVariable("userId") Long userId) throws MessagingException {
         try {
-            int contratId = reservationService.addReservation(reservation, vehiculeId);
-            if(contratId == -1) throw new Exception() ;
-            return ResponseEntity.ok(" contrat : " + contratId);
+            int contratId = reservationService.addReservation(reservation, vehiculeId, userId);
+            if (contratId == -1) {
+                throw new Exception();
+            }
+            return ResponseEntity.ok("contrat : " + contratId);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Une erreur s'est produite lors de l'ajout du contrat : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Une erreur s'est produite lors de l'ajout du contrat : " + e.getMessage());
         }
     }
 
