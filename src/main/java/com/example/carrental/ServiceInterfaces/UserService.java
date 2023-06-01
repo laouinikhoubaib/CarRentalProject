@@ -73,4 +73,6 @@ public interface UserService
     public String getNomAgence(Long userId);
 
     List<User> getMyFriends(User u);
+
+    public String getAgencyNameByUserId(Long userId);
 }
