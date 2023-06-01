@@ -420,4 +420,13 @@ public class UserServiceImpl implements UserService
 
 		return userRepository.findByEmail(userEmail).get();
 	}
+
+	@Override
+	public String getAgencyNameByUserId(Long userId) {
+		User user = userRepository.findById(userId).orElse(null);
+		if(user != null && user.getAgence() != null) {
+			return user.getAgence().getNom();
+		}
+		return null;
+	}
 }

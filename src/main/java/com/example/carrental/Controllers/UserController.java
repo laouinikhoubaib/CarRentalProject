@@ -109,4 +109,16 @@ public class UserController
         return ResponseEntity.ok(nomAgence);
     }
 
-}
+    @GetMapping("/{userId}/agencyName")
+    public ResponseEntity<Map<String, String>> getAgencyNameByUserId(@PathVariable Long userId) {
+        String agencyName = userService.getAgencyNameByUserId(userId);
+        if(agencyName == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Map<String, String> response = new HashMap<>();
+        response.put("nom", agencyName);
+        return ResponseEntity.ok(response);
+    }
+
+
+}	
