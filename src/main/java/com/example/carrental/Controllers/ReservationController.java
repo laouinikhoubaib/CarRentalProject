@@ -64,19 +64,21 @@ public class ReservationController {
     }
 
     @PostMapping("/addReservation/{vehiculeId}/{userId}")
-    public ResponseEntity<String> addReservation(@RequestBody Reservation reservation,
-                                                 @PathVariable("vehiculeId") int vehiculeId, @PathVariable("userId") Long userId) throws MessagingException {
+    public ResponseEntity<Object> addReservation(@RequestBody Reservation reservation,
+                                                 @PathVariable("vehiculeId") int vehiculeId,
+                                                 @PathVariable("userId") Long userId) throws MessagingException {
         try {
             int contratId = reservationService.addReservation(reservation, vehiculeId, userId);
             if (contratId == -1) {
                 throw new Exception();
             }
-            return ResponseEntity.ok("contrat : " + contratId);
+            return ResponseEntity.ok().body("{\"contrat\": " + contratId + "}");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("Une erreur s'est produite lors de l'ajout du contrat : " + e.getMessage());
         }
     }
+
 
     @GetMapping("/ContractIsValidd/{datedebut}/{datefin}")
     public Boolean contractIsValid(@PathVariable("datedebut") String datedebut,@PathVariable("datefin") String datefin) {
@@ -106,9 +108,9 @@ public class ReservationController {
         }
     }
 
-    @DeleteMapping("/deleteReservation/{reservation}")
-    public ResponseEntity<String> deleteReservation(@PathVariable("reservation") int reservation) {
-        boolean deleted = reservationService.deleteReservation(reservation);
+    @DeleteMapping("/deleteReservation/{reservationId}")
+    public ResponseEntity<String> deleteReservation(@PathVariable("reservationId") int reservationId) {
+        boolean deleted = reservationService.deleteReservation(reservationId);
         if (deleted) {
             return ResponseEntity.ok("Contrat  supprimé avec succès.");
         } else {

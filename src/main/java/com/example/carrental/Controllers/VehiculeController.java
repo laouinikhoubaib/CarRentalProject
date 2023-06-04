@@ -113,6 +113,7 @@ public class VehiculeController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/Disponibilite/{vehiculeid}")
     public ResponseEntity<List<String>> getVehicule(@PathVariable("vehiculeid") int vehiculeid){
         List<String> disponibilite = vehiculeServiceimpl.vehiculesdisponible(vehiculeid);
