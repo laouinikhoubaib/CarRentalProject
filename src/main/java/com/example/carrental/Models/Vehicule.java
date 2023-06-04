@@ -2,9 +2,11 @@ package com.example.carrental.Models;
 
 
 import com.example.carrental.Enumerations.Alimentation;
+import com.example.carrental.Enumerations.Categorie;
 import com.example.carrental.Enumerations.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -70,14 +72,28 @@ public class Vehicule {
     @Column(name = "alimentation", nullable = false)
     Alimentation alimentation;
 
-    @OneToMany(mappedBy = "vehiculeCategorie")
-    private Set<CategorieVehicule> vehiculeCategorievehiculeCategories;
 
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "categorievehicule_id", referencedColumnName = "categorievehiculeId")
+//    private CategorieVehicule categorieVehicule;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "categorievoiture_id", referencedColumnName = "categorievoitureId")
+//    private CategorieVoiture categorieVoiture;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "categorieutilitaire_id", referencedColumnName = "categorieutilitaireId")
+//    private CategorieUtilitaire categorieUtilitaire;
+
+
+
+    @JsonIgnore
     @OneToMany(mappedBy = "vehiculeReservation")
     private Set<Reservation> vehiculeReservationReservations;
 
 
+    @JsonIgnore
     @ManyToOne
     private User user;
 

@@ -1,6 +1,6 @@
 package com.example.carrental.Enumerations;
 
-public enum LocationVoitureEn {
+public enum TypeVoiture {
 
     economique,
     citadine,
