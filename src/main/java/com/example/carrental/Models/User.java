@@ -59,8 +59,10 @@ public class User implements Serializable {
     @Column(name = "role", nullable = false)
     Role role;
 
+    @JsonIgnore
     @OneToOne
     Media profilPicture;
+
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
@@ -95,6 +97,7 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     Set<CommentLike> commentLikes;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "userReservation")
     private Set<Reservation> userReservationReservations;
 }

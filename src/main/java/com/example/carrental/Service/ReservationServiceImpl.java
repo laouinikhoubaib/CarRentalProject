@@ -47,13 +47,15 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     UserServiceImpl userService;
 
-    private ReservationDTO mapToDTO(final Reservation reservation,
-                                       final ReservationDTO reservationDTO) {
+    private ReservationDTO mapToDTO(Reservation reservation, ReservationDTO reservationDTO) {
         reservationDTO.setReservid(reservation.getReservid());
         reservationDTO.setDatedebut(reservation.getDatedebut());
+        reservationDTO.setDatefin(reservation.getDatefin());
         reservationDTO.setNbjour(reservation.getNbjour());
-        reservationDTO.setReservationVehicule(reservation.getVehiculeReservation() == null ? null : reservation.getVehiculeReservation().getVehiculeId());
-        reservationDTO.setVehiculeReservation(reservation.getVehiculeReservation() == null ? null : reservation.getVehiculeReservation().getVehiculeId());
+        reservationDTO.setPrix(reservation.getPrix());
+        reservationDTO.setUserReservation(Math.toIntExact(reservation.getUserReservation().getUserId()));
+        reservationDTO.setVehiculeReservation(reservation.getVehiculeReservation().getVehiculeId());
+        reservationDTO.setReservationVehicule(reservation.getReservid());
         return reservationDTO;
     }
 

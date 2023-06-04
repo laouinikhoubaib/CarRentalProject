@@ -32,10 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
-    
+
     @Autowired
     private JwtAccessDenied jwtAccessDenied;
-    
+
     @Autowired
     private JwtAuthenticationHttp403 jwtAuthenticationHttp403;
 
@@ -120,7 +120,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                         .allowedOrigins("/api/**")
                         .allowedOrigins("http://localhost:4200")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
-
                         .allowedMethods("*");
             }
         };
