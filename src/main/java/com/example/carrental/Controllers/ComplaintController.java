@@ -66,16 +66,16 @@ public class ComplaintController {
     @GetMapping("/stats")
     public Map<String, Integer> getComplaintStats() {
         Map<String, Integer> stats = new HashMap<>();
-        stats.put("treated", complaintService.countByComplaintStatus("treated"));
-        stats.put("untreated", complaintService.countByComplaintStatus("untreated"));
-        stats.put("InProgress", complaintService.countByComplaintStatus("InProgress"));
+        stats.put("traitee", complaintService.countByComplaintStatus("traitee"));
+        stats.put("non_traitee", complaintService.countByComplaintStatus("non_traitee"));
+        stats.put("en_cours", complaintService.countByComplaintStatus("en_cours"));
         return stats;
     }
 
     @GetMapping("/count-by-type")
     public Map<String, Integer> getCountByComplaintType() {
         Map<String, Integer> stats = new HashMap<>();
-        stats.put("technical", complaintService.countByComplaintType("technical"));
+        stats.put("technique", complaintService.countByComplaintType("technique"));
         stats.put("service", complaintService.countByComplaintType("service"));
         return stats;
     }
