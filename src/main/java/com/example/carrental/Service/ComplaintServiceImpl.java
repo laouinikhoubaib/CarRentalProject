@@ -48,7 +48,7 @@ public class ComplaintServiceImpl implements ComplaintService {
                 .orElseThrow(() -> new RuntimeException("User introuvable"));
 
         T.setUser(user);
-        T.setComplaint_status(ComplaintStatus.untreated);
+        T.setComplaint_status(ComplaintStatus.non_traitee);
         Complaint savedComplaint = Crepo.save(T);
 
         Notification notification = new Notification();
@@ -86,7 +86,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         Date requestDate = oldComplaint.getComplaintDate();
 
         if (oldComplaint.isEtat() == false) {
-            oldComplaint.setComplaint_status(ComplaintStatus.treated);
+            oldComplaint.setComplaint_status(ComplaintStatus.traitee);
             oldComplaint.setEtat(true);
 
 
