@@ -18,39 +18,39 @@ public class ChatControllerr {
 	ChatService cs ;
 	@Autowired
 	UserRepository ur ;
-	
+
 	@Autowired
 	ChatroomRepo cr ;
-	
+
 	@GetMapping("/Chatroom/{Idsender}/{idreciver}")
 	@ResponseBody
 	public Chatroom chatfind(@PathVariable("Idsender") Long Idsender, @PathVariable("idreciver") Long idreciver) {
-	return cs.findchat(Idsender, idreciver);
+		return cs.findchat(Idsender, idreciver);
 	}
 
-	
+
 	@PostMapping("/getc/{idreciver}")
 	@ResponseBody
 	public Chatroom getcon(@PathVariable("idreciver") Long idreciver) {
-	 return cs.getConv(idreciver);
+		return cs.getConv(idreciver);
 	}
-	
+
 	@GetMapping("/ListUser")
 	@ResponseBody
 	public List<User> getListUser() {
-	 return ur.findAll();
+		return ur.findAll();
 	}
-	
+
 	@GetMapping("/allchat")
 	@ResponseBody
 	public List<Chatroom> getChat() {
-	 return cr.findAll();
+		return cr.findAll();
 	}
-	
+
 	@PostMapping("/color/{id}")
 	@ResponseBody
 	public void color(@PathVariable("id") Long id ,@RequestBody String c) {
-	 cs.changecolor(id, c);
+		cs.changecolor(id, c);
 	}
-	
+
 }

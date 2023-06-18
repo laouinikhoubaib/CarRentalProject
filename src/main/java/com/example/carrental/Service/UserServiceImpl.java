@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService
 
 		Notification notif = new Notification();
 		notif.setCreatedAt(new Date());
-		notif.setMessage("Nous sommes heureux d'avoir "  + u.getUsername()+   " encore parmi nous !");
+		notif.setMessage("Nous sommes heureux d'avoir "  +" "+ u.getUsername()+   " encore parmi nous !");
 		notif.setRead(false);
 		notif.setUser(u);
 		notificationRepository.save(notif);

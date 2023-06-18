@@ -38,11 +38,6 @@ public class Agence implements Serializable {
     @Column(name = "adresse", nullable = false)
     String adresse;
 
-    @Temporal(TemporalType.DATE)
-    Date dateouverture;
-
-    @Temporal(TemporalType.DATE)
-    Date datefermeture;
 
     @Column(name = "jourtravail", nullable = false)
     String jourtravail;

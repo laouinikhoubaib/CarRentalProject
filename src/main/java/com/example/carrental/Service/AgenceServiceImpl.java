@@ -64,7 +64,7 @@ public class AgenceServiceImpl implements AgenceService {
         Agence u = agenceRepository.save(agence);
         Notification notif = new Notification();
         notif.setCreatedAt(new Date());
-        notif.setMessage("Nous sommes heureux d'avoir " + u.getNom()+ " notre nouvelle agnce !");
+        notif.setMessage("Nous sommes heureux d'avoir " +" "+ u.getNom()+""+ " notre nouvelle agnce !");
         notif.setRead(false);
         u.setLocked(false);
         notificationRepository.save(notif);

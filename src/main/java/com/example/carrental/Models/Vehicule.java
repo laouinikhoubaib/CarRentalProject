@@ -1,9 +1,7 @@
 package com.example.carrental.Models;
 
 
-import com.example.carrental.Enumerations.Alimentation;
-import com.example.carrental.Enumerations.Categorie;
-import com.example.carrental.Enumerations.Role;
+import com.example.carrental.Enumerations.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -50,6 +48,8 @@ public class Vehicule {
     @Column(name = "charge_utile")
     private String chargeutile;
 
+    @Column
+    private double prix;
 
     @Column(name = "\"description\"")
     private String description;
@@ -73,18 +73,17 @@ public class Vehicule {
     Alimentation alimentation;
 
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "categorie", nullable = false)
+    private Categorie categorie;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "categorievehicule_id", referencedColumnName = "categorievehiculeId")
-//    private CategorieVehicule categorieVehicule;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "categorievoiture_id", referencedColumnName = "categorievoitureId")
-//    private CategorieVoiture categorieVoiture;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "categorieutilitaire_id", referencedColumnName = "categorieutilitaireId")
-//    private CategorieUtilitaire categorieUtilitaire;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type_voiture")
+    private TypeVoiture typeVoiture;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type_utilitaire")
+    private TypeUtilitaire typeUtilitaire;
 
 
 

@@ -2,6 +2,9 @@ package com.example.carrental.DTO;
 
 
 import com.example.carrental.Enumerations.Alimentation;
+import com.example.carrental.Enumerations.Categorie;
+import com.example.carrental.Enumerations.TypeUtilitaire;
+import com.example.carrental.Enumerations.TypeVoiture;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,5 +39,8 @@ public class VehiculeDTO {
     private Double jourslocation;
 
     private Alimentation alimentation;
+    private TypeUtilitaire typeUtilitaire;
+    private TypeVoiture typeVoiture;
+    private Categorie categorie;
 
 }

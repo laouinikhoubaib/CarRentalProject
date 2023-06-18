@@ -122,7 +122,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
         Set<Reservation> reservationList = vehicule.getVehiculeReservationReservations();
         reservation.setVehiculeReservation(vehicule);
-        reservation.setPrix(reservation.getVehiculeReservation().getJourslocation() * reservation.getNbjour());
+        reservation.setPrix(reservation.getVehiculeReservation().getPrix() * reservation.getNbjour());
         reservation.setUserReservation(user);
 
         return reservationRepository.save(reservation).getReservid();
