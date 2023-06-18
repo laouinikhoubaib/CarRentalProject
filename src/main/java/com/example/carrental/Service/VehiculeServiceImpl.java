@@ -61,23 +61,13 @@ public class VehiculeServiceImpl implements VehiculeService {
         vehiculeDTO.setLargeur(vehicule.getLargeur());
         vehiculeDTO.setLongueur(vehicule.getLongueur());
         vehiculeDTO.setPuissance(vehicule.getPuissance());
+        vehiculeDTO.setTypeUtilitaire(vehicule.getTypeUtilitaire());
+        vehiculeDTO.setTypeVoiture(vehicule.getTypeVoiture());
+        vehiculeDTO.setCategorie(vehicule.getCategorie());
 
         return vehiculeDTO;
     }
 
-    public static String saveImage(MultipartFile image, Vehicule vehicule) throws IOException {
-        String fileName = StringUtils.cleanPath(image.getOriginalFilename());
-        Path path = Paths.get("uploads");
-        Files.createDirectories(path);
-        try (InputStream inputStream = image.getInputStream()) {
-            Path filePath = path.resolve(fileName);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-            vehicule.setPicture(filePath.toString());
-            return filePath.toString();
-        } catch (IOException e) {
-            throw new IOException("Impossible d'enregistrer l'image' " +" "+ fileName, e);
-        }
-    }
     @Override
     public VehiculeDTO getById(final Integer vehiculeId) {
 
@@ -85,6 +75,7 @@ public class VehiculeServiceImpl implements VehiculeService {
                 .map(vehiculeDTO -> mapToDTO(vehiculeDTO, new VehiculeDTO()))
                 .orElseThrow(NotFoundException::new);
     }
+
 
     @Override
     public Vehicule addVehicule(Vehicule vehicule, String agenceName) {

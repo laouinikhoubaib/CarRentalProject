@@ -14,13 +14,13 @@ public class NotificationService {
     }
 
     public void sendGlobalNotification() {
-        ResponseMessage message = new ResponseMessage("Global Notification");
+        ResponseMessage message = new ResponseMessage("Notification Globale");
 
         messagingTemplate.convertAndSend("/chat/global-notifications", message);
     }
 
     public void sendPrivateNotification(final String userId) {
-        ResponseMessage message = new ResponseMessage("Private Notification");
+        ResponseMessage message = new ResponseMessage("Notification privé");
 
         messagingTemplate.convertAndSendToUser(userId,"/chat/private-notifications", message);
     }
