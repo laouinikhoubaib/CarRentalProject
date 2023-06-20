@@ -1,6 +1,7 @@
 package com.example.carrental.ServiceInterfaces;
 
 import com.example.carrental.DTO.VehiculeDTO;
+import com.example.carrental.Enumerations.Categorie;
 import com.example.carrental.Models.Vehicule;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +16,7 @@ public interface VehiculeService {
     boolean updateVehicule(Vehicule vehicule);
     boolean deleteVehicule(int id);
     public List<VehiculeDTO> getAll();
-
+    public List<Vehicule> findVehiculeByCategorie(Categorie categorie);
     public List<VehiculeDTO> findAllOrderByPrixAsc();
     public List<VehiculeDTO> findTopNByOrderByVehiculedateDesc(Integer n);
 

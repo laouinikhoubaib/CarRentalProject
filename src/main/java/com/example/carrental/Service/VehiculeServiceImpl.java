@@ -2,6 +2,7 @@ package com.example.carrental.Service;
 
 
 import com.example.carrental.DTO.VehiculeDTO;
+import com.example.carrental.Enumerations.Categorie;
 import com.example.carrental.Exceptions.NotFoundException;
 import com.example.carrental.Models.*;
 import com.example.carrental.Repository.NotificationRepository;
@@ -75,7 +76,10 @@ public class VehiculeServiceImpl implements VehiculeService {
                 .map(vehiculeDTO -> mapToDTO(vehiculeDTO, new VehiculeDTO()))
                 .orElseThrow(NotFoundException::new);
     }
-
+    @Override
+    public List<Vehicule> findVehiculeByCategorie(Categorie categorie) {
+        return vehiculeRepository.findByCategorie(categorie);
+    }
 
     @Override
     public Vehicule addVehicule(Vehicule vehicule, String agenceName) {
