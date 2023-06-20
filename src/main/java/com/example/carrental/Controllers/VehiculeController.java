@@ -2,6 +2,7 @@ package com.example.carrental.Controllers;
 
 
 import com.example.carrental.DTO.VehiculeDTO;
+import com.example.carrental.Enumerations.Categorie;
 import com.example.carrental.Exceptions.EmailExist;
 import com.example.carrental.Exceptions.UsernameExist;
 import com.example.carrental.Exceptions.UsernameNotExist;
@@ -112,6 +113,11 @@ public class VehiculeController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/categorie/{categorie}")
+    public List<Vehicule> getVehiculesByCategorie(@PathVariable Categorie categorie) {
+        return vehiculeService.findVehiculeByCategorie(categorie);
     }
 
     @GetMapping("/Disponibilite/{vehiculeid}")

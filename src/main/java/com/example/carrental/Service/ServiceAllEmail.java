@@ -46,7 +46,7 @@ public class ServiceAllEmail {
     public void sendNewPasswordEmail(String firstName, String password, String email) throws MessagingException {
         Message message = createEmail(firstName, password, email);
         SMTPTransport smtpTransport = (SMTPTransport) getEmailSession().getTransport("smtps");
-        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "fpabghphpgbtsyoa");
+        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "nynxrjrormrlxgec");
         smtpTransport.sendMessage(message, message.getAllRecipients());
         smtpTransport.close();
     }
@@ -66,7 +66,7 @@ public class ServiceAllEmail {
     public void sendAllertReport(String EventName, String email) throws MessagingException {
         Message message = createEmailForEvent(EventName, email);
         SMTPTransport smtpTransport = (SMTPTransport) getEmailSession().getTransport("smtps");
-        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "mqvqasngmgaekpaq*");
+        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "nynxrjrormrlxgec*");
         smtpTransport.sendMessage(message, message.getAllRecipients());
         smtpTransport.close();
     }
@@ -112,7 +112,7 @@ public class ServiceAllEmail {
     public void sendNewResetPasswordMail(String token, String email) throws MessagingException, IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, java.io.IOException {
         Message message = createresetPasswordMail(token, email);
         SMTPTransport smtpTransport = (SMTPTransport) getEmailSession().getTransport("smtps");
-        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "fpabghphpgbtsyoa");
+        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "nynxrjrormrlxgec");
         smtpTransport.sendMessage(message, message.getAllRecipients());	
         smtpTransport.close();
     }
@@ -146,7 +146,7 @@ public class ServiceAllEmail {
     public void sendWelcomeMail(String token, String email) throws MessagingException, IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, java.io.IOException {
         Message message = createWelcomeMail(token, email);
         SMTPTransport smtpTransport = (SMTPTransport) getEmailSession().getTransport("smtps");
-        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "fpabghphpgbtsyoa");
+        smtpTransport.connect("smtp.gmail.com", "laouinikhoubaib@gmail.com", "nynxrjrormrlxgec");
         smtpTransport.sendMessage(message, message.getAllRecipients());	
         smtpTransport.close();
     }
