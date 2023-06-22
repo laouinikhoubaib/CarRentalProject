@@ -98,6 +98,7 @@ public class AgenceServiceImpl implements AgenceService {
     }
 
     public Agence getAgenceByNom(String nom) {
+
         return agenceRepository.findByNom(nom);
     }
 

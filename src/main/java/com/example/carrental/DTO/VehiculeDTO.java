@@ -10,17 +10,17 @@ import lombok.Setter;
 
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
 public class VehiculeDTO {
 
     private Integer vehiculeId;
-
     @Size(max = 255)
     private String matricule;
     @Size(max = 255)
-    private String nbr_places;
+    private String nbrplaces;
     @Size(max = 255)
     private String couleur;
     @Size(max = 255)
@@ -30,11 +30,15 @@ public class VehiculeDTO {
     @Size(max = 255)
     private String puissance;
     @Size(max = 255)
-    private String charge_utile;
+    private String chargeutile;
     @Size(max = 255)
     private String picture;
 
-    private LocalDate dateajout;
+    private boolean isLocked;
+    private String description;
+    private double prix;
+
+    private Date dateajout;
 
     private Double jourslocation;
 

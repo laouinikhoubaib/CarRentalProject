@@ -3,6 +3,7 @@ package com.example.carrental.Service;
 
 import com.example.carrental.DTO.VehiculeDTO;
 import com.example.carrental.Enumerations.Categorie;
+import com.example.carrental.Exceptions.AgenceNotFoundException;
 import com.example.carrental.Exceptions.NotFoundException;
 import com.example.carrental.Models.*;
 import com.example.carrental.Repository.NotificationRepository;
@@ -49,22 +50,25 @@ public class VehiculeServiceImpl implements VehiculeService {
 
     @Autowired
     NotificationRepository notificationRepository;
-    private VehiculeDTO mapToDTO(final Vehicule vehicule,
-                                    final VehiculeDTO vehiculeDTO) {
+    private VehiculeDTO mapToDTO(final Vehicule vehicule,final VehiculeDTO vehiculeDTO) {
         vehiculeDTO.setVehiculeId(vehicule.getVehiculeId());
-        vehiculeDTO.setCharge_utile(vehicule.getChargeutile());
+        vehiculeDTO.setChargeutile(vehicule.getChargeutile());
         vehiculeDTO.setCouleur(vehicule.getCouleur());
         vehiculeDTO.setMatricule(vehicule.getMatricule());
         vehiculeDTO.setDateajout(vehicule.getDateajout());
         vehiculeDTO.setPicture(vehicule.getPicture());
         vehiculeDTO.setJourslocation(vehicule.getJourslocation());
-        vehiculeDTO.setNbr_places(vehicule.getNbrplaces());
+        vehiculeDTO.setNbrplaces(vehicule.getNbrplaces());
         vehiculeDTO.setLargeur(vehicule.getLargeur());
+        vehiculeDTO.setPrix(vehicule.getPrix());
         vehiculeDTO.setLongueur(vehicule.getLongueur());
         vehiculeDTO.setPuissance(vehicule.getPuissance());
+        vehiculeDTO.setAlimentation(vehicule.getAlimentation());
         vehiculeDTO.setTypeUtilitaire(vehicule.getTypeUtilitaire());
         vehiculeDTO.setTypeVoiture(vehicule.getTypeVoiture());
         vehiculeDTO.setCategorie(vehicule.getCategorie());
+        vehiculeDTO.setDescription(vehicule.getDescription());
+        vehiculeDTO.setLocked(vehicule.isLocked());
 
         return vehiculeDTO;
     }
@@ -218,6 +222,26 @@ public class VehiculeServiceImpl implements VehiculeService {
             revenueVehicule+=  vehicule.getJourslocation()*reservation.getNbjour();
         }
         return revenueVehicule;
+    }
+
+    @Override
+    public Vehicule blockVehicule(String matricule) {
+        Vehicule vehicule = vehiculeRepository.findByMatricule(matricule);
+        if (vehicule == null) {
+            throw new AgenceNotFoundException("Vehicule non trouvée avec la matiricule " + matricule);
+        }
+        vehicule.setLocked(true);
+        return vehiculeRepository.save(vehicule);
+    }
+
+    @Override
+    public Vehicule deblockVehicule(String matricule) {
+        Vehicule vehicule = vehiculeRepository.findByMatricule(matricule);
+        if (vehicule == null) {
+            throw new AgenceNotFoundException("Vehicule non trouvée avec la matiricule " + matricule);
+        }
+        vehicule.setLocked(false);
+        return vehiculeRepository.save(vehicule);
     }
 
 }

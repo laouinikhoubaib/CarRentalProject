@@ -33,7 +33,7 @@ public class TokenAuthServiceImpl implements TokenAuthService {
     }
 
     @Override
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -41,7 +41,8 @@ public class TokenAuthServiceImpl implements TokenAuthService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date((System.currentTimeMillis() + 1000 * 60 * 60)))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS512)
-                .compact();   }
+                .compact();
+    }
 
     @Override
     public Boolean isTokenExpired(String jwt) {
