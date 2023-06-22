@@ -116,9 +116,16 @@ public class VehiculeController {
         }
     }
 
-    @GetMapping("/categorie/{categorie}")
-    public List<Vehicule> getVehiculesByCategorie(@PathVariable Categorie categorie) {
-        return vehiculeService.findVehiculeByCategorie(categorie);
+    @GetMapping("/categorie/voiture")
+    public ResponseEntity<List<Vehicule>> getVehiculesByLocationVoiture() {
+        List<Vehicule> vehicules = vehiculeRepository.findByCategorie(Categorie.LOCATION_VOITURE);
+        return new ResponseEntity<>(vehicules, HttpStatus.OK);
+    }
+
+    @GetMapping("/categorie/utilitaire")
+    public ResponseEntity<List<Vehicule>> getVehiculesByLocationUtilitaire() {
+        List<Vehicule> vehicules = vehiculeRepository.findByCategorie(Categorie.LOCATION_UTILITAIRE);
+        return new ResponseEntity<>(vehicules, HttpStatus.OK);
     }
 
     @GetMapping("/Disponibilite/{vehiculeid}")
