@@ -2,6 +2,7 @@ package com.example.carrental.ServiceInterfaces;
 
 import com.example.carrental.DTO.VehiculeDTO;
 import com.example.carrental.Enumerations.Categorie;
+import com.example.carrental.Models.Agence;
 import com.example.carrental.Models.Vehicule;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,4 +29,7 @@ public interface VehiculeService {
     public int getNumberVehiculeByUser(int idUser);
 
     public List<VehiculeDTO> getAvailableVehicules(LocalDate datedebut, LocalDate datefin);
+
+    public Vehicule blockVehicule(String matricule);
+    public Vehicule deblockVehicule(String matricule);
 }

@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -54,9 +55,8 @@ public class Vehicule {
     @Column(name = "\"description\"")
     private String description;
 
-    @Column
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate dateajout;
+    @Temporal(TemporalType.DATE)
+    private Date dateajout;
 
 
     @Column(name = "Picture")
@@ -66,15 +66,18 @@ public class Vehicule {
     Media pictures;
 
     @Column
+    boolean isLocked;
+
+    @Column
     private Double jourslocation;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "alimentation", nullable = false)
+    @Column(name = "alimentation")
     Alimentation alimentation;
 
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "categorie", nullable = false)
+    @Column(name = "categorie")
     private Categorie categorie;
 
     @Enumerated(EnumType.STRING)

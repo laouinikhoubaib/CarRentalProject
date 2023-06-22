@@ -6,6 +6,7 @@ import com.example.carrental.Enumerations.Categorie;
 import com.example.carrental.Exceptions.EmailExist;
 import com.example.carrental.Exceptions.UsernameExist;
 import com.example.carrental.Exceptions.UsernameNotExist;
+import com.example.carrental.Models.Agence;
 import com.example.carrental.Models.Media;
 import com.example.carrental.Models.User;
 import com.example.carrental.Models.Vehicule;
@@ -201,5 +202,13 @@ public class VehiculeController {
         }
     }
 
+    @PutMapping("/block")
+    public Vehicule blockVehicule(@RequestBody String matricule) {
+        return vehiculeService.blockVehicule(matricule);
+    }
 
+    @PutMapping("/deblock")
+    public Vehicule deblockVehicule(@RequestBody String matricule) {
+        return vehiculeService.deblockVehicule(matricule);
+    }
 }
