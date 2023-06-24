@@ -5,6 +5,7 @@ import com.example.carrental.Enumerations.Alimentation;
 import com.example.carrental.Enumerations.Categorie;
 import com.example.carrental.Enumerations.TypeUtilitaire;
 import com.example.carrental.Enumerations.TypeVoiture;
+import com.example.carrental.Models.Agence;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,5 +47,7 @@ public class VehiculeDTO {
     private TypeUtilitaire typeUtilitaire;
     private TypeVoiture typeVoiture;
     private Categorie categorie;
+
+    private Agence agence;
 
 }

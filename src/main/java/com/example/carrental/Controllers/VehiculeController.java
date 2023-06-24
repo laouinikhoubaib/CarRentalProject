@@ -218,4 +218,24 @@ public class VehiculeController {
     public Vehicule deblockVehicule(@RequestBody String matricule) {
         return vehiculeService.deblockVehicule(matricule);
     }
+
+    @GetMapping("/same-agence")
+    public ResponseEntity<List<Vehicule>> getVehiculesBySameAgence(@RequestParam("vehiculeId") Integer vehiculeId) {
+        VehiculeDTO vehicule = vehiculeService.getById(vehiculeId);
+        if (vehicule == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Vehicule> vehicules = vehiculeService.findVehiculesByAgence(vehicule);
+        return ResponseEntity.ok(vehicules);
+    }
+
+    @GetMapping("/same-agence/utilitaire")
+    public List<Vehicule> getUtilitaireVehiculesByAgence(@RequestParam("vehiculeId") Integer vehiculeId) {
+        return vehiculeService.findUtilitaireVehiculesByAgence(vehiculeId);
+    }
+
+    @GetMapping("/same-agence/voiture")
+    public List<Vehicule> getVoitureVehiculesByAgence(@RequestParam("vehiculeId") Integer vehiculeId) {
+        return vehiculeService.findVoitureVehiculesByAgence(vehiculeId);
+    }
 }

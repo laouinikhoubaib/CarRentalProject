@@ -3,6 +3,7 @@ package com.example.carrental.ServiceInterfaces;
 import com.example.carrental.DTO.VehiculeDTO;
 import com.example.carrental.Enumerations.Categorie;
 import com.example.carrental.Models.Agence;
+import com.example.carrental.Models.User;
 import com.example.carrental.Models.Vehicule;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,4 +33,8 @@ public interface VehiculeService {
 
     public Vehicule blockVehicule(String matricule);
     public Vehicule deblockVehicule(String matricule);
+
+    public List<Vehicule> findVehiculesByAgence(VehiculeDTO vehicule);
+    public List<Vehicule> findUtilitaireVehiculesByAgence(Integer vehiculeId);
+    public List<Vehicule> findVoitureVehiculesByAgence(Integer vehiculeId);
 }

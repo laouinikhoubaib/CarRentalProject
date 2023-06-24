@@ -46,11 +46,6 @@ public class UserController
     }
     
 
-    
-//    @PostMapping("/notification/save/{username}")
-//    public Notification addNotification(@RequestBody Notification notification, @PathVariable(name="username") String username) {
-//    	return userService.addNotification(notification, username);
-//    }
 
     @DeleteMapping("/notification/delete/{notificationId}")
     public void deleteNotification(@PathVariable(name="notificationId") Long notificationId) {

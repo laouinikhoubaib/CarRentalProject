@@ -69,7 +69,7 @@ public class VehiculeServiceImpl implements VehiculeService {
         vehiculeDTO.setCategorie(vehicule.getCategorie());
         vehiculeDTO.setDescription(vehicule.getDescription());
         vehiculeDTO.setLocked(vehicule.isLocked());
-
+        vehiculeDTO.setAgence(vehicule.getAgence());
         return vehiculeDTO;
     }
 
@@ -242,6 +242,21 @@ public class VehiculeServiceImpl implements VehiculeService {
         }
         vehicule.setLocked(false);
         return vehiculeRepository.save(vehicule);
+    }
+
+    @Override
+    public List<Vehicule> findVehiculesByAgence(VehiculeDTO vehicule) {
+        return vehiculeRepository.findByAgence(vehicule.getAgence());
+    }
+    @Override
+    public List<Vehicule> findUtilitaireVehiculesByAgence(Integer vehiculeId) {
+        Vehicule vehicule = vehiculeRepository.getById(vehiculeId);
+        return vehiculeRepository.findByAgenceAndCategorie(vehicule.getAgence(), Categorie.LOCATION_UTILITAIRE);
+    }
+    @Override
+    public List<Vehicule> findVoitureVehiculesByAgence(Integer vehiculeId) {
+        Vehicule vehicule = vehiculeRepository.getById(vehiculeId);
+        return vehiculeRepository.findByAgenceAndCategorie(vehicule.getAgence(), Categorie.LOCATION_VOITURE);
     }
 
 }

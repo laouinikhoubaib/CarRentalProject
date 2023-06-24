@@ -2,8 +2,10 @@ package com.example.carrental.Repository;
 
 
 
+import com.example.carrental.DTO.VehiculeDTO;
 import com.example.carrental.Enumerations.Categorie;
 import com.example.carrental.Models.Agence;
+import com.example.carrental.Models.User;
 import com.example.carrental.Models.Vehicule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -33,5 +35,10 @@ public interface VehiculeRepository extends JpaRepository<Vehicule, Integer> {
 
     @Query("SELECT a FROM Vehicule a WHERE a.matricule = :matricule")
     Vehicule findByMatricule(@Param("matricule") String matricule);
+
+    List<Vehicule> findByAgence(Agence agence);
+
+    List<Vehicule> findByAgenceAndCategorie(Agence agence, Categorie categorie);
+
 }
 

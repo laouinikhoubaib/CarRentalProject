@@ -21,6 +21,7 @@ import java.util.Set;
 @ToString
 @Entity
 @Table(name = "vehicule")
+@JsonIgnoreProperties("hibernateLazyInitializer")
 public class Vehicule {
 
     @Id
