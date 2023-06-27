@@ -45,6 +45,9 @@ public class Agence implements Serializable {
     @Column(name = "description", nullable = false)
     String description;
 
+    @Column(name = "latitude", nullable = false)
+    String latitude;
+
     @Enumerated(EnumType.STRING)
     TypeAgence typeagence;
 

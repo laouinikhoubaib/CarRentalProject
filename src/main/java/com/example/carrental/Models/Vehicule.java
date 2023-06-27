@@ -47,6 +47,9 @@ public class Vehicule {
     @Column(name = "puissance")
     private String puissance;
 
+    @Column(name = "quantite")
+    private int quantite;
+
     @Column(name = "charge_utile")
     private String chargeutile;
 

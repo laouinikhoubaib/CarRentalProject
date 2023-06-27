@@ -2,6 +2,7 @@ package com.example.carrental.Models;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,6 +36,12 @@ public class Reservation {
     @Column
     private double prix;
 
+
+    @Column
+    String qrcode;
+
+    @Column
+    String codePayement;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_reservation_id")
     private User userReservation;
@@ -43,7 +50,4 @@ public class Reservation {
     @JoinColumn(name = "vehicule_vehiculereserv_reservation_id")
     private Vehicule vehiculeReservation;
 
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "paiement")
-    private Paiement paiement; //
 }

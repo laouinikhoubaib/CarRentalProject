@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Facture de paiement</title>
+    <style>
+        /* Styles pour la page */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f7f7f7;
+        }
+        h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin: 0;
+            padding: 30px 0 20px;
+            text-align: center;
+            background-color: #2d4059;
+            color: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .logo {
+            width: 100px;
+        }
+        .info {
+            font-size: 14pt;
+            line-height: 1.6;
+        }
+        .info span {
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background-color: #f7f7f7;
+            font-weight: bold;
+        }
+        .total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total span {
+            font-weight: bold;
+            font-size: 16pt;
+        }
+        .footer {
+            font-size: 10pt;
+            text-align: center;
+            margin-top: 60px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img class="logo" src="../main/resources/templates/favicon.png" alt="Logo de l'agence"/>
+            <div class="info">
+                <div><span>Nom de l'agence:</span> MASTERCLASS CARS</div>
+                <div><span>Adresse:</span> Saint denis 93, Paris, France</div>
+                <div><span>Téléphone:</span> +216 54 48 70 21</div>
+                <div><span>Email:</span> Maseterclasscars@gmail.com</div>
+            </div>
+        </div>
+        <h1>Facture de paiement</h1>
+        <table>
+            <tr>
+                <th>Facture ID</th>
+                <td>25</td>
+            </tr>
+            <tr>
+                <th>Date debut</th>
+                <td>2023-07-01</td>
+            </tr>
+            <tr>
+                <th>Date fin</th>
+                <td>2023-07-02</td>
+            </tr>
+            <tr>
+                <th>Nombre de jours</th>
+                <td>1</td>
+            </tr>
+            <tr>
+                <th>Total montant</th>
+                <td>200.0</td>
+            </tr>
+        </table>
+        <div class="total">
+            <span>Total à payer :</span>
+            <span>200.0</span>
+        </div>
+    </div>
+    <div class="footer">
+        <p>Merci pour votre confiance!</p>
+    </div>
+</body>
+</html>

@@ -70,6 +70,7 @@ public class VehiculeServiceImpl implements VehiculeService {
         vehiculeDTO.setDescription(vehicule.getDescription());
         vehiculeDTO.setLocked(vehicule.isLocked());
         vehiculeDTO.setAgence(vehicule.getAgence());
+        vehiculeDTO.setQuantite(vehicule.getQuantite());
         return vehiculeDTO;
     }
 
