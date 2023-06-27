@@ -1,8 +1,6 @@
 package com.example.carrental.DTO;
 
 
-import com.example.carrental.Models.User;
-import com.example.carrental.Models.Vehicule;
 import lombok.Getter;
 import lombok.Setter;
 

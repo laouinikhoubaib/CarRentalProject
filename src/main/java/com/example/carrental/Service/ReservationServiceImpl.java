@@ -3,30 +3,30 @@ package com.example.carrental.Service;
 
 import com.example.carrental.DTO.ReservationDTO;
 import com.example.carrental.Exceptions.NotFoundException;
-import com.example.carrental.Models.Paiement;
-import com.example.carrental.Models.Reservation;
-import com.example.carrental.Models.User;
-import com.example.carrental.Models.Vehicule;
+import com.example.carrental.Models.*;
 import com.example.carrental.Repository.ReservationRepository;
 import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.Repository.VehiculeRepository;
 import com.example.carrental.ServiceInterfaces.ReservationService;
-import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 @Slf4j
 @Service
@@ -46,6 +46,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    private Configuration freemarkerConfig;
 
     private ReservationDTO mapToDTO(Reservation reservation, ReservationDTO reservationDTO) {
         reservationDTO.setReservid(reservation.getReservid());
@@ -155,56 +158,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
 
-    public List<ReservationDTO> getContratUnJour(@NonNull HttpServletRequest request){
-
-        List<Reservation> reservationList= reservationRepository.findAll();
-        LocalDate date = LocalDate.now();
-        List<Reservation> reservationsEndDate=new ArrayList<>();
-
-        for (Reservation r:reservationList){
-            LocalDate avantTroisJoursDateFin =r.getDatefin().minusDays(1);
-            User user = userService.getUserByToken(request);
-            if (r.getUserReservation().getUserId()==user.getUserId()){
-                if (
-                        (avantTroisJoursDateFin != null && date.isEqual(avantTroisJoursDateFin)) ||
-                                (avantTroisJoursDateFin != null&&date.isAfter(avantTroisJoursDateFin)&& date.isBefore(r.getDatefin()))
-                ){
-                    reservationsEndDate.add(r);
-                }
-            }
-        }
-        return(reservationsEndDate.stream()
-                .map((rentalContract) -> mapToDTO(rentalContract, new ReservationDTO()  ))
-                .collect(Collectors.toList()));
-    }
-    public void sendEmail(String to, String subject, String text, String htmlBody) throws MessagingException {
-        Message message = new MimeMessage(session);
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-        message.setSubject(subject);
-
-        // Create the plain text part of the message
-        MimeBodyPart textPart = new MimeBodyPart();
-        textPart.setText(text);
-
-        // Create the HTML part of the message
-        MimeBodyPart htmlPart = new MimeBodyPart();
-        htmlPart.setContent(htmlBody, "text/html");
-
-        // Create a multipart message and add the text and HTML parts to it
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(textPart);
-        multipart.addBodyPart(htmlPart);
-
-        // Set the content of the message to the multipart message
-        message.setContent(multipart);
-
-        // Send the message
-        Transport.send(message);
-    }
-
 
     @Override
-
     public List<Integer> rappelFinContratAngular() {
 
         List<Reservation> reservationList= reservationRepository.findAll();
@@ -234,26 +189,31 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Charge createCharge(String token, int amount, String currency, int idreserv) throws StripeException {
-        Map<String, Object> chargeParams = new HashMap<>();
-        chargeParams.put("amount", amount);
-        chargeParams.put("currency", currency);
-        chargeParams.put("source", token);
-        Charge charge = Charge.create(chargeParams);
-        Reservation reservation = reservationRepository.findById(idreserv).get();
-        int id = reservation.getReservid();
-        String username = reservation.getVehiculeReservation().getUser().getUsername();
-        Paiement p = new Paiement();
-        String secretKey = "sk_test_51N9A3rDi7Brh0eKhHdXEuTxdDeZXnOCr0sgitOHfaCSmo1MEkejhZOXTWlf4cvZO0oMdx4s7Qaa6dsFrcaUXayd4000DiU9dDP";
-        p.setAmount(charge.getAmount());
-        p.setCardNumber(secretKey);
-        p.setCurrency(charge.getCurrency());
-        p.setCardholderName(username);
-        p.setCvc("test");
-        reservation.setPaiement(p);
-        p.setReservation(reservation);
-        reservationRepository.save(reservation);
-        return charge;
+    public byte[] genererFacturePDF(Reservation reservation) throws Exception {
+
+        ITextRenderer renderer = new ITextRenderer();
+        renderer.setDocumentFromString(genererContenuHTML(reservation));
+        renderer.layout();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        renderer.createPDF(outputStream);
+        Path fichierFacture = Paths.get("C:\\Users\\khoubaib\\Desktop\\" + "facture"+reservation.getReservid()+".pdf");
+        Files.write(fichierFacture, outputStream.toByteArray());
+        return outputStream.toByteArray();
     }
+
+    private String genererContenuHTML(Reservation reservation) throws Exception {
+        freemarkerConfig.setClassForTemplateLoading(this.getClass(), "/templates");
+        freemarkerConfig.setDefaultEncoding("UTF-8");
+        Map<String, Object> model = new HashMap<>();
+        model.put("facture", reservation);
+        Template template = freemarkerConfig.getTemplate("facture.html");
+
+        StringWriter writer = new StringWriter();
+        template.process(model, writer);
+        String contenuHTML = writer.toString();
+
+        return contenuHTML;
+    }
+
 
 }

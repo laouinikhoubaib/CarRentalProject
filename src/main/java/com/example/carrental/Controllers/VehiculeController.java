@@ -235,7 +235,13 @@ public class VehiculeController {
     }
 
     @GetMapping("/same-agence/voiture")
-    public List<Vehicule> getVoitureVehiculesByAgence(@RequestParam("vehiculeId") Integer vehiculeId) {
-        return vehiculeService.findVoitureVehiculesByAgence(vehiculeId);
+    public ResponseEntity<List<Vehicule>> getVoitureVehiculesByAgence(@RequestParam("vehiculeId") Integer vehiculeId) {
+        List<Vehicule> vehicules = vehiculeService.findVoitureVehiculesByAgence(vehiculeId);
+
+        if (vehicules.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(vehicules);
+        }
     }
 }

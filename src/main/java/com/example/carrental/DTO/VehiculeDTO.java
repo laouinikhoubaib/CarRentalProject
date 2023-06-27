@@ -35,6 +35,8 @@ public class VehiculeDTO {
     @Size(max = 255)
     private String picture;
 
+    private Integer quantite;
+
     private boolean isLocked;
     private String description;
     private double prix;

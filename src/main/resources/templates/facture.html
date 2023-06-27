@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Facture de paiement</title>
+    <style>
+        /* Styles pour la page */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f7f7f7;
+        }
+        h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin: 0;
+            padding: 30px 0 20px;
+            text-align: center;
+            background-color: #4395cc;
+            color: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+        .logo {
+            width: 100px;
+        }
+        .info {
+            font-size: 15pt;
+            line-height: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .info span {
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background-color: #f7f7f7;
+            font-weight: bold;
+        }
+        .total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total span {
+            font-weight: bold;
+            font-size: 16pt;
+        }
+        .footer {
+            font-size: 10pt;
+            text-align: center;
+            margin-top: 60px;
+            color: #999;
+        }
+        .container {
+            position: relative;
+        }
+
+        .qrcode {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 150px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img class="logo" src="file:///C:/Users/khoubaib/Desktop/CarRental/src/main/resources/templates/favicon.png" alt="Logo de l'agence" />
+            <img class="qrcode" src="${facture.qrcode}" alt="Code QR"/>
+            <div class="info">
+                <div><span>  MASTERCLASS CARS</span></div>
+                <div><span>Adresse:</span> Saint denis 93,Paris,France</div>
+                <div><span>Téléphone:</span> +216 54 48 70 21</div>
+                <div><span>Email:</span> Maseterclasscars@gmail.com</div>
+            </div>
+        </div>
+
+        <div></div>
+        <h1>Facture de paiement</h1>
+    <table>
+        <tr>
+            <th>Facture ID</th>
+            <td>${facture.reservid}</td>
+        </tr>
+
+        <tr>
+            <th>Date debut</th>
+            <td>${facture.datedebut}</td>
+        </tr>
+
+        <tr>
+            <th>Date fin</th>
+            <td>${facture.datefin}</td>
+        </tr>
+
+        <tr>
+            <th>Nombre de jours</th>
+            <td>${facture.nbjour}</td>
+        </tr>
+
+        <tr>
+            <th>Total montant</th>
+            <td>${facture.prix}</td>
+        </tr>
+
+        </table>
+        <div class="total">
+            <span>Total à payer :</span>
+            <span>${facture.prix} Euro</span>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <div class="total">
+            <span>Nom de l'agent : </span>
+            <span>${facture.userReservation.username}</span>
+        </div>
+        <div class="total">
+            <span>Signature</span>
+        </div>
+    </div>
+</body>
+</html>

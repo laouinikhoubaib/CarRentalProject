@@ -7,25 +7,19 @@ import com.example.carrental.Models.User;
 import com.example.carrental.Repository.ReservationRepository;
 import com.example.carrental.Service.UserServiceImpl;
 import com.example.carrental.ServiceInterfaces.ReservationService;
-import com.example.carrental.ServiceInterfaces.UserService;
-import com.stripe.exception.StripeException;
-import com.stripe.model.Charge;
+import java.net.http.HttpRequest;
+
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -43,6 +37,8 @@ public class ReservationController {
 
     @Autowired
     UserServiceImpl userService;
+
+
     @GetMapping("/GetAllReservations")
     public ResponseEntity<List<ReservationDTO>> getAllReservations(){
         List<ReservationDTO> reservationDTOS = reservationService.findAll();
@@ -133,16 +129,37 @@ public class ReservationController {
 
 
 
-    @PostMapping("/charge")
-    public ResponseEntity<Charge> createCharge(@RequestParam("token") String token,
-                                               @RequestParam("amount") int amount,
-                                               @RequestParam("currency") String currency,
-                                               @RequestParam ("id") int id
-    ) throws StripeException
-    {
+    @PostMapping(path = "facture/{reservid}")
+    public ResponseEntity<byte[]> factureReservation(@PathVariable("reservid") Long reservid) {
+        try {
+            Reservation reservation = reservationRepository.getById(reservid.intValue());
+            byte[] contenuPDF = reservationService.genererFacturePDF(reservation);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDisposition(ContentDisposition.attachment().filename("facture.pdf").build());
+            return new ResponseEntity<>(contenuPDF, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+    @GetMapping("/qrcode/{reservid}")
+    public void takeYourPdfDonation(@PathVariable("reservid") Long reservid) throws IOException, InterruptedException {
 
-        Charge charge = reservationService.createCharge(token,amount,currency,id);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        Reservation reservation = reservationRepository.getById(reservid.intValue());
+         String text= reservation.getUserReservation().getUsername()+reservation.getPrix()+reservation.getReservid()+reservation.getDatedebut()
+                +reservation.getDatefin()+reservation.getNbjour();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://codzz-qr-cods.p.rapidapi.com/getQrcode?type=text&value="+text+""))
+                .header("x-rapidapi-host", "codzz-qr-cods.p.rapidapi.com")
+                .header("x-rapidapi-key", "4505c1692bmsh4fe202f07557d6dp115480jsnac985346e260")
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        System.err.println(response.body());
+        reservation.setQrcode(response.body().substring(8, 61));
+        reservationRepository.saveAndFlush(reservation);
+
 
     }
 
