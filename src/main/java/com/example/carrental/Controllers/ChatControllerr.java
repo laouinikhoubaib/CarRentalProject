@@ -24,15 +24,20 @@ public class ChatControllerr {
 
 	@GetMapping("/Chatroom/{Idsender}/{idreciver}")
 	@ResponseBody
-	public Chatroom chatfind(@PathVariable("Idsender") Long Idsender, @PathVariable("idreciver") Long idreciver) {
-		return cs.findchat(Idsender, idreciver);
+	public Chatroom chatfind(@PathVariable("Idsender") Long Idsender,@PathVariable("idreciver") Long idreciver) {
+		return cs.findChat(Idsender, idreciver);
 	}
 
+	/*@PostMapping("/send/{idreciver}")
+	@ResponseBody
+	public void send(@RequestBody Message m,@PathVariable("idreciver") Long idreciver) {
+	 cs.sendmessage(m, idreciver);
+	}*/
 
 	@PostMapping("/getc/{idreciver}")
 	@ResponseBody
 	public Chatroom getcon(@PathVariable("idreciver") Long idreciver) {
-		return cs.getConv(idreciver);
+		return cs.getConversation(idreciver);
 	}
 
 	@GetMapping("/ListUser")
@@ -50,7 +55,7 @@ public class ChatControllerr {
 	@PostMapping("/color/{id}")
 	@ResponseBody
 	public void color(@PathVariable("id") Long id ,@RequestBody String c) {
-		cs.changecolor(id, c);
+		cs.changeColor(id, c);
 	}
 
 }

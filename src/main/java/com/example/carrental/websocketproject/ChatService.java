@@ -9,55 +9,50 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChatService {
 	@Autowired
-	ChatroomRepo chatroomRepo;
+	private ChatroomRepo chatroomRepo;
+
 	@Autowired
-	UserRepository ur;
+	private UserRepository userRepository;
+
 	@Autowired
-	MessageRepository mr;
-	public Chatroom findchat(Long idsender , Long idreciver) {
+	private MessageRepository messageRepository;
+
+	public Chatroom findChat(Long idSender, Long idReceiver) {
 		int x = 0;
 		Chatroom cht =  new Chatroom();
-		for (Chatroom ch : chatroomRepo.findAll()) {
-			if (ch.getReciver().getUserId() == idreciver && ch.getSender().getUserId() == idsender || ch.getReciver().getUserId() == idsender && ch.getSender().getUserId() == idreciver) {
-				x= 1;
-				cht=ch;}
-
+		if (chatroomRepo != null) {
+			for (Chatroom ch : chatroomRepo.findAll()) {
+				if ((ch.getReciver().getUserId() == idReceiver && ch.getSender().getUserId() == idSender) ||
+						(ch.getReciver().getUserId() == idSender && ch.getSender().getUserId() == idReceiver)) {
+					x = 1;
+					cht = ch;
+					break;
+				}
+			}
 		}
-		if (x== 1) { return cht;}
-		else {
+
+		if (x == 1) {
+			return cht;
+		} else {
 			Chatroom newc =  new Chatroom();
 			newc.setSender(null);
-			User s = ur.findById(idsender).orElse(null);
-			User r = ur.findById(idreciver).orElse(null);
-			newc.setReciver(r);
-			newc.setSender(s);
-
+			User sender = userRepository.findById(idSender).orElse(null);
+			User receiver = userRepository.findById(idReceiver).orElse(null);
+			newc.setReciver(receiver);
+			newc.setSender(sender);
 			return chatroomRepo.save(newc);
-
 		}
 	}
 
-
-/*	public void sendmessage(Message m , Long idchatroom) {
-		Chatroom ch = chatroomRepo.findById(idchatroom).orElse(null);
-		m.setChat(ch);
-		mr.save(m);
-		Set<Message> l = ch.getMessages();
-		l.add(m);
-		ch.setMessages(l);
-		chatroomRepo.save(ch);
-
-	}*/
-
-	public Chatroom getConv(Long idchatroom) {
-		Chatroom ch = chatroomRepo.findById(idchatroom).orElse(null);
-		return ch;
-
-	}
-	public void changecolor(Long id, String s){
-		Chatroom ch = chatroomRepo.findById(id).orElse(null);
-		ch.setColor(s);
-		chatroomRepo.save(ch);
+	public Chatroom getConversation(Long idChatroom) {
+		return chatroomRepo.findById(idChatroom).orElse(null);
 	}
 
+	public void changeColor(Long id, String color) {
+		Chatroom chatroom = chatroomRepo.findById(id).orElse(null);
+		if (chatroom != null) {
+			chatroom.setColor(color);
+			chatroomRepo.save(chatroom);
+		}
+	}
 }

@@ -40,8 +40,6 @@ public class Reservation {
     @Column
     String qrcode;
 
-    @Column
-    String codePayement;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_reservation_id")
     private User userReservation;
