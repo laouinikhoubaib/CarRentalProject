@@ -11,28 +11,19 @@ import com.example.carrental.Repository.ReservationRepository;
 import com.example.carrental.Repository.UserRepository;
 import com.example.carrental.Repository.VehiculeRepository;
 import com.example.carrental.ServiceInterfaces.VehiculeService;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
-
 @Slf4j
 @Service
 public class VehiculeServiceImpl implements VehiculeService {
@@ -50,6 +41,10 @@ public class VehiculeServiceImpl implements VehiculeService {
 
     @Autowired
     NotificationRepository notificationRepository;
+
+
+
+
     private VehiculeDTO mapToDTO(final Vehicule vehicule,final VehiculeDTO vehiculeDTO) {
         vehiculeDTO.setVehiculeId(vehicule.getVehiculeId());
         vehiculeDTO.setChargeutile(vehicule.getChargeutile());
@@ -73,6 +68,8 @@ public class VehiculeServiceImpl implements VehiculeService {
         vehiculeDTO.setQuantite(vehicule.getQuantite());
         return vehiculeDTO;
     }
+
+
 
     @Override
     public VehiculeDTO getById(final Integer vehiculeId) {
@@ -220,7 +217,7 @@ public class VehiculeServiceImpl implements VehiculeService {
         Set<Reservation> reservationList=vehicule.getVehiculeReservationReservations();
         double revenueVehicule=0.0;
         for (Reservation reservation:reservationList){
-            revenueVehicule+=  vehicule.getJourslocation()*reservation.getNbjour();
+            revenueVehicule+=  reservation.getNbjour()*vehicule.getPrix()*0.2 ;
         }
         return revenueVehicule;
     }

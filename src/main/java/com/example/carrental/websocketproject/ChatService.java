@@ -17,32 +17,43 @@ public class ChatService {
 	@Autowired
 	private MessageRepository messageRepository;
 
+
 	public Chatroom findChat(Long idSender, Long idReceiver) {
-		int x = 0;
-		Chatroom cht =  new Chatroom();
-		if (chatroomRepo != null) {
+		Chatroom cht = null;
+
+		if (chatroomRepo != null && idSender != null && idReceiver != null) {
 			for (Chatroom ch : chatroomRepo.findAll()) {
-				if ((ch.getReciver().getUserId() == idReceiver && ch.getSender().getUserId() == idSender) ||
-						(ch.getReciver().getUserId() == idSender && ch.getSender().getUserId() == idReceiver)) {
-					x = 1;
-					cht = ch;
-					break;
+				User sender = ch.getSender();
+				User receiver = ch.getReciver();
+				if (sender != null && receiver != null) {
+					Long senderId = sender.getUserId();
+					Long receiverId = receiver.getUserId();
+					if ((receiverId.equals(idReceiver) && senderId.equals(idSender)) ||
+							(receiverId.equals(idSender) && senderId.equals(idReceiver))) {
+						cht = ch;
+						break;
+					}
 				}
 			}
 		}
 
-		if (x == 1) {
+		if (cht != null) {
 			return cht;
 		} else {
-			Chatroom newc =  new Chatroom();
-			newc.setSender(null);
 			User sender = userRepository.findById(idSender).orElse(null);
 			User receiver = userRepository.findById(idReceiver).orElse(null);
-			newc.setReciver(receiver);
-			newc.setSender(sender);
-			return chatroomRepo.save(newc);
+			if (sender != null && receiver != null) {
+				Chatroom newc = new Chatroom();
+				newc.setSender(sender);
+				newc.setReciver(receiver);
+				return chatroomRepo.save(newc);
+			} else {
+				throw new IllegalArgumentException("Invalid sender or receiver IDs");
+			}
 		}
 	}
+
+
 
 	public Chatroom getConversation(Long idChatroom) {
 		return chatroomRepo.findById(idChatroom).orElse(null);
