@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService
 		User savedUser = userRepository.save(user);
 		Notification notif = new Notification();
 		notif.setCreatedAt(new Date());
-		notif.setMessage("Nous sommes heureux d'avoir"  + savedUser.getUsername()+   " dans notre communauté !");
+		notif.setMessage("Nous sommes heureux d'avoir"  +" "+ savedUser.getUsername()+" "+   " dans notre communauté !");
 		notif.setRead(false);
 		notif.setUser(savedUser);
 		notificationRepository.save(notif);
@@ -234,28 +234,13 @@ public class UserServiceImpl implements UserService
 	                false); // Salted hash == false
 
 	        PasswordValidator validator = new PasswordValidator(resolver, Arrays.asList(
-
-	                // length between 8 and 16 characters
 	                new LengthRule(8, 16),
-
-	                // at least one upper-case character
 	                new CharacterRule(EnglishCharacterData.UpperCase, 1),
-
-	                // at least one lower-case character
 	                new CharacterRule(EnglishCharacterData.LowerCase, 1),
-
-	                // at least one digit character
 	                new CharacterRule(EnglishCharacterData.Digit, 1),
-
-	                // at least one symbol (special character)
 	                new CharacterRule(EnglishCharacterData.Special, 1),
-
-	                // no whitespace
 	                new WhitespaceRule(),
-
-	                // rejects passwords that contain a sequence of >= 3 characters alphabetical  (e.g. abc, ABC )
 	                new IllegalSequenceRule(EnglishSequenceData.Alphabetical, 3, false),
-	                // rejects passwords that contain a sequence of >= 3 characters numerical   (e.g. 123)
 	                new IllegalSequenceRule(EnglishSequenceData.Numerical, 3, false)
 	                ,new DigestHistoryRule(hasher)
 	               ));

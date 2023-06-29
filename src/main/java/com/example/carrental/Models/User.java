@@ -43,7 +43,7 @@ public class User implements Serializable {
     @Column(name = "loginAttempts", nullable = false)
     int loginAttempts;
 
-    @Column(name = "profilPic", nullable = false)
+
     String profilPic;
 
     @Temporal(TemporalType.DATE)
