@@ -68,12 +68,29 @@ public class ReservationController {
             if (contratId == -1) {
                 throw new Exception();
             }
+
+            // Générer le QR code
+            String text = reservation.getUserReservation().getUsername() + reservation.getPrix()
+                    + reservation.getReservid() + reservation.getDatedebut()
+                    + reservation.getDatefin() + reservation.getNbjour();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://codzz-qr-cods.p.rapidapi.com/getQrcode?type=text&value=" + text + ""))
+                    .header("x-rapidapi-host", "codzz-qr-cods.p.rapidapi.com")
+                    .header("x-rapidapi-key", "4505c1692bmsh4fe202f07557d6dp115480jsnac985346e260")
+                    .method("GET", HttpRequest.BodyPublishers.noBody())
+                    .build();
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            System.err.println(response.body());
+            reservation.setQrcode(response.body().substring(8, 61));
+            reservationRepository.saveAndFlush(reservation);
+
             return ResponseEntity.ok().body("{\"contrat\": " + contratId + "}");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("Une erreur s'est produite lors de l'ajout du contrat : " + e.getMessage());
         }
     }
+
 
 
     @GetMapping("/ContractIsValidd/{datedebut}/{datefin}")
@@ -143,24 +160,24 @@ public class ReservationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-    @GetMapping("/qrcode/{reservid}")
-    public void takeYourPdfDonation(@PathVariable("reservid") Long reservid) throws IOException, InterruptedException {
-
-        Reservation reservation = reservationRepository.getById(reservid.intValue());
-         String text= reservation.getUserReservation().getUsername()+reservation.getPrix()+reservation.getReservid()+reservation.getDatedebut()
-                +reservation.getDatefin()+reservation.getNbjour();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://codzz-qr-cods.p.rapidapi.com/getQrcode?type=text&value="+text+""))
-                .header("x-rapidapi-host", "codzz-qr-cods.p.rapidapi.com")
-                .header("x-rapidapi-key", "4505c1692bmsh4fe202f07557d6dp115480jsnac985346e260")
-                .method("GET", HttpRequest.BodyPublishers.noBody())
-                .build();
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        System.err.println(response.body());
-        reservation.setQrcode(response.body().substring(8, 61));
-        reservationRepository.saveAndFlush(reservation);
-
-
-    }
+//    @GetMapping("/qrcode/{reservid}")
+//    public void takeYourPdfDonation(@PathVariable("reservid") Long reservid) throws IOException, InterruptedException {
+//
+//        Reservation reservation = reservationRepository.getById(reservid.intValue());
+//         String text= reservation.getUserReservation().getUsername()+reservation.getPrix()+reservation.getReservid()+reservation.getDatedebut()
+//                +reservation.getDatefin()+reservation.getNbjour();
+//        HttpRequest request = HttpRequest.newBuilder()
+//                .uri(URI.create("https://codzz-qr-cods.p.rapidapi.com/getQrcode?type=text&value="+text+""))
+//                .header("x-rapidapi-host", "codzz-qr-cods.p.rapidapi.com")
+//                .header("x-rapidapi-key", "4505c1692bmsh4fe202f07557d6dp115480jsnac985346e260")
+//                .method("GET", HttpRequest.BodyPublishers.noBody())
+//                .build();
+//        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+//        System.err.println(response.body());
+//        reservation.setQrcode(response.body().substring(8, 61));
+//        reservationRepository.saveAndFlush(reservation);
+//
+//
+//    }
 
 }
