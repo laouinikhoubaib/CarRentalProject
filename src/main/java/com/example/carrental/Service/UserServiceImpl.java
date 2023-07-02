@@ -48,14 +48,14 @@ public class UserServiceImpl implements UserService
 {
 
 	private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    
-    @Autowired
-    ServiceAllEmail emailService;
+	private final PasswordEncoder passwordEncoder;
 
 
-    @Autowired
+	@Autowired
+	ServiceAllEmail emailService;
+
+
+	@Autowired
 	MediaRepo mediaRepository;
 
 	@Autowired
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService
 	public User findUserById(Long userId) {
 		return userRepository.findById(userId).orElse(null);
 	}
-    @Override
+	@Override
 	public User saveUser(User user, String agenceName) throws UsernameNotExist, UsernameExist, EmailExist, MessagingException, io.jsonwebtoken.io.IOException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, TemplateException, IOException, MessagingException {
 		isvalidUsernameAndEmail(EMPTY, user.getUsername(), user.getEmail());
 		isValid(user.getPassword());
@@ -115,33 +115,33 @@ public class UserServiceImpl implements UserService
 		return savedUser;
 	}
 	@Override
-    public User updateUser(User user) {
+	public User updateUser(User user) {
 
 		return userRepository.save(user);
-    }
+	}
 
-    @Override
-    public Optional<User> findByUsername(String username)
-    { 
+	@Override
+	public Optional<User> findByUsername(String username)
+	{
 
 		return userRepository.findByUsername(username);
-    }
+	}
 
 
-    @Override
-    public Optional<User> findByEmail(String email)
-    {
+	@Override
+	public Optional<User> findByEmail(String email)
+	{
 
 		return userRepository.findByEmail(email);
-    }
+	}
 
 
-    @Override
-    public List<User> findAllUsers()
-    {
+	@Override
+	public List<User> findAllUsers()
+	{
 
 		return userRepository.findAll();
-    }
+	}
 
 	@Override
 	public User getUser(Long userId) {
@@ -171,101 +171,101 @@ public class UserServiceImpl implements UserService
 		return user.getProfilPicture().getImagenUrl();
 	}
 
-	
 
-	 private User isvalidUsernameAndEmail(String currentUsername, String newUsername, String newEmail) 
-			 throws UsernameNotExist, UsernameExist, EmailExist {
-	        User userByNewUsername = findByUsername(newUsername).orElse(null);
-	        User userByNewEmail = findByEmail(newEmail).orElse(null);
-	        if(StringUtils.isNotBlank(currentUsername)) {
-	            User currentUser = findByUsername(currentUsername).orElse(null);
-	            if(currentUser == null) {
-	                throw new UsernameNotExist("Aucun utilisateur trouvé par nom d’utilisateur: " + currentUsername);
-	            }
-	            if(userByNewUsername != null && !currentUser.getUserId().equals(userByNewUsername.getUserId())) {
-	                throw new UsernameExist("Username exist dèja");
-	            }
-	            if(userByNewEmail != null && !currentUser.getUserId().equals(userByNewEmail.getUserId())) {
-	                throw new EmailExist("Email exist dèja");
-	            }
-	            return currentUser;
-	        } else {
-	            if(userByNewUsername != null) {
-	                throw new UsernameExist("Username exist dèja");
-	            }
-	            if(userByNewEmail != null) {
-	                throw new EmailExist("Email exist dèja");
-	            }
-	            return null;
-	        }
-	    }
-	 
-	 @SneakyThrows
-	 public boolean isValid(String password) {
-		 String messageTemplate = null;
-		 Properties props = new Properties();
-		 InputStream inputStream = getClass().getClassLoader().getResourceAsStream("passay.properties");
-		 try {
-			 props.load(inputStream);
-		 } catch (IOException e) {
-			 e.printStackTrace();
-	     	}
-		 MessageResolver resolver = new PropertiesMessageResolver(props);
-		 List<PasswordData.Reference> history = Arrays.asList(
-				 // Password=P@ssword1
-				 new PasswordData.HistoricalReference(
-	                        "SHA256",
-	                        "j93vuQDT5ZpZ5L9FxSfeh87zznS3CM8govlLNHU8GRWG/9LjUhtbFp7Jp1Z4yS7t"),
 
-	                // Password=P@ssword2
-				 new PasswordData.HistoricalReference(
-	                        "SHA256",
-	                        "mhR+BHzcQXt2fOUWCy4f903AHA6LzNYKlSOQ7r9np02G/9LjUhtbFp7Jp1Z4yS7t"),
+	private User isvalidUsernameAndEmail(String currentUsername, String newUsername, String newEmail)
+			throws UsernameNotExist, UsernameExist, EmailExist {
+		User userByNewUsername = findByUsername(newUsername).orElse(null);
+		User userByNewEmail = findByEmail(newEmail).orElse(null);
+		if(StringUtils.isNotBlank(currentUsername)) {
+			User currentUser = findByUsername(currentUsername).orElse(null);
+			if(currentUser == null) {
+				throw new UsernameNotExist("Aucun utilisateur trouvé par nom d’utilisateur: " + currentUsername);
+			}
+			if(userByNewUsername != null && !currentUser.getUserId().equals(userByNewUsername.getUserId())) {
+				throw new UsernameExist("Username exist dèja");
+			}
+			if(userByNewEmail != null && !currentUser.getUserId().equals(userByNewEmail.getUserId())) {
+				throw new EmailExist("Email exist dèja");
+			}
+			return currentUser;
+		} else {
+			if(userByNewUsername != null) {
+				throw new UsernameExist("Username exist dèja");
+			}
+			if(userByNewEmail != null) {
+				throw new EmailExist("Email exist dèja");
+			}
+			return null;
+		}
+	}
 
-	                // Password=P@ssword3
-				 new PasswordData.HistoricalReference(
-	                        "SHA256",
-	                        "BDr/pEo1eMmJoeP6gRKh6QMmiGAyGcddvfAHH+VJ05iG/9LjUhtbFp7Jp1Z4yS7t")
-	        );
-	        EncodingHashBean hasher = new EncodingHashBean(
-	                new CodecSpec("Base64"), // Handles base64 encoding
-	                new DigestSpec("SHA256"), // Digest algorithm
-	                1, // Number of hash rounds
-	                false); // Salted hash == false
+	@SneakyThrows
+	public boolean isValid(String password) {
+		String messageTemplate = null;
+		Properties props = new Properties();
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("passay.properties");
+		try {
+			props.load(inputStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		MessageResolver resolver = new PropertiesMessageResolver(props);
+		List<PasswordData.Reference> history = Arrays.asList(
+				// Password=P@ssword1
+				new PasswordData.HistoricalReference(
+						"SHA256",
+						"j93vuQDT5ZpZ5L9FxSfeh87zznS3CM8govlLNHU8GRWG/9LjUhtbFp7Jp1Z4yS7t"),
 
-	        PasswordValidator validator = new PasswordValidator(resolver, Arrays.asList(
-	                new LengthRule(8, 16),
-	                new CharacterRule(EnglishCharacterData.UpperCase, 1),
-	                new CharacterRule(EnglishCharacterData.LowerCase, 1),
-	                new CharacterRule(EnglishCharacterData.Digit, 1),
-	                new CharacterRule(EnglishCharacterData.Special, 1),
-	                new WhitespaceRule(),
-	                new IllegalSequenceRule(EnglishSequenceData.Alphabetical, 3, false),
-	                new IllegalSequenceRule(EnglishSequenceData.Numerical, 3, false)
-	                ,new DigestHistoryRule(hasher)
-	               ));
+				// Password=P@ssword2
+				new PasswordData.HistoricalReference(
+						"SHA256",
+						"mhR+BHzcQXt2fOUWCy4f903AHA6LzNYKlSOQ7r9np02G/9LjUhtbFp7Jp1Z4yS7t"),
 
-	        RuleResult result = validator.validate(new PasswordData(password));
-	        PasswordData data = new PasswordData("P@ssword1", password);//"P@ssword1");
-	        data.setPasswordReferences(history);
-	        RuleResult result2 = validator.validate(data);
+				// Password=P@ssword3
+				new PasswordData.HistoricalReference(
+						"SHA256",
+						"BDr/pEo1eMmJoeP6gRKh6QMmiGAyGcddvfAHH+VJ05iG/9LjUhtbFp7Jp1Z4yS7t")
+		);
+		EncodingHashBean hasher = new EncodingHashBean(
+				new CodecSpec("Base64"), // Handles base64 encoding
+				new DigestSpec("SHA256"), // Digest algorithm
+				1, // Number of hash rounds
+				false); // Salted hash == false
 
-	        if (result.isValid() ) {
-	            return true;
-	        }
-	        try {
-	            if (result.isValid()==false) {
-	                List<String> messages = validator.getMessages(result);
+		PasswordValidator validator = new PasswordValidator(resolver, Arrays.asList(
+				new LengthRule(8, 16),
+				new CharacterRule(EnglishCharacterData.UpperCase, 1),
+				new CharacterRule(EnglishCharacterData.LowerCase, 1),
+				new CharacterRule(EnglishCharacterData.Digit, 1),
+				new CharacterRule(EnglishCharacterData.Special, 1),
+				new WhitespaceRule(),
+				new IllegalSequenceRule(EnglishSequenceData.Alphabetical, 3, false),
+				new IllegalSequenceRule(EnglishSequenceData.Numerical, 3, false)
+				,new DigestHistoryRule(hasher)
+		));
 
-	                messageTemplate = String.join(",", messages);
+		RuleResult result = validator.validate(new PasswordData(password));
+		PasswordData data = new PasswordData("P@ssword1", password);//"P@ssword1");
+		data.setPasswordReferences(history);
+		RuleResult result2 = validator.validate(data);
 
-	                System.out.println("Invalid Password: " + validator.getMessages(result));
-	                }
-	               } finally
-			{
-	            throw new PasswordValidException(messageTemplate);
-	        }
-	    }
+		if (result.isValid() ) {
+			return true;
+		}
+		try {
+			if (result.isValid()==false) {
+				List<String> messages = validator.getMessages(result);
+
+				messageTemplate = String.join(",", messages);
+
+				System.out.println("Invalid Password: " + validator.getMessages(result));
+			}
+		} finally
+		{
+			throw new PasswordValidException(messageTemplate);
+		}
+	}
 	@Override
 	public void lockUser(String username) {
 		User u = userRepository.findByUsername(username).get();
@@ -309,10 +309,10 @@ public class UserServiceImpl implements UserService
 			if (u.getRole().name().equals("ADMIN")) {
 				result.add(u);
 			}
-				else if(u.getRole().name().equals(("ADMIN_FRANCHISE"))){
-					result.add(u);
-				}
+			else if(u.getRole().name().equals(("ADMIN_FRANCHISE"))){
+				result.add(u);
 			}
+		}
 
 		return result;
 	}

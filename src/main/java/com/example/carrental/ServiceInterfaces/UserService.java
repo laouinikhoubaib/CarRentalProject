@@ -27,11 +27,11 @@ public interface UserService
     Optional<User> findByUsername(String username);
 
     User getUser(Long userId);
-    
-	Optional<User> findByEmail(String email);
+
+    Optional<User> findByEmail(String email);
 
     void changeRole(Role newRole, String username);
-    
+
     void makeAdmin(String username);
 
     List<User> findAllUsers();
@@ -41,12 +41,12 @@ public interface UserService
 
     void lockUser(String username);
 
-	User updateUser(User user);
-	
-	String getUserProfilPic(Long userId);
+    User updateUser(User user);
 
-	
-	public List<User> allAdmins();
+    String getUserProfilPic(Long userId);
+
+
+    public List<User> allAdmins();
 
 
     List<Notification> findNotificationsByUser(Long userId);

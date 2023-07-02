@@ -64,6 +64,7 @@ public class User implements Serializable {
     Media profilPicture;
 
 
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
     Set<Notification> notifications;
