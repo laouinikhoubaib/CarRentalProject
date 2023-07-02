@@ -68,15 +68,13 @@ public class ReservationController {
             if (contratId == -1) {
                 throw new Exception();
             }
-
-            // Générer le QR code
             String text = reservation.getUserReservation().getUsername() + reservation.getPrix()
                     + reservation.getReservid() + reservation.getDatedebut()
                     + reservation.getDatefin() + reservation.getNbjour();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://codzz-qr-cods.p.rapidapi.com/getQrcode?type=text&value=" + text + ""))
                     .header("x-rapidapi-host", "codzz-qr-cods.p.rapidapi.com")
-                    .header("x-rapidapi-key", "4505c1692bmsh4fe202f07557d6dp115480jsnac985346e260")
+                    .header("x-rapidapi-key", "9baf8c92f9msh1be6c2d789509f8p15dbebjsn623c7b23b8d9")
                     .method("GET", HttpRequest.BodyPublishers.noBody())
                     .build();
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());

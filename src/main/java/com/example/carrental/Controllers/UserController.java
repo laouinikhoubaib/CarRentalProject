@@ -25,62 +25,62 @@ import java.util.Map;
 @RequestMapping("api/user")
 public class UserController
 {
-		
+
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     UserRepository userRepository;
 
-    
-    
+
+
     @PutMapping("/update")
     public User updateUser(@RequestBody User user) {
-    	return userService.updateUser(user);
+        return userService.updateUser(user);
     }
-    
+
     @GetMapping("/all")
     public List<User> findAllUsers()
     {
         return userService.findAllUsers();
     }
-    
+
 
 
     @DeleteMapping("/notification/delete/{notificationId}")
     public void deleteNotification(@PathVariable(name="notificationId") Long notificationId) {
-    	userService.deleteNotification(notificationId);
+        userService.deleteNotification(notificationId);
     }
 
     @GetMapping("/notifications/all")
     public List<Notification> findAllNotifications() {
-    	return userService.findAllNotifications();
+        return userService.findAllNotifications();
     }
 
 
     @PutMapping("/notification/read")
     public void markNotifAsRead(@RequestBody Long idNotif) {
-    	userService.markNotifAsRead(idNotif);
+        userService.markNotifAsRead(idNotif);
     }
 
     @PutMapping("/notification/unread")
     public void markNotifAsUnRead(@RequestBody Long idNotif) {
-    	userService.markNotifAsUnRead(idNotif);
+        userService.markNotifAsUnRead(idNotif);
     }
 
     @GetMapping("/picture")
     public String getUserProfilPic( @AuthenticationPrincipal UserPrincipal user) {
         return userService.getUserProfilPic(user.getId());
     }
-    
+
     @GetMapping("/picture2")
     public String getUserProfilPic2(@RequestParam Long userId) {
-    	return userService.getUserProfilPic(userId);
+        return userService.getUserProfilPic(userId);
     }
-    
+
     @GetMapping("/{userId}")
     public User getUser(@PathVariable(value="userId") Long userId) {
-    	return userService.getUser(userId);
+        return userService.getUser(userId);
     }
 
     @GetMapping("/same-agence")
@@ -116,4 +116,4 @@ public class UserController
     }
 
 
-}	
+}
