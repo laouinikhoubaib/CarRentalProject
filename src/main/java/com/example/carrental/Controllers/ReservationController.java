@@ -144,10 +144,10 @@ public class ReservationController {
 
 
 
-    @PostMapping(path = "facture/{reservid}")
-    public ResponseEntity<byte[]> factureReservation(@PathVariable("reservid") Long reservid) {
+    @GetMapping(path = "facture/{reservid}")
+    public ResponseEntity<byte[]> factureReservation(@PathVariable("reservid") int reservid) {
         try {
-            Reservation reservation = reservationRepository.getById(reservid.intValue());
+            Reservation reservation = reservationRepository.getById(reservid);
             byte[] contenuPDF = reservationService.genererFacturePDF(reservation);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
