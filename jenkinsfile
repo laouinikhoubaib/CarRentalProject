@@ -1,0 +1,28 @@
+ipeline{
+
+      agent any
+       
+        tools {
+               jdk 'JAVA_HOME'
+               maven 'M2_HOME'
+               }
+	       
+   	 
+      
+stages{
+	
+	 
+        stage('Getting project from Github') {
+            steps {
+	         script {
+                       git branch : 'stock' ,
+                       url : 'https://github.com/ahmedaziz-code/app-achat.git';
+                        }
+		  }
+		  }
+		  
+		
+	
+      
+	      	           
+}
