@@ -20,7 +20,7 @@ stages{
             steps {
 	         script {
                        git branch : 'stock' ,
-                       url : 'https://github.com/ahmedaziz-code/app-achat.git';
+                       url : 'https://github.com/laouinikhoubaib/CarRentalProject.git';
                         }
 		  }
 		  }
