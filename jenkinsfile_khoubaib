@@ -36,6 +36,17 @@ stages{
         		sh 'mvn -B -DskipTests clean package'
       		          }
             	}
-}		
+     stage('Quality Gate Status Check'){
+                  steps{
+                      script{
+			      withSonarQubeEnv('sonar') {
+			      sh "mvn compile sonar:sonar"
+                       	     	}		     
+		    	       sh "mvn clean install"
+                 	}
+               	 }
+              } 
+}
+
 	      	           
 }
