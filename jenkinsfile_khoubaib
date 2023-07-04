@@ -1,0 +1,41 @@
+pipeline{
+
+      agent any
+       
+        tools {
+               jdk 'JAVA_HOME'
+               maven 'M2_HOME'
+               }
+	       
+   environment {
+
+         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+	 }
+	 
+      
+stages{
+	
+	 
+        stage('Getting project from Github') {
+            steps {
+	         script {
+                       git branch : 'stock' ,
+                       url : 'https://github.com/ahmedaziz-code/app-achat.git';
+                        }
+		  }
+		  }
+		  
+        stage('cleanig the project') {
+            steps{
+                sh 'mvn clean'
+            }
+        }
+       
+       stage('Build') {
+      		    steps {
+        		sh 'mvn -B -DskipTests clean package'
+      		          }
+            	}
+		
+	      	           
+}
