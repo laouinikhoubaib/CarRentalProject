@@ -105,8 +105,8 @@ public class UserController
     }
 
     @GetMapping("/{userId}/agencyName")
-    public ResponseEntity<Map<String, String>> getAgencyNameByUserId(@PathVariable Long userId) {
-        String agencyName = userService.getAgencyNameByUserId(userId);
+    public ResponseEntity<Map<String, String>> getAgencyNameByUserId(@PathVariable int userId) {
+        String agencyName = userService.getAgencyNameByUserId(Long.valueOf(userId));
         if(agencyName == null) {
             return ResponseEntity.notFound().build();
         }
