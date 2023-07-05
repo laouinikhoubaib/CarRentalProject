@@ -19,7 +19,7 @@ stages{
         stage('Getting project from Github') {
             steps {
 	         script {
-                       git branch : 'stock' ,
+                       git branch : 'GestionUtilisateurs' ,
                        url : 'https://github.com/laouinikhoubaib/CarRentalProject.git';
                         }
 		  }
