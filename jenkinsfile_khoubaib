@@ -41,7 +41,7 @@ stages{
                 steps{
                     nexusArtifactUploader artifacts: [
                             [
-                            artifactId: 'achat',
+                            artifactId: 'CarRental',
                             classifier: '',
 			    file: 'target/springprojet.jar',
                             type: 'jar'
