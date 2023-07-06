@@ -46,6 +46,25 @@ stages{
                  	}
                	 }
               } 
+     stage('Upload Jar To Nexus'){
+                steps{
+                    nexusArtifactUploader artifacts: [
+                            [
+                            artifactId: 'achat',
+                            classifier: '',
+			    file: 'target/springprojet.jar',
+                            type: 'jar'
+                            ]
+                    ],
+                     credentialsId: 'nexus3',
+                        groupId: 'com.example',
+                        nexusUrl: '192.168.33.10:8081',
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        repository: 'GestionUtilisateurs',
+                        version: '1.0'
+                }
+            }
 }
 
 	      	           
