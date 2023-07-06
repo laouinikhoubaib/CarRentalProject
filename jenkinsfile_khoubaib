@@ -1,0 +1,76 @@
+pipeline{
+
+      agent any
+       
+        tools {
+               jdk 'JAVA_HOME'
+               maven 'M2_HOME'
+               }
+	       
+   environment {
+
+         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+	 }
+	 
+      
+stages{
+	
+	 
+        stage('Getting project from Github') {
+            steps {
+	         script {
+                       git branch : 'GestionUtilisateurs' ,
+                       url : 'https://github.com/laouinikhoubaib/CarRentalProject.git';
+                        }
+		  }
+		  }
+		  
+        stage('cleanig the project') {
+            steps{
+                sh 'mvn clean'
+            }
+        }
+       
+       stage('Build') {
+      		    steps {
+        		sh 'mvn -B -DskipTests clean package'
+      		          }
+            	}
+
+         stage('Upload Jar To Nexus'){
+                steps{
+                    nexusArtifactUploader artifacts: [
+                            [
+                            artifactId: 'CarRental',
+                            classifier: '',
+			    file: 'target/springprojet.jar',
+                            type: 'jar'
+                            ]
+                    ],
+                     credentialsId: 'nexus3',
+                        groupId: 'com.example',
+                        nexusUrl: '192.168.33.10:8081',
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        repository: 'stock',
+                        version: '1.0'
+                }
+            }
+}
+  post {
+                success {
+                     mail to: "laouinikhoubaib@gmail.com",
+                            subject: "Build sucess",
+                            body: "sucess"
+                            echo 'successful'
+                        }
+                failure {
+                     mail to: "laouinikhoubaib@gmail.com",
+                            subject: "Build failed",
+                            body: "failed"
+                    echo 'failed'
+                        }
+              }	
+
+	      	           
+}
