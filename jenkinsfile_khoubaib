@@ -57,6 +57,20 @@ stages{
                 }
             }
 }
+  post {
+                success {
+                     mail to: "khoubaib.laouini@esprit.tn",
+                            subject: "Build sucess",
+                            body: "sucess"
+                            echo 'successful'
+                        }
+                failure {
+                     mail to: "khoubaib.laouini@esprit.tn",
+                            subject: "Build failed",
+                            body: "failed"
+                    echo 'failed'
+                        }
+              }	
 
 	      	           
 }
