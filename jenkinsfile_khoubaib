@@ -68,6 +68,14 @@ stages{
                 }
             }
 }
+stage('Build docker image'){
+            steps{
+                script{
+                    sh 'docker build -t khoubaiblaouini/springprojet .'
+                }
+            }
+        }
+
   post {
                 success {
                      mail to: "laouinikhoubaib@gmail.com",
