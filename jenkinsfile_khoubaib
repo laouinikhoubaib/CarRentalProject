@@ -67,7 +67,7 @@ stages{
                         version: '1.0'
                 }
             }
-}
+
 stage('Build docker image'){
             steps{
                 script{
@@ -75,6 +75,8 @@ stage('Build docker image'){
                 }
             }
         }
+}
+
 
   post {
                 success {
