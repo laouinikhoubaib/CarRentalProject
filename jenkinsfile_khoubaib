@@ -93,7 +93,7 @@ stage("DockerLogin") {
                 }
               }             		                                         
 	}
-}
+
 
 
   post {
