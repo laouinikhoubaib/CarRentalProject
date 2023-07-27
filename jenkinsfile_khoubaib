@@ -77,7 +77,7 @@ stage('Build docker image'){
         }
 stage("DockerLogin") {
                 steps {
-                sh 'docker login --username khoubaiblaouini --password Galereafond20022*-+/'
+                sh 'docker login --username khoubaiblaouini --password Prestigeahmed2023+-*/'
                 }
             }
 
