@@ -67,7 +67,35 @@ stages{
                         version: '1.0'
                 }
             }
-}
+
+stage('Build docker image'){
+            steps{
+                script{
+                    sh 'docker build -t khoubaiblaouini/springprojet .'
+                }
+            }
+        }
+stage("DockerLogin") {
+                steps {
+                sh 'docker login --username khoubaiblaouini --password Prestigeahmed2023+-*/'
+                }
+            }
+
+       stage("DockerPush") {
+                 steps {
+                 sh 'docker push khoubaiblaouini/springprojet'
+                }
+              }
+           
+       stage("DockerCompose") {
+                 steps {
+                 sh 'docker-compose up -d '
+                }
+              }             		                                         
+	}
+
+
+
   post {
                 success {
                      mail to: "laouinikhoubaib@gmail.com",
