@@ -36,7 +36,11 @@ stages{
         		sh 'mvn -B -DskipTests clean package'
       		          }
             	}
+       stage('Tests Unitaires') {
+      		    steps {
 
+      		          }
+            	}
  stage('Quality Gate Status Check'){
                   steps{
                       script{
