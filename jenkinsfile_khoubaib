@@ -87,11 +87,7 @@ stage("DockerLogin") {
                 }
               }
            
-       stage("DockerCompose") {
-                 steps {
-                 sh 'docker-compose up -d '
-                }
-              }             		                                         
+                		                                         
 	}
 
 
